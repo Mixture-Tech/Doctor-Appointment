@@ -1,6 +1,6 @@
-package mixture.hutech.backend.user.services.impl;
+package mixture.hutech.backend.service.impl;
 
-import mixture.hutech.backend.user.services.ExamplerService;
+import mixture.hutech.backend.service.ExamplerService;
 import org.springframework.stereotype.Service;
 
 @Service

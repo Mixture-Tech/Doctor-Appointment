@@ -1,4 +1,4 @@
-package mixture.hutech.backend.user.services;
+package mixture.hutech.backend.service;
 
 public interface ExamplerService {
 }
