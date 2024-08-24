@@ -33,8 +33,5 @@ build/
 .vscode/
 
 # Configuration files
-application.properties
-application.yml
-application-*.properties
-application-*.yml
+back-end/.env
 

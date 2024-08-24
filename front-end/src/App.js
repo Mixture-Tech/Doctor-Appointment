@@ -9,32 +9,32 @@ const Home = loadable(() => import("./pages/Home/Home"));
 const Login = loadable(() => import("./pages/Login/Login"));
 
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<BasicLayout />}>
-          <Route
-            index
-            element={
-              <Suspense fallback={<CircularProgress />}>
-                <Home title="Trang chủ" />
-              </Suspense>
-            }
-          />
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route
-            path="/dang-nhap"
-            element={
-              <Suspense fallback={<CircularProgress />}>
-                <Login title="Đăng nhập" />
-              </Suspense>
-            }
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route element={<BasicLayout />}>
+                    <Route
+                        index
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <Home title="Trang chủ" />
+                            </Suspense>
+                        }
+                    />
+                </Route>
+                <Route element={<AuthLayout />}>
+                    <Route
+                        path="/dang-nhap"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <Login title="Đăng nhập" />
+                            </Suspense>
+                        }
+                    />
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
 export default App;
