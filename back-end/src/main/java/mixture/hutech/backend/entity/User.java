@@ -37,9 +37,6 @@ public class User {
     @Column(name = "last_name", length = 50)
     private String lastName;
 
-    @Column(nullable = false)
-    private String description;
-
     @Column(name = "phone", length = 10, unique = true)
     @Length(min = 10, max = 10, message = "Phone must be 10 characters")
     @Pattern(regexp = "^[0-9]*$", message = "Phone must be number")
@@ -53,6 +50,16 @@ public class User {
 
     @Column(nullable = false)
     private String gender;
+
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = false;
+
+    // Doctor
+
+    private String description;
+
+    @Column(name = "is_doctor_info_completed")
+    private Boolean isDoctorInfoCompleted = false;
 
     @Column(name = "medical_fee")
     private Double medicalFee;
@@ -107,6 +114,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<Appointment> appointments = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Token> tokens = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "office_id")

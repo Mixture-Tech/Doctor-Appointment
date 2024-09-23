@@ -1,12 +1,23 @@
 package mixture.hutech.backend.exceptions;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import mixture.hutech.backend.enums.ErrorCodeEnum;
 import org.springframework.http.HttpStatus;
 
 @Getter
-@RequiredArgsConstructor
-public class ApiException {
-    private final String message;
-    private final HttpStatus httpStatus;
+public class ApiException extends RuntimeException {
+  private final ErrorCodeEnum errorCodeEnum;
+
+  public ApiException(ErrorCodeEnum errorCodeEnum) {
+    super(errorCodeEnum.getMessage());
+    this.errorCodeEnum = errorCodeEnum;
+  }
+
+  public int getCode() {
+    return errorCodeEnum.getCode();
+  }
+
+  public HttpStatus getHttpStatus() {
+    return errorCodeEnum.getHttpStatus();
+  }
 }
