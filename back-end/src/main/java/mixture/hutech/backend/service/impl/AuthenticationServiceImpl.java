@@ -46,6 +46,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
+    private PasswordResetToken createAndSavePasswordResetToken(User user, PasswordResetTokenEnum tokenType) {
+        String token = "MIXTURE_" + UUID.randomUUID().toString() + System.currentTimeMillis();
+        PasswordResetToken passwordResetToken = PasswordResetToken.builder()
+                .token(token)
+                .user(user)
+                .tokenType(tokenType)
+                .expiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)))
+                .build();
+        passwordResetTokenRepository.save(passwordResetToken);
+        return passwordResetToken;
+    }
+
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
@@ -70,17 +82,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         userRepository.save(user);
 
-        String token = "MIXTURE_" + UUID.randomUUID().toString() + System.currentTimeMillis();
-        PasswordResetToken verificationToken = PasswordResetToken.builder()
-                .token(token)
-                .user(user)
-                .tokenType(PasswordResetTokenEnum.EMAIL_VERIFICATION_TOKEN)
-                .expiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)))
-                .build();
-        passwordResetTokenRepository.save(verificationToken);
+        PasswordResetToken verificationToken = createAndSavePasswordResetToken(user, PasswordResetTokenEnum.EMAIL_VERIFICATION_TOKEN);
 
         try{
-            emailService.sendMailWithTokenRegister(user.getEmail(), user.getFirstName() + " " + user.getLastName(), token);
+            emailService.sendMailWithTokenRegister(user.getEmail(), user.getFirstName() + " " + user.getLastName(), verificationToken.getToken());
         }catch (Exception e){
             System.out.println("Mail error: " + e.getMessage());
         }
@@ -156,17 +161,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 () -> new ApiException(ErrorCodeEnum.USER_NOT_FOUND)
         );
 
-        String token = "MIXTURE_" + UUID.randomUUID().toString() + System.currentTimeMillis();
-        PasswordResetToken passwordResetToken = PasswordResetToken.builder()
-                .token(token)
-                .user(user)
-                .tokenType(PasswordResetTokenEnum.PASSWORD_RESET_TOKEN)
-                .expiryDate(Timestamp.valueOf(LocalDateTime.now().plusHours(24)))
-                .build();
-        passwordResetTokenRepository.save(passwordResetToken);
+        PasswordResetToken passwordResetToken = createAndSavePasswordResetToken(user, PasswordResetTokenEnum.PASSWORD_RESET_TOKEN);
+
 
         try{
-            emailService.sendMailWithTokenResetPassword(user.getEmail(), user.getFirstName() + " " + user.getLastName(), token);
+            emailService.sendMailWithTokenResetPassword(user.getEmail(), user.getFirstName() + " " + user.getLastName(), passwordResetToken.getToken());
         }catch (Exception e){
             System.out.println("Mail error: " + e.getMessage());
         }
