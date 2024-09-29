@@ -25,8 +25,10 @@ public class Token {
     @Enumerated(EnumType.STRING)
     public TokenTypeEnum tokenTypeEnum = TokenTypeEnum.BEARER;
 
+    @Column(name = "revoked")
     public boolean revoked;
 
+    @Column(name = "expired")
     public boolean expired;
 
     @ManyToOne(fetch = FetchType.LAZY)

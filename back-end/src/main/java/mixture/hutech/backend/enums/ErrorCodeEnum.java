@@ -16,7 +16,12 @@ public enum ErrorCodeEnum {
     TOKEN_EXPIRED(401, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN(404,"Token không hợp lệ", HttpStatus.BAD_REQUEST),
     ACCOUNT_NOT_ACTIVATED(401,"Tài khoản chưa được kích hoạt", HttpStatus.UNAUTHORIZED),
-    AUTHENTICATION_FAILED(401, "Xác thực thất bại", HttpStatus.UNAUTHORIZED);
+    AUTHENTICATION_FAILED(401, "Xác thực thất bại", HttpStatus.UNAUTHORIZED),
+    DOCTOR_SCHEDULE_NOT_FOUND(404, "Không tìm thấy lịch làm việc của bác sĩ", HttpStatus.NOT_FOUND),
+    DOCTOR_NOT_FOUND(404,"Không tìm thấy bác sĩ", HttpStatus.NOT_FOUND),
+    SLOT_NOT_AVAILABLE(400,"Lịch đã được đặt trước", HttpStatus.BAD_REQUEST),
+    INVALID_APPOINTMENT_TIME(400, "Thời gian bắt đầu phải trước thời gian kết thúc", HttpStatus.BAD_REQUEST),
+    INVALID_BOOKING_DATE(400, "Ngày đặt phải trước ngày hẹn", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

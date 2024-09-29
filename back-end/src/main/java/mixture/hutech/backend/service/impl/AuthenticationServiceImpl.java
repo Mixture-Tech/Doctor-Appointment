@@ -68,15 +68,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElse(roleRepository.findFirstByOrderByIdAsc());
 
         var user = User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phone(request.getPhone())
-                .address(request.getAddress())
-                .phone(request.getPhone())
-                .dateOfBirth(request.getDateOfBirth())
-                .gender(request.getGender())
+                .username(request.getUsername())
                 .role(role)
                 .isDoctorInfoCompleted(false)
                 .build();
@@ -85,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         PasswordResetToken verificationToken = createAndSavePasswordResetToken(user, PasswordResetTokenEnum.EMAIL_VERIFICATION_TOKEN);
 
         try{
-            emailService.sendMailWithTokenRegister(user.getEmail(), user.getFirstName() + " " + user.getLastName(), verificationToken.getToken());
+            emailService.sendMailWithTokenRegister(user.getEmail(), user.getUsername(), verificationToken.getToken());
         }catch (Exception e){
             System.out.println("Mail error: " + e.getMessage());
         }
@@ -126,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         tokenService.saveUserToken(user, jwtToken);
 
         return AuthenticationResponse.builder()
-                .name(user.getFirstName() + " " + user.getLastName())
+                .name(user.getUsername())
                 .role(user.getRole().getName())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -165,7 +160,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
         try{
-            emailService.sendMailWithTokenResetPassword(user.getEmail(), user.getFirstName() + " " + user.getLastName(), passwordResetToken.getToken());
+            emailService.sendMailWithTokenResetPassword(user.getEmail(), user.getUsername(), passwordResetToken.getToken());
         }catch (Exception e){
             System.out.println("Mail error: " + e.getMessage());
         }
