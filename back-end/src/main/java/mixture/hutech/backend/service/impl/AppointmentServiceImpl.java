@@ -33,6 +33,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final UserRepository userRepository;
     private final AppointmentRepository appointmentRepository;
     private final DoctorScheduleRepository doctorScheduleRepository;
+    private static final int MAX_APPOINTMENTS_PER_SLOT = 3;
 
 
     @Override
@@ -42,25 +43,34 @@ public class AppointmentServiceImpl implements AppointmentService {
         User doctor = getDoctorById(request.getDoctor());
         DoctorSchedule availableSlot = getAvailableSlot(doctor.getId(), request);
 
-        Appointment appointment = createAppointmentEntity(request, patient, availableSlot);
-        updatePatientInfo(patient, request);
+        if(availableSlot.getCurrentAppointment() >= MAX_APPOINTMENTS_PER_SLOT){
+            throw new ApiException(ErrorCodeEnum.FULL_SLOT);
+        }
 
+        Appointment appointment = createAppointmentEntity(request, patient, availableSlot);
         Appointment savedAppointment = appointmentRepository.save(appointment);
-        updateDoctorSchedule(availableSlot, appointment);
+
+        updatePatientInfo(patient, request);
+        updateDoctorSchedule(availableSlot, savedAppointment);
 
         try {
-            emailService.sendAppointmentConfirmation(
-                    patient.getEmail(),
-                    patient.getUsername(),
-                    doctor.getUsername(),
-                    savedAppointment.getAppointmentTakenDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                    savedAppointment.getProbableStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME)
-            );
+            sendConfirmationEmail(patient, doctor, savedAppointment);
         }catch (MessagingException e){
             System.out.println("Mail error: " + e.getMessage());
         }
 
-        return buildAppointmentResponse(appointment, patient, doctor);
+
+        return buildAppointmentResponse(savedAppointment, patient, doctor);
+    }
+
+    private void sendConfirmationEmail(User patient, User doctor, Appointment appointment) throws MessagingException {
+        emailService.sendAppointmentConfirmation(
+                patient.getEmail(),
+                patient.getUsername(),
+                doctor.getUsername(),
+                appointment.getAppointmentTakenDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
+                appointment.getProbableStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME)
+        );
     }
 
     private User getUserByEmail(String email) {
@@ -80,7 +90,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                 request.getAppointmentTakenDate(),
                 request.getStartTime(),
                 request.getEndTime()
-        ).orElseThrow(() -> new ApiException(ErrorCodeEnum.DOCTOR_SCHEDULE_NOT_FOUND));
+        ).filter(slot -> slot.getCurrentAppointment() <= MAX_APPOINTMENTS_PER_SLOT)
+        .orElseThrow(() -> new ApiException(ErrorCodeEnum.DOCTOR_SCHEDULE_NOT_FOUND));
     }
 
     private Appointment createAppointmentEntity(AppointmentRequest request, User patient, DoctorSchedule availableSlot) {
@@ -125,7 +136,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private void updateDoctorSchedule(DoctorSchedule availableSlot, Appointment appointment) {
-        availableSlot.setAppointment(appointment);
+        availableSlot.getAppointments().add(appointment);
+        availableSlot.setCurrentAppointment(availableSlot.getCurrentAppointment() + 1);
+
         doctorScheduleRepository.save(availableSlot);
     }
 

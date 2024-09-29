@@ -21,7 +21,10 @@ public enum ErrorCodeEnum {
     DOCTOR_NOT_FOUND(404,"Không tìm thấy bác sĩ", HttpStatus.NOT_FOUND),
     SLOT_NOT_AVAILABLE(400,"Lịch đã được đặt trước", HttpStatus.BAD_REQUEST),
     INVALID_APPOINTMENT_TIME(400, "Thời gian bắt đầu phải trước thời gian kết thúc", HttpStatus.BAD_REQUEST),
-    INVALID_BOOKING_DATE(400, "Ngày đặt phải trước ngày hẹn", HttpStatus.BAD_REQUEST);
+    INVALID_BOOKING_DATE(400, "Ngày đặt phải trước ngày hẹn", HttpStatus.BAD_REQUEST),
+    FULL_SLOT(400,"Khung giờ đã được đặt trước", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_CANCELLED(404,"Không tìm thấy lịch hẹn bị huỷ", HttpStatus.NOT_FOUND),
+    ;
 
     private final int code;
     private final String message;

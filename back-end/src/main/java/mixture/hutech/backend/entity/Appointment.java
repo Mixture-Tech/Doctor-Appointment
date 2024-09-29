@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -23,6 +24,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
+@Table
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -81,6 +83,9 @@ public class Appointment {
     protected void onCreate() {
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
     }
 
     @PreUpdate
@@ -97,7 +102,7 @@ public class Appointment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "doctor_schedule_id")
     private DoctorSchedule doctorSchedule;
 

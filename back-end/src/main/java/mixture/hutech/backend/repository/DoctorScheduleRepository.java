@@ -15,6 +15,6 @@ import java.util.Optional;
 public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, String> {
 //    Optional<DoctorSchedule> findById(String userId);
 
-    @Query("SELECT ds FROM DoctorSchedule ds WHERE ds.user.id = :doctorId AND ds.dayOfWeek = :dayOfWeek AND ds.isAvailable = true AND ds.startTime >= :startTime AND ds.endTime <= :endTime AND ds.workingDate = :workingDate AND ds.appointment.id IS NULL")
+    @Query("SELECT ds FROM DoctorSchedule ds WHERE ds.user.id = :doctorId AND ds.dayOfWeek = :dayOfWeek AND ds.isAvailable = true AND ds.startTime >= :startTime AND ds.endTime <= :endTime AND ds.workingDate = :workingDate")
     Optional<DoctorSchedule> findAvailableSlotByDoctorAndDayAndHours(@Param("doctorId") String doctorId, @Param("dayOfWeek") String dayOfWeek, @Param("workingDate")LocalDate workingDate, @Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
 }

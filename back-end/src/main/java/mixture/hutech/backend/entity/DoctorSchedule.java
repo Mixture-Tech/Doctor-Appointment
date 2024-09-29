@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,13 +39,15 @@ public class DoctorSchedule {
     @Column(name = "reason_of_unavailability")
     private String reasonOfUnavailability;
 
+    @Column(name = "current_appointment")
+    private int currentAppointment = 0;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
-    @JoinColumn(name = "appointment_id")
-    private Appointment appointment;
+    @OneToMany(mappedBy = "doctorSchedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Appointment> appointments;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
