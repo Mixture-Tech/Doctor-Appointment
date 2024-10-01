@@ -23,6 +23,8 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             "/api/auth/**",
+            "/api/appointment/**",
+            "/api/doctor-schedule/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -42,6 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
+//                                .requestMatchers("/api/appointment/**").hasRole("USER")
                         .anyRequest()
                         .authenticated()
                 )

@@ -26,6 +26,7 @@ public class Office {
     @Column(name = "follow_up_fee")
     private Double followupFee;
 
+    @Column(name = "address")
     private String address;
 
     @OneToMany(mappedBy = "office")

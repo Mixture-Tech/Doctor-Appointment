@@ -31,24 +31,21 @@ public class User {
     @NotBlank(message = "Password is required")
     private String password;
 
-    @Column(name = "first_name", length = 50)
-    private String firstName;
-
-    @Column(name = "last_name", length = 50)
-    private String lastName;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "phone", length = 10, unique = true)
     @Length(min = 10, max = 10, message = "Phone must be 10 characters")
     @Pattern(regexp = "^[0-9]*$", message = "Phone must be number")
     private String phone;
 
-    @Column(nullable = false)
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(nullable = false)
+    @Column(name = "gender")
     private String gender;
 
     @Column(name = "is_active", nullable = false)
@@ -56,6 +53,7 @@ public class User {
 
     // Doctor
 
+    @Column(name = "description")
     private String description;
 
     @Column(name = "is_doctor_info_completed")

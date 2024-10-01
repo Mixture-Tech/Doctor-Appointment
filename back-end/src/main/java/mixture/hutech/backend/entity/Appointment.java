@@ -3,11 +3,20 @@ package mixture.hutech.backend.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import mixture.hutech.backend.enums.AppointmentStatusEnum;
+import mixture.hutech.backend.enums.BookingTypeEnum;
+import mixture.hutech.backend.enums.ErrorCodeEnum;
+import mixture.hutech.backend.enums.PasswordResetTokenEnum;
+import mixture.hutech.backend.exceptions.ApiException;
+import mixture.hutech.backend.utils.DateTimeUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.cglib.core.Local;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -15,41 +24,52 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
+@Table
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "probable_start_time")
-    private Timestamp probableStartTime;
+    private LocalTime probableStartTime;
 
     @Column(name = "actual_end_time")
-    private Timestamp actualEndTime;
+    private LocalTime actualEndTime;
 
-    @Column(name = "appointment_take_date")
+    @Column(name = "appointment_taken_date")
     private LocalDate appointmentTakenDate;
 
-    @Column(name = "is_self_booking", nullable = false)
-    private Boolean isSelfBooking;
+    @Column(name = "appointment_booked_date")
+    private LocalDateTime appointmentBookedDate;
 
+//    @Column(name = "is_self_booking", nullable = false)
+//    private Boolean isSelfBooking;
 
-    @Column(name = "first_name", length = 50)
-    private String firstName;
+    @Enumerated(EnumType.STRING)
+    public AppointmentStatusEnum appointmentStatus;
 
-    @Column(name = "last_name", length = 50)
-    private String lastName;
+    @Enumerated(EnumType.STRING)
+    private BookingTypeEnum bookingType = BookingTypeEnum.SELF_BOOKING;
+
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "phone", length = 10)
     @Length(min = 10, max = 10, message = "Phone must be 10 characters")
     @Pattern(regexp = "^[0-9]*$", message = "Phone must be number")
     private String phone;
 
+    @Column(name = "address")
     private String address;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
+    @Column(name = "gender")
     private String gender;
+
+    @Column(name = "reminder_sent")
+    private Boolean reminderSent = false;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -66,6 +86,9 @@ public class Appointment {
     protected void onCreate() {
         createdAt = new Timestamp(System.currentTimeMillis());
         updatedAt = new Timestamp(System.currentTimeMillis());
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
     }
 
     @PreUpdate
@@ -82,12 +105,11 @@ public class Appointment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "doctor_schedule_id")
     private DoctorSchedule doctorSchedule;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private AppointmentStatus status;
-
+//    public void setAppointmentTakenDate(LocalDate appointmentTakenDate) {
+//        this.appointmentTakenDate = DateTimeUtils.p
+//    }
 }
