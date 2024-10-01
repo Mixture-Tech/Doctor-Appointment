@@ -24,6 +24,9 @@ public enum ErrorCodeEnum {
     INVALID_BOOKING_DATE(400, "Ngày đặt phải trước ngày hẹn", HttpStatus.BAD_REQUEST),
     FULL_SLOT(400,"Khung giờ đã được đặt trước", HttpStatus.BAD_REQUEST),
     APPOINTMENT_CANCELLED(404,"Không tìm thấy lịch hẹn bị huỷ", HttpStatus.NOT_FOUND),
+    APPOINTMENT_ALREADY_CANCELED(400,"Cuộc hẹn đã bị huỷ", HttpStatus.BAD_REQUEST),
+    CANNOT_CANCEL_PAST_APPOINTMENT(400, "Không thể huỷ cuộc hẹn đã hoặc đang diễn ra", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_NOT_FOUND(404,"Không tìm thấy lịch hẹn", HttpStatus.NOT_FOUND)
     ;
 
     private final int code;

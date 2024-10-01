@@ -35,7 +35,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final DoctorScheduleRepository doctorScheduleRepository;
     private static final int MAX_APPOINTMENTS_PER_SLOT = 3;
 
-
+    /**
+     * Create an appointment.
+     */
     @Override
     @Transactional
     public AppointmentResponse createAppointment(AppointmentRequest request, String userEmail) {
@@ -59,17 +61,48 @@ public class AppointmentServiceImpl implements AppointmentService {
             System.out.println("Mail error: " + e.getMessage());
         }
 
+        return buildAppointmentResponse(savedAppointment, patient, doctor, "Appointment created successfully");
+    }
 
-        return buildAppointmentResponse(savedAppointment, patient, doctor);
+    /**
+     * Cancels an upcoming appointment.
+     */
+    @Override
+    @Transactional
+    public AppointmentResponse cancelAppointment(String appointmentId, String userEmail) {
+        User patient = getUserByEmail(userEmail);
+        Appointment appointment = getAppointmentById(appointmentId);
+
+        if(!appointment.getUser().getId().equals(patient.getId())){
+            throw new ApiException(ErrorCodeEnum.AUTHENTICATION_FAILED);
+        }
+
+        if(appointment.getAppointmentStatus() == AppointmentStatusEnum.CANCELLED){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_ALREADY_CANCELED);
+        }
+
+        if(!isUpcoming(appointment)){
+            throw new ApiException(ErrorCodeEnum.CANNOT_CANCEL_PAST_APPOINTMENT);
+        }
+
+        appointment.setReminderSent(false);
+        appointment.setAppointmentStatus(AppointmentStatusEnum.CANCELLED);
+        appointmentRepository.save(appointment);
+
+        DoctorSchedule doctorSchedule = appointment.getDoctorSchedule();
+        doctorSchedule.setCurrentAppointment(doctorSchedule.getCurrentAppointment() - 1);
+        doctorScheduleRepository.save(doctorSchedule);
+
+        return buildAppointmentResponse(appointment, patient, appointment.getDoctorSchedule().getUser(), "Appointment has been cancelled");
     }
 
     private void sendConfirmationEmail(User patient, User doctor, Appointment appointment) throws MessagingException {
-        emailService.sendAppointmentConfirmation(
+        emailService.sendMailAppointmentConfirmation(
                 patient.getEmail(),
                 patient.getUsername(),
                 doctor.getUsername(),
                 appointment.getAppointmentTakenDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
-                appointment.getProbableStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME)
+                appointment.getProbableStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + " - " + appointment.getActualEndTime().format(DateTimeFormatter.ISO_LOCAL_TIME)
         );
     }
 
@@ -81,6 +114,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     private User getDoctorById(String doctorId) {
         return userRepository.findDoctorById(doctorId)
                 .orElseThrow(() -> new ApiException(ErrorCodeEnum.DOCTOR_SCHEDULE_NOT_FOUND));
+    }
+
+    private Appointment getAppointmentById(String appointmentId) {
+        return appointmentRepository.findById(appointmentId).orElseThrow(
+                () -> new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FOUND)
+        );
     }
 
     private DoctorSchedule getAvailableSlot(String doctorId, AppointmentRequest request) {
@@ -142,10 +181,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         doctorScheduleRepository.save(availableSlot);
     }
 
-    private AppointmentResponse buildAppointmentResponse(Appointment appointment, User patient, User doctor) {
+    private AppointmentResponse buildAppointmentResponse(Appointment appointment, User patient, User doctor, String message) {
         return AppointmentResponse.builder()
                 .errorCode(ErrorCodeEnum.OK)
-                .message("Appointment created successfully")
+                .message(message)
                 .probableStartTime(appointment.getProbableStartTime())
                 .actualEndTime(appointment.getActualEndTime())
                 .appointmentTakenDate(appointment.getAppointmentTakenDate())
@@ -161,84 +200,18 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .build();
     }
 
-    // validate appointment
+    public boolean isUpcoming(Appointment appointment) {
+        LocalDateTime appointmentDateTime = LocalDateTime.of(appointment.getAppointmentTakenDate(), appointment.getProbableStartTime());
+        return appointmentDateTime.isAfter(LocalDateTime.now());
+    }
 
-//    private Appointment getAppointmentById(String id){
-//        return appointmentRepository.findById(id).orElseThrow();
-//    }
-//
-//    /**
-//     * Checks if the appointment is upcoming.
-//     */
-//    public boolean isUpcoming(Appointment appointment) {
-//        LocalDateTime appointmentDateTime = LocalDateTime.of(appointment.getAppointmentTakenDate(), appointment.getProbableStartTime());
-//        return appointmentDateTime.isAfter(LocalDateTime.now());
-//    }
-//
-//    /**
-//     * Checks if the appointment is in the past.
-//     */
-//    public boolean isPast(Appointment appointment) {
-//        LocalDateTime appointmentDateTime = LocalDateTime.of(appointment.getAppointmentTakenDate(), appointment.getActualEndTime());
-//        return appointmentDateTime.isBefore(LocalDateTime.now());
-//    }
-//
-//    /**
-//     * Cancels an upcoming appointment.
-//     */
-//    @Transactional
-//    public void cancelAppointment(String appointmentId) {
-//        Appointment appointment = getAppointmentById(appointmentId);
-//        if (isUpcoming(appointment)) {
-//            appointment.setAppointmentStatus(AppointmentStatusEnum.CANCELLED);
-//            appointmentRepository.save(appointment);
-//            // TODO: Notify the doctor and patient about the cancellation
-//        } else {
-//            throw new AppointmentException("Cannot cancel a past or ongoing appointment");
-//        }
-//    }
-//
-//    @Transactional
-//    public void completeAppointment(String appointmentId) {
-//        Appointment appointment = getAppointmentById(appointmentId);
-//        if (isPast(appointment)) {
-//            appointment.setAppointmentStatus(AppointmentStatusEnum.COMPLETED);
-//            appointmentRepository.save(appointment);
-//            // TODO: Update any post-appointment processes (e.g., billing, follow-up scheduling)
-//        } else {
-//            throw new AppointmentException("Cannot mark an upcoming or ongoing appointment as completed");
-//        }
-//    }
-//
-//    @Transactional
-//    public void rescheduleAppointment(String appointmentId, LocalDate newDate, LocalTime newStartTime, LocalTime newEndTime) {
-//        Appointment appointment = getAppointmentById(appointmentId);
-//        if (isUpcoming(appointment)) {
-//            appointment.setAppointmentTakenDate(newDate);
-//            appointment.setProbableStartTime(newStartTime);
-//            appointment.setActualEndTime(newEndTime);
-//            appointment.setAppointmentStatus(AppointmentStatusEnum.RESCHEDULED);
-//            validateAppointment(appointment);
-//            if (hasConflictingAppointments(appointment)) {
-//                throw new ApiException(ErrorCodeEnum.APPOINTMENT_CONFLICT);
-//            }
-//            appointmentRepository.save(appointment);
-//            // TODO: Notify the doctor and patient about the rescheduling
-//        } else {
-//            throw new AppointmentException("Cannot reschedule a past or ongoing appointment");
-//        }
-//    }
-//
-//    /**
-//     * Validates the appointment details.
-//     */
-//    private void validateAppointment(Appointment appointment) {
-//        if (appointment.getProbableStartTime().isAfter(appointment.getActualEndTime())) {
-//            throw new ApiException(ErrorCodeEnum.INVALID_APPOINTMENT_TIME);
-//        }
-//        if (appointment.getAppointmentBookedDate().isAfter(
-//                LocalDateTime.of(appointment.getAppointmentTakenDate(), appointment.getProbableStartTime()))) {
-//            throw new ApiException(ErrorCodeEnum.INVALID_BOOKING_DATE);
-//        }
-//    }
+    private void validateAppointment(Appointment appointment) {
+        if (appointment.getProbableStartTime().isAfter(appointment.getActualEndTime())) {
+            throw new ApiException(ErrorCodeEnum.INVALID_APPOINTMENT_TIME);
+        }
+        if (appointment.getAppointmentBookedDate().isAfter(
+                LocalDateTime.of(appointment.getAppointmentTakenDate(), appointment.getProbableStartTime()))) {
+            throw new ApiException(ErrorCodeEnum.INVALID_BOOKING_DATE);
+        }
+    }
 }

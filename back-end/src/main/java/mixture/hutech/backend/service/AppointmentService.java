@@ -6,4 +6,5 @@ import mixture.hutech.backend.entity.Appointment;
 
 public interface AppointmentService {
     AppointmentResponse createAppointment(AppointmentRequest request, String userEmail);
+    AppointmentResponse cancelAppointment(String appointmentId, String userEmail);
 }

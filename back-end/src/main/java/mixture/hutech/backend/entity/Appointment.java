@@ -68,6 +68,9 @@ public class Appointment {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "reminder_sent")
+    private Boolean reminderSent = false;
+
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createdAt;
