@@ -1,5 +1,5 @@
+import 'package:app/ui/screens/screen.dart';
 import 'package:flutter/material.dart';
-import 'package:app/ui/widgets/NavigationBarWidget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const NavigationBarWidget(),
+      home: const MyScreen(),
     );
   }
 }
