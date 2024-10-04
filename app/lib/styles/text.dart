@@ -13,7 +13,7 @@ class AppTextStyles {
   static const TextStyle subHeaderStyle = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
-    color: AppColors.grey,
+    color: AppColors.primaryBlue,
   );
 
   // Kiểu cho nhãn trường nhập liệu
