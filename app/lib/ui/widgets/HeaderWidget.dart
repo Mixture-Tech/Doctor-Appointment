@@ -12,30 +12,33 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: AppColors.grey,
             spreadRadius: 1,
             blurRadius: 3,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),
       child: Stack(
         children: [
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset(
-              'assets/images/Logo.png',
-              height: 60,
-              fit: BoxFit.contain,
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Image.asset(
+                'assets/images/Logo.png',
+                height: 55,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
           Positioned(
             left: 0,
-            top: 5,
+            top: 9,
             child: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: onBackPressed,

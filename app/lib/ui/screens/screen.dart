@@ -32,10 +32,10 @@ class _MyScreenState extends State<MyScreen> {
                       ),
                     ),
                     child: Center(
-                      child: FlutterLogo(
-                        size: 200,
-                      ),
-                    ),
+                       child: FlutterLogo(
+                         size: 200,
+                       ),
+                     ),
                   ),
                   // Navigation bar widget on top
                   Positioned.fill(
