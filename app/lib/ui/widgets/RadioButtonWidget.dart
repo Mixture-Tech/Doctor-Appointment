@@ -1,4 +1,5 @@
 import 'package:app/styles/colors.dart';
+import 'package:app/styles/text.dart';
 import 'package:flutter/material.dart';
 
 // Enum cho other_booking và self_booking
@@ -27,6 +28,11 @@ class _TypeSelectorWidgetState extends State<TypeSelectorWidget> {
           value: SingingCharacter.other_booking,
           groupValue: _character,
           activeColor: AppColors.primaryBlue,
+          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            return states.contains(MaterialState.selected)
+                ? AppColors.primaryBlue // Màu khi được chọn
+                : AppColors.grey; // Màu xám khi không được chọn
+          }),
           onChanged: (SingingCharacter? value) {
             setState(() {
               _character = value!;
@@ -39,6 +45,11 @@ class _TypeSelectorWidgetState extends State<TypeSelectorWidget> {
           value: SingingCharacter.self_booking,
           groupValue: _character,
           activeColor: AppColors.primaryBlue,
+          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            return states.contains(MaterialState.selected)
+                ? AppColors.primaryBlue
+                : AppColors.grey;
+          }),
           onChanged: (SingingCharacter? value) {
             setState(() {
               _character = value!;
@@ -71,24 +82,46 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
           value: Gender.male,
           groupValue: _gender,
           activeColor: AppColors.grey,
+          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            return states.contains(MaterialState.selected)
+                ? AppColors.grey // Màu khi được chọn
+                : AppColors.grey; // Màu viền xám khi không được chọn
+          }),
           onChanged: (Gender? value) {
             setState(() {
               _gender = value!;
             });
           },
         ),
-        const Text('Nam'),
+        const Text(
+          'Nam',
+          style: TextStyle(
+            fontSize: 14,
+            color: AppColors.grey
+          ),
+        ),
         Radio<Gender>(
           value: Gender.female,
           groupValue: _gender,
           activeColor: AppColors.grey,
+          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            return states.contains(MaterialState.selected)
+                ? AppColors.grey
+                : AppColors.grey;
+          }),
           onChanged: (Gender? value) {
             setState(() {
               _gender = value!;
             });
           },
         ),
-        const Text('Nữ'),
+        const Text(
+          'Nữ',
+          style: TextStyle(
+            fontSize: 14,
+            color: AppColors.grey
+          ),
+        ),
       ],
     );
   }

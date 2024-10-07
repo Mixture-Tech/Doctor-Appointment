@@ -99,6 +99,43 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                               ),
                               // Chọn loại đặt lịch (other_booking, self_booking)
                               const TypeSelectorWidget(),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 245),
+                                child: Text(
+                                    'Thông tin người đặt',
+                                    style: TextStyle(
+                                      color: AppColors.primaryBlue,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              const TextFieldWidget(
+                                hintText: 'Họ và tên',
+                                prefixIcon: Icons.person_outline,
+                              ),
+                              const SizedBox(height: 10),
+                              const TextFieldWidget(
+                                  hintText: 'Số điện thoại',
+                                  prefixIcon: Icons.phone_outlined,
+                              ),
+                              const SizedBox(height: 10),
+                              const TextFieldWidget(
+                                hintText: 'Email',
+                                prefixIcon: Icons.email_outlined,
+                              ),
+                              const SizedBox(height: 20),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 245),
+                                child: Text(
+                                  'Thông tin bệnh nhân',
+                                  style: TextStyle(
+                                      color: AppColors.primaryBlue,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
                               const TextFieldWidget(
                                 hintText: 'Họ tên bệnh nhân',
                                 prefixIcon: Icons.person_outline,
@@ -114,12 +151,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 hintText: 'Số điện thoại bệnh nhân',
                                 prefixIcon: Icons.phone_outlined,
                                 isRequired: true
-                              ),
-                              const SizedBox(height: 10),
-                              const TextFieldWidget(
-                                hintText: 'Email',
-                                prefixIcon: Icons.email_outlined,
-                                isRequired: true,
                               ),
                               const SizedBox(height: 10),
                               DatePickerTextField(
@@ -169,9 +200,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 },
                               ),
                               const SizedBox(height: 15),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 18),
-                                child: const Text(
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 18),
+                                child: Text(
                                     'Vui lòng điền đầy đủ thông tin, để tiết kiệm thời gian làm thủ tục khám bệnh',
                                     style: AppTextStyles.infoStyle,
                                 ),
