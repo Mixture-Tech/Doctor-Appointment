@@ -18,11 +18,10 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  // Thêm các danh sách này ở đầu lớp _AppointmentState
   List<String> provinces = ['Hà Nội', 'TP.HCM', 'Đà Nẵng',]; // Thêm các tỉnh/thành phố khác
   List<String> districts = []; // Sẽ được cập nhật dựa trên tỉnh/thành phố được chọn
   List<String> wards = []; // Sẽ được cập nhật dựa trên quận/huyện được chọn
-
+  SingingCharacter _bookingType = SingingCharacter.self_booking;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 Navigator.pop(context);
               },
             ),
-            // Content area with image background
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
@@ -98,113 +96,25 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 ),
                               ),
                               // Chọn loại đặt lịch (other_booking, self_booking)
-                              const TypeSelectorWidget(),
-                              const Padding(
-                                padding: EdgeInsets.only(right: 245),
-                                child: Text(
-                                    'Thông tin người đặt',
-                                    style: TextStyle(
-                                      color: AppColors.primaryBlue,
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              const TextFieldWidget(
-                                hintText: 'Họ và tên',
-                                prefixIcon: Icons.person_outline,
-                              ),
-                              const SizedBox(height: 10),
-                              const TextFieldWidget(
-                                  hintText: 'Số điện thoại',
-                                  prefixIcon: Icons.phone_outlined,
-                              ),
-                              const SizedBox(height: 10),
-                              const TextFieldWidget(
-                                hintText: 'Email',
-                                prefixIcon: Icons.email_outlined,
-                              ),
-                              const SizedBox(height: 20),
-                              const Padding(
-                                padding: EdgeInsets.only(right: 245),
-                                child: Text(
-                                  'Thông tin bệnh nhân',
-                                  style: TextStyle(
-                                      color: AppColors.primaryBlue,
-                                      fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              const TextFieldWidget(
-                                hintText: 'Họ tên bệnh nhân',
-                                prefixIcon: Icons.person_outline,
-                                isRequired: true,
-                                helperText: 'Hãy ghi rõ họ và tên, viết hoa những chữ cái đầu tiên.\nVí dụ: Nguyễn Văn A',
-                              ),
-                              // Chọn giới tính (male, female)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 6),
-                                child: GenderSelectorWidget(),
-                              ),
-                              const TextFieldWidget(
-                                hintText: 'Số điện thoại bệnh nhân',
-                                prefixIcon: Icons.phone_outlined,
-                                isRequired: true
-                              ),
-                              const SizedBox(height: 10),
-                              DatePickerTextField(
-                                hintText: 'Ngày/tháng/năm sinh',
-                                prefixIcon: Icons.calendar_today_outlined,
-                                isRequired: true,
-                                onDateSelected: (DateTime selectedDate) {
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              AddressDropdownField(
-                                hintText: 'Chọn tỉnh/thành phố',
-                                prefixIcon: Icons.location_on_outlined,
-                                isRequired: true,
-                                items: provinces,
-                                onChanged: (value) {
+                              TypeSelectorWidget(
+                                character: _bookingType,
+                                onChanged: (SingingCharacter? value) {
                                   setState(() {
-                                    // Cập nhật danh sách quận/huyện dựa trên tỉnh/thành phố được chọn
-                                    // Đây chỉ là ví dụ, bạn cần thực hiện logic thực tế để lấy danh sách quận/huyện
-                                    districts = ['Quận 1', 'Quận 2', 'Quận 3'];
-                                    wards = []; // Reset danh sách phường/xã
+                                    _bookingType = value!;
                                   });
                                 },
                               ),
-                              const SizedBox(height: 10),
-                              AddressDropdownField(
-                                hintText: 'Chọn quận/huyện',
-                                prefixIcon: Icons.location_on_outlined,
-                                isRequired: true,
-                                items: districts,
-                                onChanged: (value) {
-                                  setState(() {
-                                    // Cập nhật danh sách phường/xã dựa trên quận/huyện được chọn
-                                    // Đây chỉ là ví dụ, bạn cần thực hiện logic thực tế để lấy danh sách phường/xã
-                                    wards = ['Phường 1', 'Phường 2', 'Phường 3'];
-                                  });
-                                },
-                              ),
-                              const SizedBox(height: 10),
-                              AddressDropdownField(
-                                hintText: 'Chọn phường/xã',
-                                prefixIcon: Icons.location_on_outlined,
-                                isRequired: true,
-                                items: wards,
-                                onChanged: (value) {
-                                  // Xử lý khi phường/xã được chọn
-                                },
-                              ),
+
+                              if (_bookingType == SingingCharacter.other_booking) ...[
+                                _buildBookerInfo(),
+                              ],
+                              _buildPatientInfo(),
                               const SizedBox(height: 15),
                               const Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 18),
                                 child: Text(
-                                    'Vui lòng điền đầy đủ thông tin, để tiết kiệm thời gian làm thủ tục khám bệnh',
-                                    style: AppTextStyles.infoStyle,
+                                  'Vui lòng điền đầy đủ thông tin, để tiết kiệm thời gian làm thủ tục khám bệnh',
+                                  style: AppTextStyles.infoStyle,
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -229,4 +139,116 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       ),
     );
   }
+
+  Widget _buildBookerInfo(){
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 18, bottom: 5),
+          child: Text(
+            'Thông tin người đặt',
+            style: TextStyle(
+                color: AppColors.primaryBlue,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+        TextFieldWidget(
+          hintText: 'Họ và tên',
+          prefixIcon: Icons.person_outline,
+        ),
+        SizedBox(height: 10),
+        TextFieldWidget(
+          hintText: 'Số điện thoại',
+          prefixIcon: Icons.phone_outlined,
+        ),
+        SizedBox(height: 10),
+        TextFieldWidget(
+          hintText: 'Email',
+          prefixIcon: Icons.email_outlined,
+        ),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _buildPatientInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 18, bottom: 5),
+          child: Text(
+            _bookingType == SingingCharacter.self_booking ? 'Thông tin bệnh nhân' : 'Thông tin người thân',
+            style: const TextStyle(
+                color: AppColors.primaryBlue,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+        const TextFieldWidget(
+          hintText: 'Họ tên bệnh nhân',
+          prefixIcon: Icons.person_outline,
+          isRequired: true,
+          helperText: 'Hãy ghi rõ họ và tên, viết hoa những chữ cái đầu tiên.\nVí dụ: Nguyễn Văn A',
+        ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 6),
+          child: GenderSelectorWidget(),
+        ),
+        const TextFieldWidget(
+            hintText: 'Số điện thoại bệnh nhân',
+            prefixIcon: Icons.phone_outlined,
+            isRequired: true
+        ),
+        const SizedBox(height: 10),
+        DatePickerTextField(
+          hintText: 'Ngày/tháng/năm sinh',
+          prefixIcon: Icons.calendar_today_outlined,
+          isRequired: true,
+          onDateSelected: (DateTime selectedDate) {
+            // Handle date selection
+          },
+        ),
+        const SizedBox(height: 10),
+        AddressDropdownField(
+          hintText: 'Chọn tỉnh/thành phố',
+          prefixIcon: Icons.location_on_outlined,
+          isRequired: true,
+          items: provinces,
+          onChanged: (value) {
+            setState(() {
+              districts = ['Quận 1', 'Quận 2', 'Quận 3'];
+              wards = [];
+            });
+          },
+        ),
+        const SizedBox(height: 10),
+        AddressDropdownField(
+          hintText: 'Chọn quận/huyện',
+          prefixIcon: Icons.location_on_outlined,
+          isRequired: true,
+          items: districts,
+          onChanged: (value) {
+            setState(() {
+              wards = ['Phường 1', 'Phường 2', 'Phường 3'];
+            });
+          },
+        ),
+        const SizedBox(height: 10),
+        AddressDropdownField(
+          hintText: 'Chọn phường/xã',
+          prefixIcon: Icons.location_on_outlined,
+          isRequired: true,
+          items: wards,
+          onChanged: (value) {
+            // Handle ward selection
+          },
+        ),
+      ],
+    );
+  }
 }
+
+

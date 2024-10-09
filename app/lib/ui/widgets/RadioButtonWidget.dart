@@ -9,15 +9,15 @@ enum SingingCharacter { other_booking, self_booking }
 enum Gender { male, female }
 
 // TypeSelectorWidget cho other_booking và self_booking
-class TypeSelectorWidget extends StatefulWidget {
-  const TypeSelectorWidget({super.key});
+class TypeSelectorWidget extends StatelessWidget {
+  final SingingCharacter character;
+  final ValueChanged<SingingCharacter?> onChanged;
 
-  @override
-  _TypeSelectorWidgetState createState() => _TypeSelectorWidgetState();
-}
-
-class _TypeSelectorWidgetState extends State<TypeSelectorWidget> {
-  SingingCharacter _character = SingingCharacter.other_booking;
+  const TypeSelectorWidget({
+    super.key,
+    required this.character,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,43 +25,34 @@ class _TypeSelectorWidgetState extends State<TypeSelectorWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Radio<SingingCharacter>(
-          value: SingingCharacter.other_booking,
-          groupValue: _character,
-          activeColor: AppColors.primaryBlue,
-          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-            return states.contains(MaterialState.selected)
-                ? AppColors.primaryBlue // Màu khi được chọn
-                : AppColors.grey; // Màu xám khi không được chọn
-          }),
-          onChanged: (SingingCharacter? value) {
-            setState(() {
-              _character = value!;
-            });
-          },
-        ),
-        const Text('Đặt cho mình'),
-        const SizedBox(width: 20),
-        Radio<SingingCharacter>(
           value: SingingCharacter.self_booking,
-          groupValue: _character,
+          groupValue: character,
           activeColor: AppColors.primaryBlue,
           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             return states.contains(MaterialState.selected)
                 ? AppColors.primaryBlue
                 : AppColors.grey;
           }),
-          onChanged: (SingingCharacter? value) {
-            setState(() {
-              _character = value!;
-            });
-          },
+          onChanged: onChanged,
+        ),
+        const Text('Đặt cho bản thân'),
+        const SizedBox(width: 20),
+        Radio<SingingCharacter>(
+          value: SingingCharacter.other_booking,
+          groupValue: character,
+          activeColor: AppColors.primaryBlue,
+          fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            return states.contains(MaterialState.selected)
+                ? AppColors.primaryBlue
+                : AppColors.grey;
+          }),
+          onChanged: onChanged,
         ),
         const Text('Đặt cho người thân'),
       ],
     );
   }
 }
-
 // GenderSelectorWidget cho lựa chọn giới tính
 class GenderSelectorWidget extends StatefulWidget {
   const GenderSelectorWidget({super.key});

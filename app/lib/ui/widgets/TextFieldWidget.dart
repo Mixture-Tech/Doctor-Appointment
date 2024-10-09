@@ -32,6 +32,7 @@ class TextFieldWidget extends StatelessWidget {
               style: const TextStyle(color: Colors.grey), // Đặt màu chữ là xám
               decoration: InputDecoration(
                 hintText: null, // Không sử dụng hintText gốc
+                // floatingLabelBehavior: FloatingLabelBehavior.never,
                 label: RichText(
                   text: TextSpan(
                     text: hintText, // Nội dung hintText
