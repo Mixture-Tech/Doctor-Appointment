@@ -10,14 +10,14 @@ import '../widgets/DoctorInfoWidget.dart';
 import '../widgets/HeaderWidget.dart';
 import '../widgets/NavigationBarWidget.dart';
 
-class AppointmentScreen extends StatefulWidget {
-  const AppointmentScreen({super.key});
+class AppointmentDetailScreen extends StatefulWidget {
+  const AppointmentDetailScreen({super.key});
 
   @override
-  State<AppointmentScreen> createState() => _AppointmentScreenState();
+  State<AppointmentDetailScreen> createState() => _AppointmentDetailScreenState();
 }
 
-class _AppointmentScreenState extends State<AppointmentScreen> {
+class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   List<String> provinces = ['Hà Nội', 'TP.HCM', 'Đà Nẵng',]; // Thêm các tỉnh/thành phố khác
   List<String> districts = []; // Sẽ được cập nhật dựa trên tỉnh/thành phố được chọn
   List<String> wards = []; // Sẽ được cập nhật dựa trên quận/huyện được chọn
