@@ -1,4 +1,5 @@
-import 'package:app/ui/screens/AppointmentScreen.dart';
+import 'package:app/ui/screens/Appointment.dart';
+import 'package:app/ui/screens/AppointmentDetailScreen.dart';
 import 'package:app/ui/screens/screen.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const AppointmentScreen(),
+      // home: const AppointmentDetailScreen(),
     );
   }
 }
