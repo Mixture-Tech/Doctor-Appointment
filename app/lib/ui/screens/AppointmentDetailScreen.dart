@@ -1,3 +1,4 @@
+import 'package:app/services/ProviceGHNApiService.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +19,14 @@ class AppointmentDetailScreen extends StatefulWidget {
 }
 
 class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
-  List<String> provinces = ['Hà Nội', 'TP.HCM', 'Đà Nẵng',]; // Thêm các tỉnh/thành phố khác
-  List<String> districts = []; // Sẽ được cập nhật dựa trên tỉnh/thành phố được chọn
-  List<String> wards = []; // Sẽ được cập nhật dựa trên quận/huyện được chọn
+  // List<String> provinces = ['Hà Nội', 'TP.HCM', 'Đà Nẵng',]; // Thêm các tỉnh/thành phố khác
+  // List<String> districts = []; // Sẽ được cập nhật dựa trên tỉnh/thành phố được chọn
+  // List<String> wards = []; // Sẽ được cập nhật dựa trên quận/huyện được chọn
+
+  Map<String, dynamic>? _selectedProvince;
+  Map<String, dynamic>? _selectedDistrict;
+  Map<String, dynamic>? _selectedWard;
+  
   SingingCharacter _bookingType = SingingCharacter.self_booking;
 
   @override
@@ -213,37 +219,44 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         ),
         const SizedBox(height: 10),
         AddressDropdownField(
+          // key: ValueKey('province-${_selectedProvince?.toString()??''}'),
           hintText: 'Chọn tỉnh/thành phố',
           prefixIcon: Icons.location_on_outlined,
           isRequired: true,
-          items: provinces,
+          fetchItems: ProvinceGHNApiService.getProvinces,
           onChanged: (value) {
             setState(() {
-              districts = ['Quận 1', 'Quận 2', 'Quận 3'];
-              wards = [];
+              _selectedProvince = value;
+              _selectedDistrict = null;
+              _selectedWard = null;
             });
           },
         ),
         const SizedBox(height: 10),
+        // if(_selectedProvince != null)
         AddressDropdownField(
+          key: ValueKey('district-${_selectedProvince?.toString()??''}'),
           hintText: 'Chọn quận/huyện',
           prefixIcon: Icons.location_on_outlined,
           isRequired: true,
-          items: districts,
+          fetchItems: () => _selectedProvince != null ? ProvinceGHNApiService.getDistricts(_selectedProvince!['ProvinceID']) : Future.value([]),
           onChanged: (value) {
             setState(() {
-              wards = ['Phường 1', 'Phường 2', 'Phường 3'];
+              _selectedDistrict = value;
+              _selectedWard = null;
             });
           },
         ),
         const SizedBox(height: 10),
+        // if(_selectedDistrict != null)
         AddressDropdownField(
+          key: ValueKey('ward-${_selectedDistrict?.toString()??''}'),
           hintText: 'Chọn phường/xã',
           prefixIcon: Icons.location_on_outlined,
           isRequired: true,
-          items: wards,
+          fetchItems: () => _selectedDistrict != null ? ProvinceGHNApiService.getWards(_selectedDistrict!['DistrictID']) : Future.value([]),
           onChanged: (value) {
-            // Handle ward selection
+            _selectedWard = value;
           },
         ),
       ],

@@ -29,7 +29,10 @@ class TextFieldWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: TextField(
               controller: controller,
-              style: const TextStyle(color: Colors.grey), // Đặt màu chữ là xám
+              style: const TextStyle(
+                  color: AppColors.black,
+                  fontWeight: FontWeight.w500
+              ), // Đặt màu chữ là xám
               decoration: InputDecoration(
                 hintText: null, // Không sử dụng hintText gốc
                 // floatingLabelBehavior: FloatingLabelBehavior.never,

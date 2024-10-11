@@ -54,7 +54,10 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
               controller: _controller,
               readOnly: true,
               onTap: () => _selectDate(context),
-              style: AppTextStyles.labelStyle,
+              style: AppTextStyles.labelStyle.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500
+              ),
               decoration: InputDecoration(
                 hintText: null,
                 floatingLabelBehavior: FloatingLabelBehavior.never, // Ẩn nhãn khi nhập

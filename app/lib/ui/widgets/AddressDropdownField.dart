@@ -6,16 +6,19 @@ class AddressDropdownField extends StatefulWidget {
   final String hintText;
   final IconData prefixIcon;
   final bool isRequired;
-  final List<String> items;
-  final Function(String?)? onChanged;
+  // final List<String> items;
+  // final Function(String?)? onChanged;
+
+  final Future<List<Map<String, dynamic>>> Function() fetchItems;
+  final Function(Map<String, dynamic>?) onChanged;
 
   const AddressDropdownField({
     Key? key,
     required this.hintText,
     required this.prefixIcon,
     this.isRequired = false,
-    required this.items,
-    this.onChanged,
+    required this.fetchItems,
+    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -23,7 +26,33 @@ class AddressDropdownField extends StatefulWidget {
 }
 
 class _AddressDropdownFieldState extends State<AddressDropdownField> {
-  String? _selectedValue;
+  Map<String, dynamic>? _selectedValue;
+  List<Map<String, dynamic>> _items = [];
+  bool _isLoading = false;
+
+  @override
+  void initState(){
+    super.initState();
+    _loadItems();
+  }
+
+  Future<void> _loadItems() async{
+    setState(() {
+      _isLoading = true;
+    });
+    try{
+      final items = await widget.fetchItems();
+      setState(() {
+        _items = items;
+        _isLoading = false;
+      });
+    }catch(e){
+      setState(() {
+        _isLoading = false;
+      });
+      print('LOIII LOIII LOOIII LOOIIII' + e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +66,7 @@ class _AddressDropdownFieldState extends State<AddressDropdownField> {
           border: Border.all(color: AppColors.grey),
         ),
         child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
+          child: DropdownButton<Map<String, dynamic>>(
             value: _selectedValue,
             icon: const Icon(Icons.arrow_drop_down, color: AppColors.grey),
             hint: Row(
@@ -53,26 +82,26 @@ class _AddressDropdownFieldState extends State<AddressDropdownField> {
               ],
             ),
             selectedItemBuilder: (BuildContext context) {
-              return widget.items.map<Widget>((String item) {
+              return _items.map<Widget>((Map<String, dynamic> item) {
                 return Row(
                   children: [
                     Icon(widget.prefixIcon, color: AppColors.grey, size: 22),
                     const SizedBox(width: 8),
-                    Text(item, style: AppTextStyles.labelStyle),
+                    Text(item['ProvinceName'] ?? item['DistrictName'] ?? item['WardName'] ?? ''),
                   ],
                 );
               }).toList();
             },
-            onChanged: (String? newValue) {
+            onChanged: (Map<String, dynamic>? newValue) {
               setState(() {
                 _selectedValue = newValue;
               });
-              widget.onChanged?.call(newValue);
+                widget.onChanged(newValue);
             },
-            items: widget.items.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
+            items: _items.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> value) {
+              return DropdownMenuItem<Map<String, dynamic>>(
                 value: value,
-                child: Text(value),
+                child: Text(value['ProvinceName'] ?? value['DistrictName'] ?? value['WardName'] ?? ''),
               );
             }).toList(),
             isExpanded: true,
