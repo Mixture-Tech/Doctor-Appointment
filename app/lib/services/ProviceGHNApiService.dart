@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class ProvinceGHNApiService{
-  static const String baseUrl = 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data';
-  static const String token = '6f15c88b-8731-11ef-8e53-0a00184fe694';
+  static String baseUrl = dotenv.env['BASE_URL_API_PROVINCE_GHN'] ?? '';
+  static String token = dotenv.env['TOKEN_API_PROVINCE_GHN'] ?? '';
 
   static Map<String, String> get headers => {
     'Content-Type' : 'application/json',
@@ -11,12 +12,11 @@ class ProvinceGHNApiService{
   };
 
   static Future<List<Map<String,dynamic>>>  getProvinces() async{
-    final response = await http.get(
-      Uri.parse('$baseUrl/province'),
-      headers: headers
-    );
-    print(response.body);
-    if(response.statusCode == 200){
+      final response = await http.get(
+          Uri.parse('$baseUrl/province'),
+          headers: headers
+      );
+      if(response.statusCode == 200){
       final jsonData = json.decode(utf8.decode(response.bodyBytes));
       return List<Map<String, dynamic>>.from(jsonData['data']);
     }
