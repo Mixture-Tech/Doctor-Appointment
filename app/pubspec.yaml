@@ -62,6 +62,26 @@ flutter:
   assets:
     - assets/images/
     - assets/images/Background_1.png
+    - assets/images/Background_3.png
+    - assets/images/Home - Find Doctor.png
+    - assets/images/Body.png
+    - assets/images/Clipboard-alt.png
+    - assets/images/Dollar (USD).png
+    - assets/images/Heart Rate.png
+    - assets/images/Medical Symbol.png
+    - assets/images/Tooth.png
+    - assets/images/NhiDong1.png
+    - assets/images/ChoRay.png
+    - assets/images/GiaDinh.png
+    - assets/images/115.png
+    - assets/images/hiv_resized.jpg
+    - assets/images/fruit_resized.jpg
+    - assets/images/Lungs.png
+    - assets/images/Brain.png
+    - assets/images/Joints Bone.png
+    - assets/images/bs1.jpg
+    - assets/images/bs2.jpg
+    - assets/images/bs3.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
