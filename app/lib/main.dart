@@ -1,4 +1,4 @@
-import 'package:app/ui/screens/Appointment.dart';
+import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/AppointmentDetailScreen.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';

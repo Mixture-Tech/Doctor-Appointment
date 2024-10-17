@@ -1,5 +1,5 @@
 import 'package:app/services/ProviceGHNApiService.dart';
-import 'package:app/ui/screens/Appointment.dart';
+import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';
 import 'package:flutter/material.dart';
