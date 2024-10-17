@@ -11,9 +11,9 @@ class AppTextStyles {
 
   // Kiểu cho tiêu đề phụ
   static const TextStyle subHeaderStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: AppColors.grey,
+    color: AppColors.primaryBlue,
   );
 
   // Kiểu cho nhãn trường nhập liệu
@@ -43,7 +43,7 @@ class AppTextStyles {
 
   // Kiểu cho nút bấm
   static const TextStyle buttonStyle = TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: FontWeight.bold,
     color: AppColors.white,
   );
