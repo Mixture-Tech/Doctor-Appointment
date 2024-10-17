@@ -1,7 +1,8 @@
 import 'package:app/styles/colors.dart';
-import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/HeaderWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,267 +16,273 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(AppBar().preferredSize.height),
-        child: SafeArea(
-          child: HeaderWidget(
-            onMenuPressed: () {
-              print("Menu icon pressed");
-            },
-          ),
-        ),
-      ),
-      body: Stack(
-        children: [
-          DecoratedBox(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/images/Background_3.png"),
-                fit: BoxFit.cover,
-              ),
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          children: <Widget>[
+            HeaderWidget(
+              isHomeScreen: true,
+              onIconPressed: () {
+                // Navigator.pop(context);
+                print('hehe');
+              },
             ),
-            child: SingleChildScrollView(
-              child: Column(
+            Expanded(
+              child: Stack(
                 children: [
-                  SizedBox(height: AppBar().preferredSize.height),
-                  // Thêm thanh tìm kiếm tại đây thay vì trong Positioned
-                  Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20.0),
-                      child: Stack(
-                        alignment: Alignment.center,
+                  DecoratedBox(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/Background_3.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
-                          Image.asset(
-                            'assets/images/Home - Find Doctor.png',
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                          Positioned(
-                            top: 20,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: const Text(
-                                'Tìm và đặt hẹn với bác sĩ \n yêu thích của bạn',
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  shadows: [
-                                    Shadow(
-                                      blurRadius: 5.0,
-                                      color: Colors.black,
-                                      offset: Offset(1.0, 1.0),
+                          // SizedBox(height: AppBar().preferredSize.height),
+                          SizedBox(height: 15),
+                          // Thêm thanh tìm kiếm tại đây thay vì trong Positioned
+                          Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/Home - Find Doctor.png',
+                                    height: 200,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  Positioned(
+                                    top: 20,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: const Text(
+                                        'Tìm và đặt hẹn với bác sĩ \n yêu thích của bạn',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 5.0,
+                                              color: Colors.black,
+                                              offset: Offset(1.0, 1.0),
+                                            ),
+                                          ],
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ],
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Positioned(
+                                    top: 120,
+                                    left: 30.0,
+                                    right: 30.0,
+                                    child: _buildSearchBar(),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          Positioned(
-                            top: 120,
-                            left: 30.0,
-                            right: 30.0,
-                            child: _buildSearchBar(),
+                          SizedBox(height: 12.0),
+                          const Text(
+                            'Chuyên khoa',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: 24,
+                            ),
                           ),
+                          SizedBox(height: 16.0),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildSpecialtyCircle('assets/images/Lungs.png', 'Phổi'),
+                                _buildSpecialtyCircle('assets/images/Tooth.png', 'Răng'),
+                                _buildSpecialtyCircle('assets/images/Brain.png', 'Thần kinh'),
+                                _buildSpecialtyCircle('assets/images/Joints Bone.png', 'Cơ-Xương-Khớp'),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 16.0),
+                          const Divider(
+                            color: AppColors.accentBlue,
+                            thickness: 1.0,
+                            indent: 20.0,
+                            endIndent: 20.0,
+                          ),
+                          SizedBox(height: 12.0),
+                          const Text(
+                            'Bác sĩ nổi bật',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: 24,
+                            ),
+                          ),
+                          const SizedBox(height: 24.0),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildDoctorAvatar('assets/images/bs1.jpg', 'TS.BS.Trần Thu Hương', 'Nhi khoa, Thần kinh'),
+                                _buildDoctorAvatar('assets/images/bs2.jpg', 'PGS.TS.BS.Nguyễn Xuân Thành', 'Nội tiêu hóa - Gan mật'),
+                                _buildDoctorAvatar('assets/images/bs3.png', 'GS.TS.Thái Hồng Quang','Nội tiết - Tuyến giáp'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          TextButton(
+                            onPressed: () {
+                              // Thực hiện hành động khi nhấn vào nút "Xem thêm"
+                              print('Xem thêm bác sĩ nổi bật');
+                              // Có thể điều hướng đến trang khác hoặc hiển thị thêm thông tin
+                            },
+                            child: const Text(
+                              'Xem thêm',
+                              style: TextStyle(
+                                color: AppColors.primaryBlue, // Màu chữ cho nút
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          const Divider(
+                            color: AppColors.accentBlue,
+                            thickness: 1.0,
+                            indent: 20.0,
+                            endIndent: 20.0,
+                          ),
+                          const SizedBox(height: 12.0),
+                          const Text(
+                            'Dịch vụ toàn diện',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: 24,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          GridView.count(
+                            shrinkWrap: true, // Đảm bảo GridView không chiếm quá nhiều không gian
+                            physics: const NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn cho GridView
+                            crossAxisCount: 2, // Số cột
+                            mainAxisSpacing: 16.0, // Khoảng cách giữa các hàng
+                            crossAxisSpacing: 16.0, // Khoảng cách giữa các cột
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            children: [
+                              _buildServiceBox('Khám\nchuyên khoa', 'assets/images/Medical Symbol.png'),
+                              _buildServiceBox('Khám\ntổng quát', 'assets/images/Heart Rate.png'),
+                              _buildServiceBox('Tham khảo\nchi phí', 'assets/images/Dollar (USD).png'),
+                              _buildServiceBox('Sức khỏe\ntinh thần', 'assets/images/Body.png'),
+                              _buildServiceBox('Khám\nnha khoa', 'assets/images/Tooth.png'),
+                              _buildServiceBox('Bài test\nsức khỏe', 'assets/images/Clipboard-alt.png'),
+                            ],
+                          ),
+                          const SizedBox(height: 16.0),
+                          const Divider(
+                            color: AppColors.accentBlue,
+                            thickness: 1.0,
+                            indent: 20.0,
+                            endIndent: 20.0,
+                          ),
+                          const SizedBox(height: 12.0),
+                          const Text(
+                            'Cơ sở y tế hàng đầu',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: 24,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0), // Space after the title
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16.0,
+                            crossAxisSpacing: 16.0,
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            children: [
+                              _buildServiceBox('Bệnh viện\nnhân dân 115', 'assets/images/115.png'),
+                              _buildServiceBox('Bệnh viện\nnhi đồng 1', 'assets/images/NhiDong1.png'),
+                              _buildServiceBox('Bệnh viện\nChợ Rẫy', 'assets/images/ChoRay.png'),
+                              _buildServiceBox('Bệnh viện\nnhân dân Gia Định', 'assets/images/GiaDinh.png'),
+                            ],
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Thực hiện hành động khi nhấn vào nút "Xem thêm"
+                              print('Xem thêm bác sĩ nổi bật');
+                              // Có thể điều hướng đến trang khác hoặc hiển thị thêm thông tin
+                            },
+                            child: const Text(
+                              'Xem thêm',
+                              style: TextStyle(
+                                color: AppColors.primaryBlue, // Màu chữ cho nút
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          const Divider(
+                            color: AppColors.accentBlue,
+                            thickness: 1.0,
+                            indent: 20.0,
+                            endIndent: 20.0,
+                          ),
+                          const SizedBox(height: 12.0),
+                          const Text(
+                            'Cẩm nang sức khỏe',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.primaryBlue,
+                              fontSize: 24,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildLargeBox('7 nguyên tắc an toàn vệ sinh thực\nphẩm dành cho bạn', 'Nội dung khung 1', 'assets/images/fruit_resized.jpg'),
+                                const SizedBox(width: 16.0), // Space between boxes
+                                _buildLargeBox('10 triệu chứng HIV thường gặp và\ncách điều trị', 'Nội dung khung 2', 'assets/images/hiv_resized.jpg'),
+                              ],
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Thực hiện hành động khi nhấn vào nút "Xem thêm"
+                              print('Xem thêm bác sĩ nổi bật');
+                              // Có thể điều hướng đến trang khác hoặc hiển thị thêm thông tin
+                            },
+                            child: const Text(
+                              'Xem thêm',
+                              style: TextStyle(
+                                color: AppColors.primaryBlue, // Màu chữ cho nút
+                                fontSize: 18,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 70.0),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 12.0),
-                  const Text(
-                    'Chuyên khoa',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
-                      fontSize: 24,
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildSpecialtyCircle('assets/images/Lungs.png', 'Phổi'),
-                        _buildSpecialtyCircle('assets/images/Tooth.png', 'Răng'),
-                        _buildSpecialtyCircle('assets/images/Brain.png', 'Thần kinh'),
-                        _buildSpecialtyCircle('assets/images/Joints Bone.png', 'Cơ-Xương-Khớp'),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 16.0),
-                  const Divider(
-                    color: AppColors.accentBlue,
-                    thickness: 1.0,
-                    indent: 20.0,
-                    endIndent: 20.0,
-                  ),
-                  SizedBox(height: 12.0),
-                  const Text(
-                    'Bác sĩ nổi bật',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
-                      fontSize: 24,
-                    ),
-                  ),
-                  const SizedBox(height: 24.0),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildDoctorAvatar('assets/images/bs1.jpg', 'TS.BS.Trần Thu Hương', 'Nhi khoa, Thần kinh'),
-                        _buildDoctorAvatar('assets/images/bs2.jpg', 'PGS.TS.BS.Nguyễn Xuân Thành', 'Nội tiêu hóa - Gan mật'),
-                        _buildDoctorAvatar('assets/images/bs3.png', 'GS.TS.Thái Hồng Quang','Nội tiết - Tuyến giáp'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  TextButton(
-                    onPressed: () {
-                      // Thực hiện hành động khi nhấn vào nút "Xem thêm"
-                      print('Xem thêm bác sĩ nổi bật');
-                      // Có thể điều hướng đến trang khác hoặc hiển thị thêm thông tin
-                    },
-                    child: const Text(
-                      'Xem thêm',
-                      style: TextStyle(
-                        color: AppColors.primaryBlue, // Màu chữ cho nút
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: AppColors.accentBlue,
-                    thickness: 1.0,
-                    indent: 20.0,
-                    endIndent: 20.0,
-                  ),
-                  const SizedBox(height: 12.0),
-                  const Text(
-                    'Dịch vụ toàn diện',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
-                      fontSize: 24,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  GridView.count(
-                    shrinkWrap: true, // Đảm bảo GridView không chiếm quá nhiều không gian
-                    physics: const NeverScrollableScrollPhysics(), // Vô hiệu hóa cuộn cho GridView
-                    crossAxisCount: 2, // Số cột
-                    mainAxisSpacing: 16.0, // Khoảng cách giữa các hàng
-                    crossAxisSpacing: 16.0, // Khoảng cách giữa các cột
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    children: [
-                      _buildServiceBox('Khám\nchuyên khoa', 'assets/images/Medical Symbol.png'),
-                      _buildServiceBox('Khám\ntổng quát', 'assets/images/Heart Rate.png'),
-                      _buildServiceBox('Tham khảo\nchi phí', 'assets/images/Dollar (USD).png'),
-                      _buildServiceBox('Sức khỏe\ntinh thần', 'assets/images/Body.png'),
-                      _buildServiceBox('Khám\nnha khoa', 'assets/images/Tooth.png'),
-                      _buildServiceBox('Bài test\nsức khỏe', 'assets/images/Clipboard-alt.png'),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Divider(
-                    color: AppColors.accentBlue,
-                    thickness: 1.0,
-                    indent: 20.0,
-                    endIndent: 20.0,
-                  ),
-                  const SizedBox(height: 12.0),
-                  const Text(
-                    'Cơ sở y tế hàng đầu',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
-                      fontSize: 24,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0), // Space after the title
-                  GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16.0,
-                    crossAxisSpacing: 16.0,
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    children: [
-                      _buildServiceBox('Bệnh viện\nnhân dân 115', 'assets/images/115.png'),
-                      _buildServiceBox('Bệnh viện\nnhi đồng 1', 'assets/images/NhiDong1.png'),
-                      _buildServiceBox('Bệnh viện\nChợ Rẫy', 'assets/images/ChoRay.png'),
-                      _buildServiceBox('Bệnh viện\nnhân dân Gia Định', 'assets/images/GiaDinh.png'),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Thực hiện hành động khi nhấn vào nút "Xem thêm"
-                      print('Xem thêm bác sĩ nổi bật');
-                      // Có thể điều hướng đến trang khác hoặc hiển thị thêm thông tin
-                    },
-                    child: const Text(
-                      'Xem thêm',
-                      style: TextStyle(
-                        color: AppColors.primaryBlue, // Màu chữ cho nút
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    color: AppColors.accentBlue,
-                    thickness: 1.0,
-                    indent: 20.0,
-                    endIndent: 20.0,
-                  ),
-                  const SizedBox(height: 12.0),
-                  const Text(
-                    'Cẩm nang sức khỏe',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryBlue,
-                      fontSize: 24,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildLargeBox('7 nguyên tắc an toàn vệ sinh thực\nphẩm dành cho bạn', 'Nội dung khung 1', 'assets/images/fruit_resized.jpg'),
-                        const SizedBox(width: 16.0), // Space between boxes
-                        _buildLargeBox('10 triệu chứng HIV thường gặp và\ncách điều trị', 'Nội dung khung 2', 'assets/images/hiv_resized.jpg'),
-                      ],
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Thực hiện hành động khi nhấn vào nút "Xem thêm"
-                      print('Xem thêm bác sĩ nổi bật');
-                      // Có thể điều hướng đến trang khác hoặc hiển thị thêm thông tin
-                    },
-                    child: const Text(
-                      'Xem thêm',
-                      style: TextStyle(
-                        color: AppColors.primaryBlue, // Màu chữ cho nút
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 70.0),
+                  const NavigationBarWidget(),
                 ],
               ),
             ),
-          ),
-          const NavigationBarWidget(),
-        ],
+          ],
+        ),
       ),
     );
   }

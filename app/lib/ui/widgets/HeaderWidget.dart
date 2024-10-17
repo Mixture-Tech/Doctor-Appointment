@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 
 class HeaderWidget extends StatelessWidget {
-  final VoidCallback? onMenuPressed;
+  final VoidCallback? onIconPressed;
+  final bool isHomeScreen;
 
   const HeaderWidget({
     super.key,
-    this.onMenuPressed,
+    this.onIconPressed,
+    this.isHomeScreen = false,
   });
 
   @override
@@ -40,8 +42,8 @@ class HeaderWidget extends StatelessWidget {
             left: 0,
             top: 9,
             child: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: onMenuPressed,
+              icon: Icon(isHomeScreen ? Icons.menu : Icons.arrow_back),
+              onPressed: onIconPressed,
               color: AppColors.primaryBlue,
             ),
           ),
