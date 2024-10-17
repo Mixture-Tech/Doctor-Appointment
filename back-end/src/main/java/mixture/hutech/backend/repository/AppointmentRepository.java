@@ -1,7 +1,6 @@
 package mixture.hutech.backend.repository;
 
 import mixture.hutech.backend.entity.Appointment;
-import mixture.hutech.backend.entity.AppointmentStatus;
 import mixture.hutech.backend.enums.AppointmentStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

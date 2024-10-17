@@ -22,4 +22,7 @@ public class Specialization {
 
     @OneToMany(mappedBy = "specialization")
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Disease> diseases = new HashSet<>();
 }
