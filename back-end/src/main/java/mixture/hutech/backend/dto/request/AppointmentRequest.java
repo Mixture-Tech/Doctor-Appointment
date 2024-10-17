@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mixture.hutech.backend.entity.AppointmentStatus;
 import mixture.hutech.backend.entity.DoctorSchedule;
 import mixture.hutech.backend.entity.User;
 import mixture.hutech.backend.enums.AppointmentStatusEnum;
