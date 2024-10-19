@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SpecializationRepository extends JpaRepository<Specialization, Integer> {
+public interface SpecializationRepository extends JpaRepository<Specialization, String> {
 
     @Query("SELECT new mixture.hutech.backend.dto.response.SpecializationResponse(s.id, s.specializationName) FROM Specialization s")
     List<SpecializationResponse> findAllSpecialization();

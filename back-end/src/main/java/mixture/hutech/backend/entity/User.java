@@ -48,6 +48,9 @@ public class User {
     @Column(name = "gender")
     private String gender;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Column(name = "is_active", nullable = false)
     private boolean isActive = false;
 

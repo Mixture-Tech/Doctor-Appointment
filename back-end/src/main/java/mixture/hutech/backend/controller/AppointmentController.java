@@ -3,7 +3,9 @@ package mixture.hutech.backend.controller;
 import lombok.RequiredArgsConstructor;
 import mixture.hutech.backend.dto.request.AppointmentRequest;
 import mixture.hutech.backend.dto.response.AppointmentResponse;
+import mixture.hutech.backend.dto.response.MessageResponse;
 import mixture.hutech.backend.entity.CustomUserDetail;
+import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping("/{doctorId}")
-    public ResponseEntity<AppointmentResponse> createAppointment(
+    public ResponseEntity<MessageResponse> createAppointment(
             @PathVariable String doctorId,
             @RequestBody AppointmentRequest appointmentRequest,
             @AuthenticationPrincipal CustomUserDetail userDetail) {
@@ -29,13 +31,17 @@ public class AppointmentController {
             appointmentRequest.setDoctor(doctorId);
 
             AppointmentResponse appointmentResponse = appointmentService.createAppointment(appointmentRequest, currentUserEmail);
-            return ResponseEntity
-                    .status(appointmentResponse.getErrorCode().getHttpStatus())
-                    .body(appointmentResponse);
+            return ResponseEntity.ok(
+                    MessageResponse.builder()
+                            .errorCode(ErrorCodeEnum.OK)
+                            .message(ErrorCodeEnum.OK.getMessage())
+                            .data(appointmentResponse)
+                            .build()
+            );
         } catch (ApiException e) {
             return ResponseEntity
                     .status(e.getErrorCodeEnum().getHttpStatus())
-                    .body(AppointmentResponse.builder()
+                    .body(MessageResponse.builder()
                             .errorCode(e.getErrorCodeEnum())
                             .message(e.getMessage())
                             .build());
@@ -43,19 +49,21 @@ public class AppointmentController {
     }
 
     @PostMapping("/{appointmentId}/cancel")
-    public ResponseEntity<AppointmentResponse> updateAppointment(
+    public ResponseEntity<MessageResponse> updateAppointment(
             @PathVariable String appointmentId,
             @AuthenticationPrincipal CustomUserDetail userDetail){
         try {
             String currentUserEmail = userDetail.getUsername();
             AppointmentResponse appointmentResponse = appointmentService.cancelAppointment(appointmentId, currentUserEmail);
-            return ResponseEntity
-                    .status(appointmentResponse.getErrorCode().getHttpStatus())
-                    .body(appointmentResponse);
+            return ResponseEntity.ok(MessageResponse.builder()
+                            .errorCode(ErrorCodeEnum.OK)
+                            .message(ErrorCodeEnum.OK.getMessage())
+                            .data(appointmentResponse)
+                            .build());
         } catch (ApiException e) {
             return ResponseEntity
                     .status(e.getErrorCodeEnum().getHttpStatus())
-                    .body(AppointmentResponse.builder()
+                    .body(MessageResponse.builder()
                             .errorCode(e.getErrorCodeEnum())
                             .message(e.getMessage())
                             .build());

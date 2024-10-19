@@ -12,6 +12,7 @@ import mixture.hutech.backend.enums.BookingTypeEnum;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.repository.AppointmentRepository;
+import mixture.hutech.backend.repository.DoctorRepository;
 import mixture.hutech.backend.repository.DoctorScheduleRepository;
 import mixture.hutech.backend.repository.UserRepository;
 import mixture.hutech.backend.service.AppointmentService;
@@ -31,6 +32,7 @@ import java.util.List;
 public class AppointmentServiceImpl implements AppointmentService {
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
     private final DoctorScheduleRepository doctorScheduleRepository;
     private static final int MAX_APPOINTMENTS_PER_SLOT = 3;
@@ -112,8 +114,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     private User getDoctorById(String doctorId) {
-        return userRepository.findDoctorById(doctorId)
-                .orElseThrow(() -> new ApiException(ErrorCodeEnum.DOCTOR_SCHEDULE_NOT_FOUND));
+        return doctorRepository.findDoctorById(doctorId)
+                .orElseThrow(() -> new ApiException(ErrorCodeEnum.DOCTOR_NOT_FOUND));
     }
 
     private Appointment getAppointmentById(String appointmentId) {

@@ -14,8 +14,8 @@ import java.util.Set;
 @Builder
 public class Specialization {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "specialization_name")
     private String specializationName;

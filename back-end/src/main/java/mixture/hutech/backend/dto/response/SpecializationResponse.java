@@ -13,7 +13,7 @@ import mixture.hutech.backend.enums.ErrorCodeEnum;
 @NoArgsConstructor
 public class SpecializationResponse {
     @JsonProperty("specialization_id")
-    private int specializationId;
+    private String specializationId;
     @JsonProperty("specialization_name")
     private String specializationName;
 }
