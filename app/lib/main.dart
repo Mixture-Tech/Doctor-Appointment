@@ -1,6 +1,8 @@
 import 'package:app/ui/screens/Appointment.dart';
 import 'package:app/ui/screens/AppointmentDetailScreen.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
+import 'package:app/ui/screens/Specialization.dart';
+import 'package:app/ui/screens/SpecializationDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const AppointmentScreen(),
-      home: const HomeScreen(),
+      home: const Specialization(),
     );
   }
 }
