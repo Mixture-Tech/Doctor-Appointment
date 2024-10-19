@@ -11,53 +11,94 @@ class Specialization extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(
-                height: 65,
-                child: HeaderWidget(
-                  isHomeScreen: false,
-                  onIconPressed: () {
-                    print('Header icon pressed');
-                  },
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 65,
+              child: HeaderWidget(
+                isHomeScreen: false,
+                onIconPressed: () {
+                  print('Header icon pressed');
+                },
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                    children: [
+                      _buildSpecializationItem(
+                          context,
+                          'Cơ Xương Khớp',
+                          'assets/images/Joints Bone.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Thần kinh',
+                          'assets/images/Brain.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Răng',
+                          'assets/images/Tooth.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Phổi',
+                          'assets/images/Lungs.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Cơ Xương Khớp',
+                          'assets/images/Joints Bone.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Thần kinh',
+                          'assets/images/Brain.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Răng',
+                          'assets/images/Tooth.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Phổi',
+                          'assets/images/Lungs.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Cơ Xương Khớp',
+                          'assets/images/Joints Bone.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Thần kinh',
+                          'assets/images/Brain.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Răng',
+                          'assets/images/Tooth.png'
+                      ),
+                      _buildSpecializationItem(
+                          context,
+                          'Phổi',
+                          'assets/images/Lungs.png'
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
-                  children: [
-                    _buildSpecializationItem(
-                        context,
-                        'Cơ Xương Khớp',
-                        'assets/images/Joints Bone.png'
-                    ),
-                    _buildSpecializationItem(
-                        context,
-                        'Thần kinh',
-                        'assets/images/Brain.png'
-                    ),
-                    _buildSpecializationItem(
-                        context,
-                        'Răng',
-                        'assets/images/Tooth.png'
-                    ),
-                    _buildSpecializationItem(
-                        context,
-                        'Phổi',
-                        'assets/images/Lungs.png'
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
         bottomNavigationBar: Container(
           height: 70,
