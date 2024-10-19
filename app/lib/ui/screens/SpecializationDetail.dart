@@ -89,7 +89,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                       icon: Icon(Icons.arrow_drop_down),
                       elevation: 6,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: AppColors.black,
                         fontSize: 16,
                       ),
                       underline: Container(
@@ -112,11 +112,11 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                       padding: const EdgeInsets.all(16.0),
                       margin: const EdgeInsets.only(top: 8.0),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
+                            color: AppColors.grey.withOpacity(0.2),
                             spreadRadius: 1,
                             blurRadius: 5,
                             offset: Offset(0, 3),
@@ -163,7 +163,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                       'Nguyên Phó Giám đốc Bệnh viện E',
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: Colors.grey,
+                                        color: AppColors.grey,
                                       ),
                                     ),
                                   ],
@@ -246,7 +246,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                       style: TextStyle(
                                         color: selectedTimeSlot == time
                                             ? AppColors.primaryBlue
-                                            : Colors.black,
+                                            : AppColors.black,
                                       ),
                                     ),
                                   ),
@@ -262,7 +262,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                               Icon(
                                 Icons.location_on,
                                 size: 16,
-                                color: Colors.grey,
+                                color: AppColors.grey,
                               ),
                               Text(
                                 'ĐỊA CHỈ KHÁM',
@@ -301,7 +301,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                               Text(
                                 '350.000đ',
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: AppColors.red,
                                 ),
                               ),
                               Spacer(),
