@@ -1,4 +1,4 @@
-import 'package:app/services/ProviceGHNApiService.dart';
+import 'package:app/services/ProvinceGHNApiService.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';

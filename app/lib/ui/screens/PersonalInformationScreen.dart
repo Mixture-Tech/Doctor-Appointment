@@ -65,7 +65,7 @@ class _PersonnalInfoScreenState extends State<PersonnalInfoScreen> {
                         // Hình đại diện
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage("assets/images/Personal_Information.png"),
+                          backgroundImage: AssetImage("assets/images/Personal_Avatar.png"),
                         ),
                         const SizedBox(height: 20),
                         Column(
