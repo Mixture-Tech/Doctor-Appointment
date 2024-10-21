@@ -10,14 +10,14 @@ import '../widgets/DateTimePickerWidget.dart';
 import '../widgets/RadioButtonWidget.dart';
 import '../widgets/TextFieldWidget.dart';
 
-class PersonnalInfoScreen extends StatefulWidget {
-  const PersonnalInfoScreen({super.key});
+class PersonalInfoScreen extends StatefulWidget {
+  const PersonalInfoScreen({super.key});
 
   @override
-  State<PersonnalInfoScreen> createState() => _PersonnalInfoScreenState();
+  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
 }
 
-class _PersonnalInfoScreenState extends State<PersonnalInfoScreen> {
+class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   List<String> provinces = ['Hà Nội', 'TP.HCM', 'Đà Nẵng',]; // Thêm các tỉnh/thành phố khác
   List<String> districts = []; // Sẽ được cập nhật dựa trên tỉnh/thành phố được chọn
   List<String> wards = []; // Sẽ được cập nhật dựa trên quận/huyện được chọn
@@ -212,7 +212,7 @@ class _PersonnalInfoScreenState extends State<PersonnalInfoScreen> {
 
                     ),
                   ),
-                  NavigationBarWidget(),  // Navigation bar phía dưới
+                  // NavigationBarWidget(),  // Navigation bar phía dưới
                 ],
               ),
             ),

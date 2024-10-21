@@ -1,5 +1,7 @@
 import 'package:app/styles/colors.dart';
+import 'package:app/ui/screens/SpecializationScreen.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/HeaderWidget.dart';
@@ -177,12 +179,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisSpacing: 16.0, // Khoảng cách giữa các cột
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             children: [
-                              _buildServiceBox('Khám\nchuyên khoa', 'assets/images/Medical Symbol.png'),
-                              _buildServiceBox('Khám\ntổng quát', 'assets/images/Heart Rate.png'),
-                              _buildServiceBox('Tham khảo\nchi phí', 'assets/images/Dollar (USD).png'),
-                              _buildServiceBox('Sức khỏe\ntinh thần', 'assets/images/Body.png'),
-                              _buildServiceBox('Khám\nnha khoa', 'assets/images/Tooth.png'),
-                              _buildServiceBox('Bài test\nsức khỏe', 'assets/images/Clipboard-alt.png'),
+                              _buildServiceBox(
+                                'Khám\nchuyên khoa',
+                                'assets/images/Medical Symbol.png',
+                                  () {
+                                  Navigator.push(
+                                      context,
+                                      CupertinoPageRoute(builder: (context) => const SpecializationScreen())
+                                  );
+                                }),
+                              // _buildServiceBox('Khám\ntổng quát', 'assets/images/Heart Rate.png'),
+                              // _buildServiceBox('Tham khảo\nchi phí', 'assets/images/Dollar (USD).png'),
+                              // _buildServiceBox('Sức khỏe\ntinh thần', 'assets/images/Body.png'),
+                              // _buildServiceBox('Khám\nnha khoa', 'assets/images/Tooth.png'),
+                              // _buildServiceBox('Bài test\nsức khỏe', 'assets/images/Clipboard-alt.png'),
                             ],
                           ),
                           const SizedBox(height: 16.0),
@@ -210,10 +220,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisSpacing: 16.0,
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             children: [
-                              _buildServiceBox('Bệnh viện\nnhân dân 115', 'assets/images/115.png'),
-                              _buildServiceBox('Bệnh viện\nnhi đồng 1', 'assets/images/NhiDong1.png'),
-                              _buildServiceBox('Bệnh viện\nChợ Rẫy', 'assets/images/ChoRay.png'),
-                              _buildServiceBox('Bệnh viện\nnhân dân Gia Định', 'assets/images/GiaDinh.png'),
+                              // _buildServiceBox('Bệnh viện\nnhân dân 115', 'assets/images/115.png',),
+                              // _buildServiceBox('Bệnh viện\nnhi đồng 1', 'assets/images/NhiDong1.png'),
+                              // _buildServiceBox('Bệnh viện\nChợ Rẫy', 'assets/images/ChoRay.png'),
+                              // _buildServiceBox('Bệnh viện\nnhân dân Gia Định', 'assets/images/GiaDinh.png'),
                             ],
                           ),
                           TextButton(
@@ -277,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  const NavigationBarWidget(),
+                  // const NavigationBarWidget(),
                 ],
               ),
             ),
@@ -324,40 +334,43 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildServiceBox(String title, String imagePath) {
-    return Container(
-      width: 120, // Chiều rộng của hình chữ nhật
-      height: 60, // Chiều cao của hình chữ nhật
-      decoration: BoxDecoration(
-        color: AppColors.lightYellow,
-        borderRadius: BorderRadius.circular(12.0), // Bo tròn các góc
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            imagePath,
-            width: 80, // Điều chỉnh kích thước của logo
-            height: 80,
-          ),
-          const SizedBox(height: 8.0),
-          Text(
-            title,
-            style: const TextStyle(
-              color: AppColors.primaryBlue,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+  Widget _buildServiceBox(String title, String imagePath, VoidCallback? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 120, // Chiều rộng của hình chữ nhật
+        height: 60, // Chiều cao của hình chữ nhật
+        decoration: BoxDecoration(
+          color: AppColors.lightYellow,
+          borderRadius: BorderRadius.circular(12.0), // Bo tròn các góc
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              offset: const Offset(0, 3),
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              imagePath,
+              width: 80, // Điều chỉnh kích thước của logo
+              height: 80,
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              title,
+              style: const TextStyle(
+                color: AppColors.primaryBlue,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

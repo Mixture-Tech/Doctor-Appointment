@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../styles/colors.dart';
 import '../../styles/text.dart';
 import '../widgets/ButtonWidget.dart';
 import '../widgets/HeaderWidget.dart';
 import '../widgets/NavigationBarWidget.dart';
+import 'AppointmentDetailScreen.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({super.key});
@@ -157,7 +159,15 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                     padding: const EdgeInsets.symmetric(vertical: 16),
                                     child: CustomElevatedButton(
                                       text: 'Tiếp theo',
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(builder: (context) => const AppointmentDetailScreen(
+                                                previousScreen: AppointmentScreen()
+                                              )
+                                            )
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -201,7 +211,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ),
                   ),
                   // Thanh điều hướng
-                  const NavigationBarWidget(),
                 ],
               ),
             ),

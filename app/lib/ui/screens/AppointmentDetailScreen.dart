@@ -2,6 +2,7 @@ import 'package:app/services/ProvinceGHNApiService.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../styles/colors.dart';
 import '../../styles/text.dart';
@@ -13,7 +14,12 @@ import '../widgets/HeaderWidget.dart';
 import '../widgets/NavigationBarWidget.dart';
 
 class AppointmentDetailScreen extends StatefulWidget {
-  const AppointmentDetailScreen({super.key});
+  final Widget previousScreen;
+
+  const AppointmentDetailScreen({
+    super.key,
+    required this.previousScreen, // Thêm tham số này vào constructor
+  });
 
   @override
   State<AppointmentDetailScreen> createState() => _AppointmentDetailScreenState();
@@ -40,9 +46,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             HeaderWidget(
               isHomeScreen: false,
               onIconPressed: () {
-                Navigator.pushReplacement(
+                Navigator.pop(
                     context,
-                    MaterialPageRoute(builder: (context) => const AppointmentScreen())
+                    CupertinoPageRoute(builder: (context) => widget.previousScreen)
                 );
               },
             ),
@@ -141,7 +147,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     ],
                   ),
                   // Breadcrumb and title
-                  const NavigationBarWidget(),
+                  // const NavigationBarWidget(),
                 ],
               ),
             ),

@@ -16,14 +16,14 @@ class HeaderWidget extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.grey,
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 2),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: AppColors.grey,
+        //     spreadRadius: 1,
+        //     blurRadius: 3,
+        //     offset: Offset(0, 2),
+        //   ),
+        // ],
       ),
       child: Stack(
         children: [

@@ -82,7 +82,7 @@ class _ProfileState extends State<Profile> {
                           label: 'Thông tin cá nhân',
                           onTap: () {
                            Navigator.push(context, 
-                           MaterialPageRoute(builder: (context) => const PersonnalInfoScreen()),
+                           MaterialPageRoute(builder: (context) => const PersonalInfoScreen()),
                            );
                           },
                         ),
@@ -112,10 +112,10 @@ class _ProfileState extends State<Profile> {
                   ),
 
                   // Navigation Bar ở dưới
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: NavigationBarWidget(),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: NavigationBarWidget(),
+                  // ),
                 ],
               ),
             ),

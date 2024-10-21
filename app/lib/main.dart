@@ -1,8 +1,13 @@
+import 'package:app/styles/colors.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/AppointmentDetailScreen.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
+import 'package:app/ui/screens/MainScreen.dart';
+import 'package:app/ui/screens/NotificationScreen.dart';
+import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:app/ui/screens/PersonalInformationScreen.dart';
+import 'package:app/ui/screens/SpecializationScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -19,11 +24,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Health Connect App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.accentBlue),
         useMaterial3: true,
       ),
-      // home: const AppointmentScreen(),
-      home: const PersonnalInfoScreen(),
+      home: const MainScreen(),
     );
   }
 }

@@ -1,11 +1,13 @@
 import 'package:app/styles/colors.dart';
+import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'SpecializationDetail.dart';
+import 'SpecializationDetailScreen.dart';
 
-class Specialization extends StatelessWidget {
-  const Specialization({super.key});
+class SpecializationScreen extends StatelessWidget {
+  const SpecializationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,9 @@ class Specialization extends StatelessWidget {
               child: HeaderWidget(
                 isHomeScreen: false,
                 onIconPressed: () {
-                  print('Header icon pressed');
+                  Navigator.of(context).pop(
+                      CupertinoPageRoute(builder: (context) => const HomeScreen()),
+                  );
                 },
               ),
             ),
@@ -100,10 +104,10 @@ class Specialization extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          height: 70,
-          child: const NavigationBarWidget(),
-        ),
+        // bottomNavigationBar: Container(
+        //   height: 70,
+        //   child: const NavigationBarWidget(),
+        // ),
       ),
     );
   }
@@ -112,10 +116,8 @@ class Specialization extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SpecializationDetail(),
-          ),
+            context,
+            CupertinoPageRoute(builder: (context) => const SpecializationDetailScreen())
         );
       },
       child: SizedBox(

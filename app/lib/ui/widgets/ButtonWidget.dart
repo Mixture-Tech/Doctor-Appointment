@@ -6,7 +6,7 @@ import '../../styles/colors.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
 
   const CustomElevatedButton({

@@ -1,16 +1,20 @@
 import 'package:app/styles/colors.dart';
+import 'package:app/ui/screens/AppointmentDetailScreen.dart';
+import 'package:app/ui/screens/AppointmentScreen.dart';
+import 'package:app/ui/screens/SpecializationScreen.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../widgets/NavigationBarWidget.dart';
 
-class SpecializationDetail extends StatefulWidget {
-  const SpecializationDetail({super.key});
+class SpecializationDetailScreen extends StatefulWidget {
+  const SpecializationDetailScreen({super.key});
 
   @override
-  State<SpecializationDetail> createState() => _SpecializationDetailState();
+  State<SpecializationDetailScreen> createState() => _SpecializationDetailScreenState();
 }
 
-class _SpecializationDetailState extends State<SpecializationDetail> {
+class _SpecializationDetailScreenState extends State<SpecializationDetailScreen> {
   String selectedLocation = 'Toàn quốc';
   String selectedDate = '17/10/2024';
   String? selectedTimeSlot; // Thời gian khám đã chọn
@@ -30,7 +34,9 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
               child: HeaderWidget(
                 isHomeScreen: false,
                 onIconPressed: () {
-                  print('Header icon pressed');
+                  Navigator.of(context).pop(
+                    CupertinoPageRoute(builder: (context) => const SpecializationScreen()),
+                  );
                 },
               ),
             ),
@@ -41,24 +47,24 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Cơ Xương Khớp',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
-                      Text(
+                      const Text(
                         'Danh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:',
                         style: TextStyle(fontSize: 14),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
-                      Column(
+                      const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('• Các chuyên gia có quá trình đào tạo bài bản, nhiều kinh nghiệm'),
@@ -68,7 +74,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                       ),
                       GestureDetector(
                         onTap: () {},
-                        child: Text(
+                        child: const Text(
                           'Xem thêm',
                           style: TextStyle(
                             color: AppColors.primaryBlue,
@@ -76,14 +82,14 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       DropdownButton<String>(
                         value: selectedLocation,
-                        icon: Icon(Icons.arrow_drop_down),
+                        icon: const Icon(Icons.arrow_drop_down),
                         elevation: 6,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                         ),
@@ -114,14 +120,14 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                               color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 1,
                               blurRadius: 5,
-                              offset: Offset(0, 3),
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            const Row(
                               children: [
                                 CircleAvatar(
                                   radius: 40,
@@ -166,7 +172,7 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 12,
                             ),
                             Row(
@@ -174,9 +180,9 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                               children: [
                                 DropdownButton<String>(
                                   value: selectedDate,
-                                  icon: Icon(Icons.arrow_drop_down),
+                                  icon: const Icon(Icons.arrow_drop_down),
                                   elevation: 16,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: AppColors.primaryBlue,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -199,8 +205,8 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                 ),
                               ],
                             ),
-                            Divider(),
-                            Row(
+                            const Divider(),
+                            const Row(
                               children: [
                                 Icon(
                                   Icons.calendar_month,
@@ -225,6 +231,13 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                         setState(() {
                                           selectedTimeSlot = time;
                                         });
+                                        Navigator.push(
+                                            context,
+                                            CupertinoPageRoute(builder: (context) => const AppointmentDetailScreen(
+                                                previousScreen: SpecializationDetailScreen()
+                                              )
+                                            )
+                                        );
                                       },
                                       style: OutlinedButton.styleFrom(
                                         backgroundColor: selectedTimeSlot == time
@@ -249,10 +262,10 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                 }).toList(),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
-                            Row(
+                            const Row(
                               children: [
                                 Icon(
                                   Icons.location_on,
@@ -268,43 +281,43 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
                                 ),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 4,
                             ),
-                            Text(
+                            const Text(
                               'Phòng khám Đa khoa Mediplus',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Text(
+                            const Text(
                               'Tầng 2, Trung tâm thương mại Mandarin Garden 2, 99 phố Tân Mai, Hoàng Mai, Hà Nội',
                               style: TextStyle(
                                 fontSize: 14,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Giá khám: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text(
+                                const Text(
                                   '350.000đ',
                                   style: TextStyle(
                                     color: Colors.red,
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 GestureDetector(
                                   onTap: () {
                                     // Xử lý khi người dùng nhấn vào "Xem chi tiết"
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'Xem chi tiết',
                                     style: TextStyle(
                                       color: Colors.blue,
@@ -323,10 +336,10 @@ class _SpecializationDetailState extends State<SpecializationDetail> {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          height: 70,
-          child: const NavigationBarWidget(),
-        ),
+        // bottomNavigationBar: Container(
+        //   height: 70,
+        //   child: const NavigationBarWidget(),
+        // ),
       ),
     );
   }

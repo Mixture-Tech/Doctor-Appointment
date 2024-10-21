@@ -1,4 +1,5 @@
 import 'package:app/ui/screens/RegisterScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/CustomtextAuthWidget.dart';
@@ -101,8 +102,8 @@ class _LoginState extends State<LoginScreen> {
                         onPressed: () {
                           // Hành động khi nhấn "Đăng ký"
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Register()),
+                              context,
+                              CupertinoPageRoute(builder: (context) => const Register())
                           );
                         },
                         child: const Text(

@@ -1,4 +1,5 @@
 import 'package:app/ui/screens/LoginScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/CustomtextAuthWidget.dart';
@@ -126,9 +127,9 @@ class _RegisterState extends State<Register> {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.push(
+                              Navigator.pop(
                                 context,
-                                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                CupertinoPageRoute(builder: (context) => const LoginScreen()),
                               );
                             },
                             style: TextButton.styleFrom(

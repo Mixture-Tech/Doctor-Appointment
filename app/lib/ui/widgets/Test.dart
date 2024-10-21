@@ -1,61 +1,51 @@
-import 'dart:async';
+import 'package:flutter/cupertino.dart';
 
-import 'package:flutter/material.dart';
+void main() {
+  runApp(const CupertinoApp(
+    title: 'Navigation Basics',
+    home: FirstRoute(),
+  ));
+}
 
-void main() => runApp(MyApp());
+class FirstRoute extends StatelessWidget {
+  const FirstRoute({super.key});
 
-class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Flutter Demo',
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('First Route'),
+      ),
+      child: Center(
+        child: CupertinoButton(
+          child: const Text('Open route'),
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(builder: (context) => const SecondRoute()),
+            );
+          },
+        ),
+      ),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  DateTime selectedDate = DateTime.now();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text('Second Route'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text("${selectedDate.toLocal()}".split(' ')[0]),
-            const SizedBox(height: 20.0,),
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: const Text('Select date'),
-            ),
-          ],
+      child: Center(
+        child: CupertinoButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back!'),
         ),
       ),
     );
