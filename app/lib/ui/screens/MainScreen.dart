@@ -1,8 +1,7 @@
-import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
+import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
-import 'package:app/ui/screens/PersonalInformationScreen.dart';
 import 'package:app/ui/screens/ProfileScreen.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
 
@@ -16,30 +15,101 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    const NotificationScreen(), // Thay thế bằng màn hình Thông báo thực tế
-    const AppointmentScreen(),
-    const Profile(),
+  final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == _selectedIndex) {
+      // Pop to first route in current tab
+      _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
+  Widget _buildOffstageNavigator(int index) {
+    return Offstage(
+      offstage: _selectedIndex != index,
+      child: TabNavigator(
+        navigatorKey: _navigatorKeys[index],
+        tabItem: TabItem.values[index],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _pages,
+    return WillPopScope(
+      onWillPop: () async {
+        final isFirstRouteInCurrentTab =
+        !await _navigatorKeys[_selectedIndex].currentState!.maybePop();
+        if (isFirstRouteInCurrentTab) {
+          if (_selectedIndex != 0) {
+            _onItemTapped(0);
+            return false;
+          }
+        }
+        return isFirstRouteInCurrentTab;
+      },
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            _buildOffstageNavigator(0),
+            _buildOffstageNavigator(1),
+            _buildOffstageNavigator(2),
+            _buildOffstageNavigator(3),
+          ],
+        ),
+        bottomNavigationBar: NavigationBarWidget(
+          selectedIndex: _selectedIndex,
+          onItemTapped: _onItemTapped,
+        ),
       ),
-      bottomNavigationBar: NavigationBarWidget(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
-      ),
+    );
+  }
+}
+
+enum TabItem { home, notification, appointment, profile }
+
+class TabNavigator extends StatelessWidget {
+  final GlobalKey<NavigatorState> navigatorKey;
+  final TabItem tabItem;
+
+  const TabNavigator({
+    Key? key,
+    required this.navigatorKey,
+    required this.tabItem,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Widget child;
+    switch (tabItem) {
+      case TabItem.home:
+        child = const HomeScreen();
+        break;
+      case TabItem.notification:
+        child = const NotificationScreen();
+        break;
+      case TabItem.appointment:
+        child = const AppointmentScreen();
+        break;
+      case TabItem.profile:
+        child = const Profile();
+        break;
+    }
+
+    return Navigator(
+      key: navigatorKey,
+      onGenerateRoute: (routeSettings) {
+        return MaterialPageRoute(builder: (context) => child);
+      },
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/AppointmentDetailScreen.dart';
+import 'package:app/ui/screens/BookingSuccessScreen.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
 import 'package:app/ui/screens/MainScreen.dart';

@@ -87,7 +87,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           height: MediaQuery.of(context).size.height * 0.45,
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage("assets/images/Doctor.png"),
+                              image: AssetImage("assets/images/bs2.jpg"),
                               fit: BoxFit.cover,
                             ),
                           ),
