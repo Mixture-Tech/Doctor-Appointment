@@ -18,12 +18,7 @@ class BookingSuccessScreen extends StatelessWidget {
               child: HeaderWidget(
                 isHomeScreen: false,
                 onIconPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(
-                    CupertinoPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
-                    (route) => false,
-                  );
+                  Navigator.of(context).popAndPushNamed('/home');
                 },
               ),
             ),

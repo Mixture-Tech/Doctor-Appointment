@@ -1,6 +1,7 @@
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/ButtonWidget.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/screens/ProfileScreen.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
@@ -24,9 +25,9 @@ class ForgotPasswordScreen extends StatelessWidget {
             HeaderWidget(
               isHomeScreen: false,
               onIconPressed: () {
-                Navigator.pushReplacement(
+                Navigator.pop(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()), // Chuyển đến trang Profile
+                  CupertinoPageRoute(builder: (context) => const LoginScreen()), // Chuyển đến trang Profile
                 );
               },
             ),
