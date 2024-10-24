@@ -28,6 +28,10 @@ public enum ErrorCodeEnum {
     CANNOT_CANCEL_PAST_APPOINTMENT(400, "Không thể huỷ cuộc hẹn đã hoặc đang diễn ra", HttpStatus.BAD_REQUEST),
     APPOINTMENT_NOT_FOUND(404,"Không tìm thấy lịch hẹn", HttpStatus.NOT_FOUND),
     SPECIALIZATION_NOT_FOUND(404,"Không tìm thấy chuyên khoa", HttpStatus.NOT_FOUND),
+    TOKEN_ALREADY_ACTIVATED(400,"Tài khoản đã được kích hoạt" ,HttpStatus.BAD_REQUEST ),
+    TOKEN_NOT_FOUND(400,"Không tìm thấy token hợp lệ" , HttpStatus.BAD_REQUEST ),
+    VERIFICATION_FAILED(401,"Xác thực thất bại",HttpStatus.UNAUTHORIZED ),
+    INVALID_CURRENT_PASSWORD(401,"Mật khẩu hiện tại không đúng", HttpStatus.UNAUTHORIZED ),
     ;
 
     private final int code;

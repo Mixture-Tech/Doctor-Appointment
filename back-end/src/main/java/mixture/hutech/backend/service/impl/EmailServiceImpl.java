@@ -40,7 +40,8 @@ public class EmailServiceImpl implements EmailService {
         Context context = new Context();
         context.setVariable("title", "Xác nhận đăng ký tài khoản thành công");
         context.setVariable("message", "Chào bạn, \n\nChúng tôi đã nhận được yêu cầu đăng ký tài khoản của bạn. Để hoàn tất quá trình đăng ký và sử dụng dịch vụ đặt lịch hẹn khám bệnh của chúng tôi, vui lòng xác nhận địa chỉ email của bạn bằng cách nhấp vào liên kết bên dưới.");
-        context.setVariable("url", frontendUrl + "/Notify?token=" + token + "&type=verifyEmailSuccess");
+        // Thay đổi URL để trỏ đến endpoint mới
+        context.setVariable("url", frontendUrl + "/api/auth/direct-verify/" + token);
         context.setVariable("name", name);
         context.setVariable("textBtn", "Kích hoạt tài khoản");
 
@@ -51,10 +52,9 @@ public class EmailServiceImpl implements EmailService {
     public void sendMailWithTokenResetPassword(String toEmail, String name, String token) throws MessagingException {
         Context context = new Context();
         context.setVariable("title", "Quên mật khẩu");
-        context.setVariable("message", "Bạn đã yêu cầu đặt lại mật khẩu. Vui lòng nhấp vào nút bên dưới để đặt lại mật khẩu.");
-        context.setVariable("url", frontendUrl + "/change-password?token=" + token);
+        context.setVariable("message", "Mật khẩu mới của bạn là: " + token);
         context.setVariable("name", name);
-        context.setVariable("textBtn", "Đặt lại mật khẩu");
+        context.setVariable("showBtn", false);
 
         sendEmail(toEmail, "Quên mật khẩu", "mail-authenticate", context);
     }

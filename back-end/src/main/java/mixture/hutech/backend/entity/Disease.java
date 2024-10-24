@@ -11,8 +11,8 @@ import lombok.*;
 @Builder
 public class Disease {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "disease_name")
     private String diseaseName;

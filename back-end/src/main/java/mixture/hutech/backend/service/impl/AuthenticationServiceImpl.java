@@ -27,7 +27,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -45,6 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenService tokenService;
     private final EmailService emailService;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     private PasswordResetToken createAndSavePasswordResetToken(User user, PasswordResetTokenEnum tokenType) {
         String token = "MIXTURE_" + UUID.randomUUID().toString() + System.currentTimeMillis();
@@ -130,24 +133,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    @Transactional
     @Override
     public MessageResponse verifyTokenRegister(String token) {
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow();
-        if(passwordResetToken.getExpiryDate().before(new Date())){
-            return MessageResponse.builder()
-                    .errorCode(ErrorCodeEnum.TOKEN_EXPIRED)
-                    .message(ErrorCodeEnum.TOKEN_EXPIRED.getMessage())
-                    .build();
+        // Tìm token và xử lý lỗi nếu không tồn tại
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository
+                .findByToken(token)
+                .orElseThrow(() -> new ApiException(ErrorCodeEnum.TOKEN_NOT_FOUND));
+
+        // Kiểm tra token đã được kích hoạt chưa
+        if (passwordResetToken.isActivated()) {
+            throw new ApiException(ErrorCodeEnum.TOKEN_ALREADY_ACTIVATED);
         }
 
-        passwordResetToken.setActivated(true);
-        passwordResetToken.getUser().setActive(true);
-        passwordResetTokenRepository.save(passwordResetToken);
+        // Kiểm tra token còn hạn không
+        if (passwordResetToken.getExpiryDate().before(new Timestamp(System.currentTimeMillis()))) {
+            throw new ApiException(ErrorCodeEnum.TOKEN_EXPIRED);
+        }
 
-        return MessageResponse.builder()
-                .errorCode(ErrorCodeEnum.OK)
-                .message("Verification Successful")
-                .build();
+        try {
+            // Kích hoạt tài khoản người dùng
+            User user = passwordResetToken.getUser();
+            user.setActive(true);
+            userRepository.save(user);
+
+            // Đánh dấu token đã được sử dụng
+            passwordResetToken.setActivated(true);
+            passwordResetTokenRepository.save(passwordResetToken);
+
+            return MessageResponse.builder()
+                    .errorCode(ErrorCodeEnum.OK)
+                    .message("Xác thực email thành công")
+                    .build();
+
+        } catch (Exception e) {
+            throw new ApiException(ErrorCodeEnum.VERIFICATION_FAILED);
+        }
     }
 
     @Override
@@ -156,37 +177,40 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 () -> new ApiException(ErrorCodeEnum.USER_NOT_FOUND)
         );
 
-        PasswordResetToken passwordResetToken = createAndSavePasswordResetToken(user, PasswordResetTokenEnum.PASSWORD_RESET_TOKEN);
+        // Tạo mã số ngẫu nhiên 10 chữ số bằng SecureRandom
+        String randomPassword = String.format("%010d", Math.abs(secureRandom.nextInt(1000000000)));
 
+        // Cập nhật mật khẩu mới cho user
+        user.setPassword(passwordEncoder.encode(randomPassword));
+        userRepository.save(user);
 
-        try{
-            emailService.sendMailWithTokenResetPassword(user.getEmail(), user.getUsername(), passwordResetToken.getToken());
-        }catch (Exception e){
+        try {
+            // Gửi mã qua email
+            emailService.sendMailWithTokenResetPassword(user.getEmail(), user.getUsername(), randomPassword);
+        } catch (Exception e) {
             System.out.println("Mail error: " + e.getMessage());
         }
 
         return MessageResponse.builder()
                 .errorCode(ErrorCodeEnum.OK)
-                .message("Email sent successfully")
+                .message("New password has been sent to your email")
                 .build();
     }
 
     @Override
-    public MessageResponse changePassword(String token, String newPassword) {
-        if(token == null || token.isEmpty() || newPassword == null || newPassword.isEmpty()){
-            throw new ApiException(ErrorCodeEnum.INVALID_TOKEN);
+    public MessageResponse changePassword(String username, String currentPassword, String newPassword) {
+        // Tìm người dùng dựa trên username
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new ApiException(ErrorCodeEnum.USER_NOT_FOUND));
+
+        // Kiểm tra xem mật khẩu hiện tại có đúng không
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new ApiException(ErrorCodeEnum.INVALID_CURRENT_PASSWORD);
         }
 
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token).orElseThrow(null);
-        if(passwordResetToken == null || passwordResetToken.getExpiryDate().before(new Date()) || passwordResetToken.isActivated()){
-            throw new ApiException(ErrorCodeEnum.INVALID_TOKEN);
-        }
-
-        User user = passwordResetToken.getUser();
+        // Cập nhật mật khẩu mới sau khi kiểm tra thành công
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        passwordResetToken.setActivated(true);
-        passwordResetTokenRepository.save(passwordResetToken);
 
         return MessageResponse.builder()
                 .errorCode(ErrorCodeEnum.OK)
