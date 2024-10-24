@@ -4,17 +4,18 @@ import 'package:app/ui/screens/PersonalInformationScreen.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/widgets/ProfileOptionWidget.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileScreenState extends State<ProfileScreen> {
 
   void _submitPersonalInfo() {
     // Xử lý thông tin cá nhân ở đây
@@ -29,13 +30,13 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             // Header
             HeaderWidget(
-              isHomeScreen: false,
+              isHomeScreen: true,
               onIconPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) =>
-                      const LoginScreen()), // Chuyển đến trang đăng nhập
-                );
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(builder: (context) =>
+                //   const LoginScreen()), // Chuyển đến trang đăng nhập
+                // );
               },
               // customIcon: Icons.menu,
             ),
@@ -81,9 +82,9 @@ class _ProfileState extends State<Profile> {
                           icon: Icons.person,
                           label: 'Thông tin cá nhân',
                           onTap: () {
-                           Navigator.push(context, 
-                           MaterialPageRoute(builder: (context) => const PersonalInfoScreen()),
-                           );
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(builder: (context) => const PersonalInfoScreen()),
+                            );
                           },
                         ),
                         ProfileOptionWidget(

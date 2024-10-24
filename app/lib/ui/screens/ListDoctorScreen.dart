@@ -1,3 +1,4 @@
+import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/widgets/DoctorInfoWidget.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,9 +18,12 @@ class ListDoctorScreen extends StatefulWidget {
 
 class _ListDoctorScreenState extends State<ListDoctorScreen> {
   void handleDoctorCardTap(String doctorName) {
-    // Xử lý sự kiện khi nhấn vào DoctorCard
-    print('Doctor card tapped: $doctorName');
-    // Bạn có thể thêm logic khác ở đây nếu cần
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => const AppointmentScreen(),
+      ),
+    );
   }
 
   @override
@@ -29,9 +33,9 @@ class _ListDoctorScreenState extends State<ListDoctorScreen> {
         body: Column(
           children: <Widget>[
             HeaderWidget(
-              isHomeScreen: false,
+              isHomeScreen: true,
               onIconPressed: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
               },
             ),
             Expanded(
@@ -48,39 +52,8 @@ class _ListDoctorScreenState extends State<ListDoctorScreen> {
                   ),
                   ListView(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.home,
-                              color: AppColors.primaryBlue,
-                            ),
-                            Text(
-                              " / ",
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                "Danh sách bác sĩ",
-                                style: AppTextStyles.subHeaderStyle,
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 1,
-                        color: AppColors.primaryBlue,
-                        width: double.infinity,
-                      ),
-                      const SizedBox(height: 10),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                         child: Column(
                           children: [
                             DoctorCardWidget(

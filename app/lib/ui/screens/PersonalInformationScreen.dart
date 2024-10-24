@@ -2,6 +2,7 @@ import 'package:app/styles/colors.dart';
 import 'package:app/ui/screens/ProfileScreen.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/widgets/AddressDropdownField.dart';
 
@@ -36,9 +37,9 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
             HeaderWidget(
               isHomeScreen: false,
               onIconPressed: () {
-                Navigator.pushReplacement(
+                Navigator.pop(
                   context,
-                  MaterialPageRoute(builder: (context) => Profile()), // Chuyển đến trang đăng nhập
+                  CupertinoPageRoute(builder: (context) => ProfileScreen()), // Chuyển đến trang đăng nhập
                 );
               },
             ),

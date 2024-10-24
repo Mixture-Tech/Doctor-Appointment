@@ -1,3 +1,4 @@
+import 'package:app/ui/screens/ListDoctorScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:app/ui/screens/NotificationScreen.dart';
@@ -98,10 +99,10 @@ class TabNavigator extends StatelessWidget {
         child = const NotificationScreen();
         break;
       case TabItem.appointment:
-        child = const AppointmentScreen();
+        child = const ListDoctorScreen();
         break;
       case TabItem.profile:
-        child = const Profile();
+        child = const ProfileScreen();
         break;
     }
 

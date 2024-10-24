@@ -3,7 +3,7 @@ import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/AppointmentDetailScreen.dart';
 import 'package:app/ui/screens/BookingSuccessScreen.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
-import 'package:app/ui/screens/ListDoctor.dart';
+import 'package:app/ui/screens/ListDoctorScreen.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
 import 'package:app/ui/screens/MainScreen.dart';
 import 'package:app/ui/screens/NotificationScreen.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.accentBlue),
         useMaterial3: true,
       ),
-      home: const ListDoctorScreen(),
+      home: const MainScreen(),
     );
   }
 }
