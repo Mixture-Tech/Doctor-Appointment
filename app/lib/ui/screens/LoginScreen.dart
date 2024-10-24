@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/CustomtextAuthWidget.dart';
 import '../widgets/ButtonWidget.dart';
+import 'package:app/ui/screens/ForgotPasswordScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -116,6 +117,10 @@ class _LoginState extends State<LoginScreen> {
 
                       TextButton(
                         onPressed: () {
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(builder: (context) => const ForgotPasswordScreen())
+                          );
                           // Hành động khi nhấn "Quên mật khẩu"
                         },
                         child: const Text(

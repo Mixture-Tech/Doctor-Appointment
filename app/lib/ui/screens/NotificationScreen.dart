@@ -19,7 +19,7 @@ class NotificationScreen extends StatelessWidget {
         body: Column(
           children: <Widget>[
             HeaderWidget(
-              isHomeScreen: false,
+              isHomeScreen: true,
               onIconPressed: () {
                 // Navigator.pop(context);
               },

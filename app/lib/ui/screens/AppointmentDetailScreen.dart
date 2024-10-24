@@ -1,5 +1,6 @@
 import 'package:app/services/ProvinceGHNApiService.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
+import 'package:app/ui/screens/BookingSuccessScreen.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';
 import 'package:flutter/cupertino.dart';
@@ -137,7 +138,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                               const SizedBox(height: 20),
                               CustomElevatedButton(
                                 text: 'Đặt lịch ngay',
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => const BookingSuccessScreen(),
+                                    ),
+                                  );
+                                },
                               ),
                               const SizedBox(height: 100),
                             ],

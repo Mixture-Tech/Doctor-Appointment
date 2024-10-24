@@ -82,12 +82,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           color: AppColors.primaryBlue,
                           width: double.infinity,
                         ),
+                        const SizedBox(height: 10),
                         // Hình ảnh chiếm khoảng 45% màn hình
                         Container(
                           height: MediaQuery.of(context).size.height * 0.45,
                           decoration: const BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage("assets/images/Doctor.png"),
+                              image: AssetImage("assets/images/bs2.jpg"),
                               fit: BoxFit.cover,
                             ),
                           ),
