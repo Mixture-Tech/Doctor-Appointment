@@ -14,12 +14,15 @@ import java.util.Set;
 @Builder
 public class Specialization {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "specialization_name")
     private String specializationName;
 
     @OneToMany(mappedBy = "specialization")
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Disease> diseases = new HashSet<>();
 }

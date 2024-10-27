@@ -11,11 +11,9 @@ import mixture.hutech.backend.enums.ErrorCodeEnum;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageResponse {
-    @JsonProperty("error_code")
-    private ErrorCodeEnum errorCode;
-    @JsonProperty("message")
-    private String message;
-    @JsonProperty("data")
-    private Object data;
+public class SpecializationResponse {
+    @JsonProperty("specialization_id")
+    private String specializationId;
+    @JsonProperty("specialization_name")
+    private String specializationName;
 }

@@ -10,5 +10,5 @@ public interface AuthenticationService {
     AuthenticationResponse authenticate(AuthenticationRequest request);
     MessageResponse verifyTokenRegister(String token);
     MessageResponse forgotPassword(String email);
-    MessageResponse changePassword(String token, String newPassword);
+    MessageResponse changePassword(String userEmail, String currentPassword, String newPassword);
 }

@@ -47,5 +47,5 @@ public class AppointmentResponse {
     @JsonProperty("doctor_name")
     private String doctorName;
     @JsonProperty("status")
-    private AppointmentStatusEnum status;
+    private AppointmentStatusEnum status    ;
 }
