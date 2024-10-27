@@ -9,6 +9,7 @@ import 'package:app/ui/screens/MainScreen.dart';
 import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:app/ui/screens/PersonalInformationScreen.dart';
+import 'package:app/ui/screens/RegisterScreen.dart';
 import 'package:app/ui/screens/SpecializationScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.accentBlue),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }

@@ -1,10 +1,14 @@
+import 'package:app/models/auth_request.dart';
+import 'package:app/services/AuthenticationService.dart';
+import 'package:app/ui/screens/MainScreen.dart';
 import 'package:app/ui/screens/RegisterScreen.dart';
+import 'package:app/utils/auth_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/CustomtextAuthWidget.dart';
 import '../widgets/ButtonWidget.dart';
-import 'package:app/ui/screens/ForgotPasswordScreen.dart';
+import 'ForgotPasswordScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,12 +21,76 @@ class _LoginState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
+  bool _isLoading = false;
+  final AuthenticationService _authenticationService = AuthenticationService();
 
-  void _login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  Future<void> _login() async {
+    final errors = AuthenticationValidator.validateForm(
+        email: _emailController.text,
+        password: _passwordController.text,
+        isRegistration: false
+    );
 
-    print("Email: $email, Password: $password");
+    if(errors.isNotEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AuthenticationValidator.getErrorMessage(errors)),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try{
+      final request = AuthenticationRequest(
+          email: _emailController.text,
+          password: _passwordController.text
+      );
+
+      final response = await _authenticationService.authenticate(request);
+
+      if (!mounted) return;
+
+      if(response.errorCode.code == 200 && response.accessToken != null){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đăng nhập thành công'),
+          ),
+        );
+
+        // Đợi người dùng đọc thông báo
+        await Future.delayed(const Duration(seconds: 2));
+
+        if(!mounted) return;
+
+        Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(builder: (context) => const MainScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message),
+          ),
+        );
+      }
+    }
+    catch(ex){
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Đã xảy ra lỗi'),
+      //   ),
+      // );
+      throw ex;
+    }
+    finally{
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -95,7 +163,10 @@ class _LoginState extends State<LoginScreen> {
                       const SizedBox(height: 50),
 
                       // Login button
-                     CustomElevatedButton(text: 'Đăng nhập', onPressed: _login),//nút đăng nhập
+                     CustomElevatedButton(
+                         text: 'Đăng nhập',
+                         onPressed: _isLoading ? null : _login
+                     ),//nút đăng nhập
                       const SizedBox(height: 130),
 
                       //chuyển trang đăng ký
@@ -104,7 +175,7 @@ class _LoginState extends State<LoginScreen> {
                           // Hành động khi nhấn "Đăng ký"
                           Navigator.push(
                               context,
-                              CupertinoPageRoute(builder: (context) => const Register())
+                              CupertinoPageRoute(builder: (context) => const RegisterScreen())
                           );
                         },
                         child: const Text(

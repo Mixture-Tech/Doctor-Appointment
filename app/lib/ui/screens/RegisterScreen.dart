@@ -1,32 +1,102 @@
+import 'package:app/models/auth_request.dart';
+import 'package:app/services/AuthenticationService.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
+import 'package:app/utils/auth_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/CustomtextAuthWidget.dart';
-
 import '../widgets/ButtonWidget.dart';
 
-class Register extends StatefulWidget {
-  const Register({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<Register> createState() => _RegisterState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterState extends State<Register> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _obscureText = true;
+  bool _isLoading = false;
+  final AuthenticationService _authenticationService = AuthenticationService();
 
-  void _register() {
-    String username = _usernameController.text;
-    String phone = _phoneController.text;
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  Future<void> _register() async {
+    final errors = AuthenticationValidator.validateForm(
+      username: _usernameController.text,
+      phone: _phoneController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+      isRegistration: true,
+    );
 
-    print("Username: $username, Phone: $phone, Email: $email, Password: $password");
+    if(errors.isNotEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AuthenticationValidator.getErrorMessage(errors)),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try{
+      final request = AuthenticationRequest(
+        username: _usernameController.text,
+        phone: _phoneController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        // role: 1
+      );
+
+      final response = await _authenticationService.register(request);
+
+      if (!mounted) return;
+
+      if(response.errorCode.code == 200){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đăng ký thành công. Vui lòng kiểm tra email để xác thực tài khoản.'),
+          ),
+        );
+
+        // Đợi người dùng đọc thông báo
+        await Future.delayed(const Duration(seconds: 2));
+
+        if(!mounted) return;
+
+        Navigator.pop(
+          context,
+          CupertinoPageRoute(builder: (context) => const LoginScreen()),
+        );
+
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message),
+          ),
+        );
+      }
+    }
+    catch(ex){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đăng ký thất bại'),
+        ),
+      );
+      throw ex;
+    }
+    finally{
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
   }
 
 
@@ -112,7 +182,10 @@ class _RegisterState extends State<Register> {
                       const SizedBox(height: 24),
 
                       // Register button
-                      CustomElevatedButton(text: 'Đăng ký', onPressed: _register),
+                      CustomElevatedButton(
+                          text: 'Đăng ký',
+                          onPressed: _isLoading ? null : _register,
+                      ),
 
                       const SizedBox(height: 55),
                       Row(
