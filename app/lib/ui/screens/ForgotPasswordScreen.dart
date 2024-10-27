@@ -1,18 +1,89 @@
+import 'package:app/models/auth_request.dart';
+import 'package:app/services/AuthenticationService.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/widgets/ButtonWidget.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
+import 'package:app/utils/auth_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app/ui/screens/ProfileScreen.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
 import 'package:app/styles/text.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
-  void _submitForgotPassword() {
-    // Xử lý logic quên mật khẩu ở đây
+  @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final AuthenticationService _authenticationService = AuthenticationService();
+  bool _isLoading = false;
+  Future<void> _submitForgotPassword() async {
+
+    final errors = AuthenticationValidator.validateForm(
+      email: _emailController.text,
+      isForgotPassword: true
+    );
+
+    if(errors.isNotEmpty){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AuthenticationValidator.getErrorMessage(errors)),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try{
+      final request = AuthenticationRequest(
+        email: _emailController.text,
+      );
+
+      final response = await _authenticationService.forgotPassword(request);
+
+      if(!mounted) return;
+
+      if(response.errorCode.code == 200){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Mật khẩu mới đã được gửi đến email của bạn'),
+          ),
+        );
+
+        await Future.delayed(const Duration(seconds: 2));
+
+        Navigator.pop(
+          context,
+          CupertinoPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message),
+          ),
+        );
+      }
+    }
+    catch(e){
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Có lỗi xảy ra, vui lòng thử lại sau'),
+      //   ),
+      // );
+      throw e;
+    }
+    finally{
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -76,6 +147,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           TextFieldWidget(
+                            controller: _emailController,
                             hintText: 'Nhập email',
                             prefixIcon: Icons.mail,
                             isRequired: true,
@@ -86,9 +158,8 @@ class ForgotPasswordScreen extends StatelessWidget {
                           // Nút Gửi
                           CustomElevatedButton(
                             text: 'Gửi',
-                            onPressed: _submitForgotPassword,
-
-                            ),
+                            onPressed: _isLoading ? null : _submitForgotPassword,
+                          ),
                         ],
                       ),
                     ),
