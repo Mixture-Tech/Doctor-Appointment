@@ -75,6 +75,10 @@
             max-width: 200px;
             height: auto;
         }
+
+        span {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -86,8 +90,12 @@
         <p th:text="${message}"></p>
 
         <!-- Nút chỉ hiển thị khi biến showButton là true -->
-        <a th:if="${showBtn}" th:href="${url}" class="btn" style="color: white;" th:text="${textBtn}"></a>
-    </div>
+        <a th:if="${showBtn}" th:href="${url}" class="btn" style="color: white;"></a>
+        <a th:if="${showBtn == null || showBtn == true}"
+           th:href="${url}"
+           class="btn"
+           style="color: white;"
+           th:text="${textBtn}"></a>    </div>
     <br>
     <br>
     <br>

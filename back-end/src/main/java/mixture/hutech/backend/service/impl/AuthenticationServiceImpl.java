@@ -178,9 +178,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         );
 
         // Tạo mã số ngẫu nhiên 10 chữ số bằng SecureRandom
-        String randomPassword = String.format("%010d", Math.abs(secureRandom.nextInt(1000000000)));
-
-        // Cập nhật mật khẩu mới cho user
+        String randomPassword = "Mixture" + String.format("%010d", Math.abs(secureRandom.nextInt(1000000000)));
         user.setPassword(passwordEncoder.encode(randomPassword));
         userRepository.save(user);
 
