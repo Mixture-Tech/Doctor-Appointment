@@ -1,25 +1,46 @@
 import 'dart:convert';
 import 'package:app/models/auth_request.dart';
 import 'package:app/models/auth_response.dart';
+import 'package:app/services/StorageService.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationService{
   static String baseUrl = dotenv.env['BASE_URL_API'] ?? '';
+  final StorageService _storageService;
+  final http.Client _httpClient;
+
+  // Factory constructor để khởi tạo AuthenticationService
+  static Future<AuthenticationService> create() async {
+    final prefs = await SharedPreferences.getInstance();
+    return AuthenticationService._(
+      storageService: StorageService(prefs),
+      httpClient: http.Client(),
+    );
+  }
+
+  AuthenticationService._({
+    required StorageService storageService,
+    required http.Client httpClient,
+  }) : _storageService = storageService,
+        _httpClient = httpClient;
+
+  Future<bool> isAuthenticated() async {
+    final token = await _storageService.getAccessToken();
+    return token != null;
+  }
 
   Future<AuthenticationResponse> register(AuthenticationRequest request) async {
     try {
-      final response = await http.post(
+      final response = await _httpClient.post(
         Uri.parse('$baseUrl/auth/register'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await _getBasicHeaders(),
         body: jsonEncode(request.toJson()),
       );
+      print("RESPONSE: " + response.body);
 
-      final responseData = jsonDecode(response.body);
-
-      return AuthenticationResponse.fromJson(responseData);
+      return _handleAuthResponse(response);
     } catch (e) {
       throw Exception('Failed to register: $e');
     }
@@ -27,17 +48,15 @@ class AuthenticationService{
 
   Future<AuthenticationResponse> authenticate(AuthenticationRequest request) async {
     try {
-      final response = await http.post(
+      final response = await _httpClient.post(
         Uri.parse('$baseUrl/auth/authenticate'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await _getBasicHeaders(),
         body: jsonEncode(request.toJson()),
       );
 
-      final responseData = jsonDecode(utf8.decode(response.bodyBytes));
-
-      return AuthenticationResponse.fromJson(responseData);
+      final authResponse = _handleAuthResponse(response);
+      await _storageService.saveAuthData(authResponse);
+      return authResponse;
     } catch (e) {
       throw Exception('Failed to authenticate: $e');
     }
@@ -45,21 +64,75 @@ class AuthenticationService{
 
   Future<AuthenticationResponse> forgotPassword(AuthenticationRequest request) async {
     try {
-      final response = await http.post(
+      final response = await _httpClient.post(
         Uri.parse('$baseUrl/auth/forgot-password'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: await _getBasicHeaders(),
         body: jsonEncode(request.toJson()),
       );
 
-      final responseData = jsonDecode(response.body);
-
-      return AuthenticationResponse.fromJson(responseData);
+      return _handleAuthResponse(response);
     } catch (e) {
-      throw Exception('Failed to forgot password: $e');
+      throw Exception('Failed to process forgot password request: $e');
     }
   }
 
+  Future<AuthenticationResponse> refreshToken() async {
+    try {
+      final refreshToken = await _storageService.getRefreshToken();
+      if(refreshToken == null) {
+        throw Exception('No refresh token available');
+      }
 
+      final response = await _httpClient.post(
+        Uri.parse('$baseUrl/auth/refresh-token'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $refreshToken',
+        },
+      );
+
+      final authResponse = _handleAuthResponse(response);
+      await _storageService.saveAuthData(authResponse);
+      return authResponse;
+    } catch (e) {
+      throw Exception('Failed to refresh token: $e');
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final token = await _storageService.getAccessToken();
+      if(token != null) {
+        await _httpClient.post(
+          Uri.parse('$baseUrl/auth/logout'),
+          headers: await getAuthHeaders(),
+        );
+      }
+    } catch (e) {
+      print('Error during logout: $e');
+    } finally {
+      await _storageService.clearAuthData();
+    }
+  }
+
+  // Helper methods
+  Future<Map<String, String>> _getBasicHeaders() async {
+    return {
+      'Content-Type': 'application/json',
+    };
+  }
+
+  Future<Map<String, String>> getAuthHeaders() async {
+    final token = await _storageService.getAccessToken();
+    return {
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
+  AuthenticationResponse _handleAuthResponse(http.Response response) {
+    final responseData = jsonDecode(utf8.decode(response.bodyBytes));
+    // print("RESPONSE: " + responseData);
+    return AuthenticationResponse.fromJson(responseData);
+  }
 }

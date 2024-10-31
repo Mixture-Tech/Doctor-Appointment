@@ -22,7 +22,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   bool _obscureText = true;
   bool _isLoading = false;
-  final AuthenticationService _authenticationService = AuthenticationService();
+  late AuthenticationService _authenticationService;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAuthenticationService();
+  }
+
+  Future<void> _initializeAuthenticationService() async {
+    _authenticationService = await AuthenticationService.create();
+  }
 
   Future<void> _register() async {
     final errors = AuthenticationValidator.validateForm(
@@ -52,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         phone: _phoneController.text,
         email: _emailController.text,
         password: _passwordController.text,
-        // role: 1
+        role: 1
       );
 
       final response = await _authenticationService.register(request);
@@ -90,6 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           content: Text('Đăng ký thất bại'),
         ),
       );
+      print(ex);
       throw ex;
     }
     finally{
