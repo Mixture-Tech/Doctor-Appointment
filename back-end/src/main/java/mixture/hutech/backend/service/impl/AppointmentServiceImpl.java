@@ -45,6 +45,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponse createAppointment(AppointmentRequest request, String userEmail) {
         User patient = getUserByEmail(userEmail);
         User doctor = getDoctorById(request.getDoctor());
+
+        // Thêm log để debug
+        System.out.println("Doctor ID: " + doctor.getId());
+        System.out.println("Day of week: " + request.getAppointmentTakenDate().getDayOfWeek().toString());
+        System.out.println("Working date: " + request.getAppointmentTakenDate());
+        System.out.println("Start time: " + request.getStartTime());
+        System.out.println("End time: " + request.getEndTime());
+
+
         DoctorSchedule availableSlot = getAvailableSlot(doctor.getId(), request);
 
         if(availableSlot.getCurrentAppointment() >= MAX_APPOINTMENTS_PER_SLOT){
@@ -185,8 +194,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentResponse buildAppointmentResponse(Appointment appointment, User patient, User doctor, String message) {
         return AppointmentResponse.builder()
-                .errorCode(ErrorCodeEnum.OK)
-                .message(message)
+//                .errorCode(ErrorCodeEnum.OK)
+//                .message(message)
                 .probableStartTime(appointment.getProbableStartTime())
                 .actualEndTime(appointment.getActualEndTime())
                 .appointmentTakenDate(appointment.getAppointmentTakenDate())

@@ -20,10 +20,10 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppointmentResponse {
-    @JsonProperty("error_code")
-    private ErrorCodeEnum errorCode;
-    @JsonProperty("message")
-    private String message;
+//    @JsonProperty("error_code")
+//    private ErrorCodeEnum errorCode;
+//    @JsonProperty("message")
+//    private String message;
     @JsonProperty("start_time")
     private LocalTime probableStartTime;
     @JsonProperty("end_time")
