@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface DoctorService {
     List<DoctorResponse> listDoctor();
+    List<DoctorResponse> searchDoctorsByName(String name);
     List<DoctorSpecializationResponse> listDoctorBySpecializationId(String specializationId);
 }

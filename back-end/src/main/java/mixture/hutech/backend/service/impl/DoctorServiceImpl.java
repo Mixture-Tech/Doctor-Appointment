@@ -29,6 +29,15 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public List<DoctorResponse> searchDoctorsByName(String name) {
+        List<DoctorResponse> doctors = doctorRepository.searchDoctorsByName(name);
+        if(doctors.isEmpty()) {
+            throw new ApiException(ErrorCodeEnum.DOCTOR_NOT_FOUND);
+        }
+        return doctors;
+    }
+
+    @Override
     public List<DoctorSpecializationResponse> listDoctorBySpecializationId(String specializationId) {
         List<DoctorSpecializationResponse> doctors = doctorRepository.listDoctorsBySpecializationId(specializationId);
         if(doctors.isEmpty()){

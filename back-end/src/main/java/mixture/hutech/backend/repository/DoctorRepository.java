@@ -35,4 +35,10 @@ public interface DoctorRepository extends JpaRepository<User, String> {
             "AND  u.specialization.id = :specializationId"
     )
     List<DoctorSpecializationResponse> listDoctorsBySpecializationId(String specializationId);
+
+    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorResponse(u.id, u.username, u.description, u.avatar) " +
+            "FROM User u WHERE u.role.name = 'DOCTOR' " +
+            "AND LOWER(u.username) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<DoctorResponse> searchDoctorsByName(String name);
+
 }
