@@ -25,6 +25,7 @@ public interface DoctorRepository extends JpaRepository<User, String> {
             "ON u.id = ds.user.id " +
             "WHERE u.role.name = 'DOCTOR' " +
             "AND u.specialization.id = :specializationId " +
+            "AND ds.currentAppointment < 3 " +
             "ORDER BY ds.id, ds.workingDate, ds.dayOfWeek, ds.startTime"
     )
     List<DoctorScheduleResponse> listDoctorScheduleBySpecializationId(String specializationId);
