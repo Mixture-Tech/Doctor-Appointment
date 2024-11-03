@@ -253,8 +253,7 @@ class _SpecializationDetailScreenState extends State<SpecializationDetailScreen>
     String formattedDate = DateFormat('yyyy-MM-dd').format(date);
 
     return doctor.schedules.where((schedule) =>
-      schedule.workingDate == formattedDate &&
-          schedule.currentAppointment! <= 3
+      schedule.workingDate == formattedDate
     ).toList();
   }
 

@@ -98,37 +98,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   void _updateFormFields() {
     if (_currentUser == null) return;
 
-    if (_bookingType == SingingCharacter.SELF_BOOKING) {
-      setState(() {
-        // Tự đặt: Fill thông tin bệnh nhân từ currentUser
-        _patientNameController.text = _currentUser?.username ?? '';
-        _patientPhoneController.text = _currentUser?.phone ?? '';
-
-        // Cho phép cập nhật ngày sinh mới
-        if (_currentUser?.dateOfBirth != null && _selectedDate == null) {
-          _selectedDate = DateTime.parse(_currentUser!.dateOfBirth!);
-          _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate!);
-        }
-
-        if (_currentUser?.gender != null) {
-          _selectedGender = _currentUser!.gender?.toLowerCase() == 'nam'
-              ? Gender.male
-              : Gender.female;
-        }
-
-        // Khôi phục địa chỉ
-        if (_currentUser?.address != null && _currentUser!.address!.isNotEmpty) {
-          _processAddress(_currentUser!.address!);
-        }
-      });
-    } else {
-      setState(() {
-        // Đặt cho người thân: Fill thông tin người đặt từ currentUser
-        _nameController.text = _currentUser?.username ?? '';
-        _phoneController.text = _currentUser?.phone ?? '';
-        _emailController.text = _currentUser?.email ?? '';
-      });
-    }
+    setState(() {
+      if(_bookingType == SingingCharacter.SELF_BOOKING){
+        _updateSelfBookingFields();
+      } else {
+        _updateOtherBookingFields();
+      }
+    });
   }
 
   void _updateSelfBookingFields() {
@@ -153,29 +129,25 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     // Khôi phục địa chỉ đã lưu
-    if (_originalProvince != null) {
-      _selectedProvince = Map<String, dynamic>.from(_originalProvince!);
-      _selectedDistrict = _originalDistrict != null
-          ? Map<String, dynamic>.from(_originalDistrict!)
-          : null;
-      _selectedWard = _originalWard != null
-          ? Map<String, dynamic>.from(_originalWard!)
-          : null;
+    if (_originalProvince != null && _originalDistrict != null && _originalWard != null) {
+      setState(() {
+        _selectedProvince = Map<String, dynamic>.from(_originalProvince!);
+        _selectedDistrict = Map<String, dynamic>.from(_originalDistrict!);
+        _selectedWard = Map<String, dynamic>.from(_originalWard!);
+      });
     } else if (_currentUser?.address != null && _currentUser!.address!.isNotEmpty) {
+      // Reset flag để cho phép xử lý địa chỉ lại
+      _isAddressLoaded = false;
       _processAddress(_currentUser!.address!);
     }
   }
 
   void _updateOtherBookingFields() {
-    // Lưu trữ địa chỉ hiện tại
-    if (_selectedProvince != null) {
+    // Lưu trữ địa chỉ hiện tại nếu có
+    if (_selectedProvince != null && _selectedDistrict != null && _selectedWard != null) {
       _originalProvince = Map<String, dynamic>.from(_selectedProvince!);
-      _originalDistrict = _selectedDistrict != null
-          ? Map<String, dynamic>.from(_selectedDistrict!)
-          : null;
-      _originalWard = _selectedWard != null
-          ? Map<String, dynamic>.from(_selectedWard!)
-          : null;
+      _originalDistrict = Map<String, dynamic>.from(_selectedDistrict!);
+      _originalWard = Map<String, dynamic>.from(_selectedWard!);
     }
 
     // Cập nhật thông tin người đặt từ currentUser
@@ -191,9 +163,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     _selectedGender = Gender.male;
 
     // Clear địa chỉ
-    _selectedProvince = null;
-    _selectedDistrict = null;
-    _selectedWard = null;
+    setState(() {
+      _selectedProvince = null;
+      _selectedDistrict = null;
+      _selectedWard = null;
+    });
   }
 
   Future<void> _processAddress(String fullAddress) async {
@@ -461,7 +435,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           child: DoctorInfoWidget(
             name: widget.doctorName,
             imageUrl: 'https://example.com/doctor-image.jpg',
-            date: widget.schedule.workingDate!,
+            date: DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!)),
             time: DateTimeUtils.formatScheduleTimeRange(widget.schedule),
             price: widget.price,
           ),

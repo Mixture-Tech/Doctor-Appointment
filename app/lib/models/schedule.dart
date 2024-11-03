@@ -5,7 +5,7 @@ class Schedule {
     required this.startTime,
     required this.endTime,
     required this.workingDate,
-    this.currentAppointment,
+      // required this.currentAppointment,
     required this.doctorName,
   });
 
@@ -14,7 +14,7 @@ class Schedule {
   final String startTime; // Format "HH:mm:ss"
   final String endTime; // Format "HH:mm:ss"
   final String? workingDate; // Format "yyyy-MM-dd"
-  final int? currentAppointment;
+  // final int currentAppointment;
   final String? doctorName;
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
@@ -24,7 +24,7 @@ class Schedule {
       startTime: json["start_time"],
       endTime: json["end_time"],
       workingDate: json["working_date"],
-      currentAppointment: json["current_appointment"],
+      // currentAppointment: json["current_appointment"] ?? 0,
       doctorName: json["doctor_name"],
     );
   }
@@ -35,7 +35,7 @@ class Schedule {
     "start_time": startTime,
     "end_time": endTime,
     "working_date": workingDate,
-    "current_appointment": currentAppointment,
+    // "current_appointment": currentAppointment,
     "doctor_name": doctorName,
   };
 }
