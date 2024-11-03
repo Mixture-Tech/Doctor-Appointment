@@ -4,6 +4,7 @@ import mixture.hutech.backend.entity.Appointment;
 import mixture.hutech.backend.enums.AppointmentStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,9 @@ import java.util.Optional;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, String> {
     Optional<Appointment> findById(String id);
+
+    @Query("SELECT a FROM Appointment a WHERE a.user.id = :userId")
+    List<Appointment> findByUserId(String userId);
 
     @Query("SELECT a FROM Appointment a " +
             "WHERE a.appointmentTakenDate = CURRENT_DATE " +

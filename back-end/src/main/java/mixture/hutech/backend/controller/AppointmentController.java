@@ -9,9 +9,12 @@ import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.service.AppointmentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/appointments")
@@ -60,6 +63,30 @@ public class AppointmentController {
                             .message(ErrorCodeEnum.OK.getMessage())
                             .data(appointmentResponse)
                             .build());
+        } catch (ApiException e) {
+            return ResponseEntity
+                    .status(e.getErrorCodeEnum().getHttpStatus())
+                    .body(MessageResponse.builder()
+                            .errorCode(e.getErrorCodeEnum())
+                            .message(e.getMessage())
+                            .build());
+        }
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<MessageResponse> getAppointmentsByUserId(
+            @AuthenticationPrincipal CustomUserDetail userDetail) {
+        try {
+            String currentUserId = userDetail.getId();
+            List<AppointmentResponse> appointmentResponses = appointmentService.getAppointmentsByUserId(currentUserId);
+
+            return ResponseEntity.ok(
+                    MessageResponse.builder()
+                            .errorCode(ErrorCodeEnum.OK)
+                            .message(ErrorCodeEnum.OK.getMessage())
+                            .data(appointmentResponses)
+                            .build()
+            );
         } catch (ApiException e) {
             return ResponseEntity
                     .status(e.getErrorCodeEnum().getHttpStatus())
