@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -19,13 +20,18 @@ public class UserResponse {
     private String role;
     private String avatar;
     private String phone;
+    private LocalDate dateOfBirth;
     private String address;
+    private String gender;
     private Set<AppointmentResponse> appointments;
 
-    public UserResponse(String id, String email, String username, String phone) {
+    public UserResponse(String id, String email, String username, String phone, String address, LocalDate dateOfBirth, String gender) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.phone = phone;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.gender = gender;
     }
 }

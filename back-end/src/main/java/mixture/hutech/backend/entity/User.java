@@ -65,8 +65,11 @@ public class User {
     @Column(name = "medical_fee")
     private Double medicalFee;
 
-    @Column(name = "professional_statement", unique = true)
+    @Column(name = "professional_statement", unique = true, length = 500)
     private String professionalStatement;
+
+    @Column(name = "current_working")
+    private String currentWorking;
 
     @Column(name = "practicing_from")
     @PastOrPresent(message = "Practicing from date must be in the past or present")

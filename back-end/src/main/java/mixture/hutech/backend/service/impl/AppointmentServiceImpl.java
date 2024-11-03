@@ -225,4 +225,15 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new ApiException(ErrorCodeEnum.INVALID_BOOKING_DATE);
         }
     }
+
+
+    @Override
+    public List<AppointmentResponse> listAppointmentByUser(String userEmail) {
+        List<AppointmentResponse> appointments = appointmentRepository.listAppointmentByUserId(userEmail);
+        if(appointments.isEmpty()){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FOUND);
+        }
+        return appointments;
+    }
+
 }

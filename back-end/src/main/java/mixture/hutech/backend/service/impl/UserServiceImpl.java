@@ -29,6 +29,9 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .phone(user.getPhone())
+                .dateOfBirth(user.getDateOfBirth())
+                .address(user.getAddress())
+                .gender(user.getGender())
                 .build();
     }
 }

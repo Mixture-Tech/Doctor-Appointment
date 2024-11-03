@@ -11,6 +11,7 @@ import mixture.hutech.backend.enums.AppointmentStatusEnum;
 import mixture.hutech.backend.enums.BookingTypeEnum;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -47,5 +48,16 @@ public class AppointmentResponse {
     @JsonProperty("doctor_name")
     private String doctorName;
     @JsonProperty("status")
-    private AppointmentStatusEnum status    ;
+    private AppointmentStatusEnum status;
+    @JsonProperty("created_at")
+    private Timestamp createdAt;
+
+    public AppointmentResponse(LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {
+        this.probableStartTime = probableStartTime;
+        this.actualEndTime = actualEndTime;
+        this.appointmentTakenDate = appointmentTakenDate;
+        this.doctorName = doctorName;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
 }

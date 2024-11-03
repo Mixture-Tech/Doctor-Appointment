@@ -1,5 +1,6 @@
 package mixture.hutech.backend.repository;
 
+import mixture.hutech.backend.dto.response.AppointmentResponse;
 import mixture.hutech.backend.entity.Appointment;
 import mixture.hutech.backend.enums.AppointmentStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
             "AND a.appointmentStatus = ?3 " +
             "AND (a.reminderSent = false OR a.reminderSent IS NULL)")
     List<Appointment> findUpcomingAppointments(LocalTime start, LocalTime end, AppointmentStatusEnum status);
+
+    @Query("SELECT new mixture.hutech.backend.dto.response.AppointmentResponse(a.probableStartTime,a.actualEndTime,a.appointmentTakenDate,a.user.username,a.appointmentStatus,a.createdAt) FROM Appointment a WHERE a.user.email = :userId")
+    List<AppointmentResponse> listAppointmentByUserId(String userId);
 }
