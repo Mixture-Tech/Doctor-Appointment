@@ -125,7 +125,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                         // Giới tính
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: GenderSelectorWidget(),
+                          // child: GenderSelectorWidget(),
                         ),
 
                         // Tỉnh

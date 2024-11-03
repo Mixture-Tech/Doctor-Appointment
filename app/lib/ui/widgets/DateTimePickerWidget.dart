@@ -9,6 +9,10 @@ class DatePickerTextField extends StatefulWidget {
   final bool isRequired;
   final String? helperText;
   final Function(DateTime)? onDateSelected;
+  final TextEditingController? controller;
+  final bool enabled;
+  final bool readOnly;
+  final DateTime? initialDate;
 
   const DatePickerTextField({
     Key? key,
@@ -17,6 +21,10 @@ class DatePickerTextField extends StatefulWidget {
     this.isRequired = false,
     this.helperText,
     this.onDateSelected,
+    this.controller,
+    this.enabled = true,
+    this.readOnly = false,
+    this.initialDate,
   }) : super(key: key);
 
   @override
@@ -24,18 +32,50 @@ class DatePickerTextField extends StatefulWidget {
 }
 
 class _DatePickerTextFieldState extends State<DatePickerTextField> {
-  final TextEditingController _controller = TextEditingController();
+  late TextEditingController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = widget.controller ?? TextEditingController();
+    // Chỉ set text ban đầu nếu có initialDate
+    if (widget.initialDate != null) {
+      controller.text = DateFormat('dd/MM/yyyy').format(widget.initialDate!);
+    }
+  }
+
+  @override
+  void didUpdateWidget(DatePickerTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Chỉ cập nhật text khi initialDate thay đổi và không null
+    if (widget.initialDate != oldWidget.initialDate && widget.initialDate != null) {
+      controller.text = DateFormat('dd/MM/yyyy').format(widget.initialDate!);
+    }
+  }
+
+  @override
+  void dispose() {
+    // Only dispose the controller if it wasn't provided externally
+    if (widget.controller == null) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   Future<void> _selectDate(BuildContext context) async {
+    // Chỉ check readOnly, bỏ check enabled
+    if (!widget.enabled) return;
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: widget.initialDate ?? DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
+
     if (picked != null) {
       setState(() {
-        _controller.text = DateFormat('dd/MM/yyyy').format(picked);
+        controller.text = DateFormat('dd/MM/yyyy').format(picked);
       });
       widget.onDateSelected?.call(picked);
     }
@@ -51,52 +91,56 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: TextField(
-              controller: _controller,
+              controller: controller,
               readOnly: true,
+              enabled: widget.enabled,
               onTap: () => _selectDate(context),
               style: AppTextStyles.labelStyle.copyWith(
-                  color: Colors.black,
+                  color: widget.enabled ? Colors.black : AppColors.grey,
                   fontWeight: FontWeight.w500
               ),
               decoration: InputDecoration(
                 hintText: null,
-                floatingLabelBehavior: FloatingLabelBehavior.never, // Ẩn nhãn khi nhập
+                floatingLabelBehavior: FloatingLabelBehavior.never,
                 label: RichText(
                   text: TextSpan(
                     text: widget.hintText,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey,
-                      fontSize: 16
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                        fontSize: 16
                     ),
                     children: widget.isRequired
                         ? [
                       const TextSpan(
                         text: ' *',
-                        style: TextStyle(color: AppColors.red), // Dấu * màu đỏ
+                        style: TextStyle(color: AppColors.red),
                       ),
                     ]
                         : [],
                   ),
                 ),
-                prefixIcon: Icon(widget.prefixIcon, color: AppColors.grey, size: 22),
+                prefixIcon: Icon(
+                    widget.prefixIcon,
+                    color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                    size: 22
+                ),
                 filled: true,
-                fillColor: AppColors.white,
+                fillColor: widget.enabled ? AppColors.white : AppColors.grey.withOpacity(0.1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.grey),
+                  borderSide: BorderSide(color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.grey),
+                  borderSide: BorderSide(color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.primaryBlue),
+                  borderSide: BorderSide(color: widget.enabled ? AppColors.primaryBlue : AppColors.grey.withOpacity(0.5)),
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               ),
-
             ),
           ),
         ),
@@ -105,7 +149,10 @@ class _DatePickerTextFieldState extends State<DatePickerTextField> {
             padding: const EdgeInsets.only(top: 4, left: 18),
             child: Text(
               widget.helperText!,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                  color: widget.enabled ? Colors.grey : Colors.grey.withOpacity(0.5),
+                  fontSize: 12
+              ),
             ),
           ),
       ],

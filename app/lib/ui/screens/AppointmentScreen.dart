@@ -1,3 +1,4 @@
+import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../styles/colors.dart';
@@ -163,8 +164,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                       onPressed: () {
                                         Navigator.push(
                                             context,
-                                            CupertinoPageRoute(builder: (context) => const AppointmentDetailScreen(
-                                                previousScreen: AppointmentScreen()
+                                            CupertinoPageRoute(builder: (context) => const HomeScreen(
+                                                // previousScreen: AppointmentScreen()
                                               )
                                             )
                                         );
