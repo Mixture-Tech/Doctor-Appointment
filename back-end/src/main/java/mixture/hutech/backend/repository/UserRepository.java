@@ -12,10 +12,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByEmail(String email);
-    /*@Query("SELECT new mixture u from User WHERE u.id = :userId")
-    Optional<User> findById(@Param("userId") String userId);*/
-    @Query("SELECT u FROM User u LEFT JOIN FETCH u.appointments a WHERE u.id = :userId")
-    Optional<User> findByUserId(@Param("userId") String userId);
+
+    @Query("SELECT u FROM User u WHERE u.id = :userId")
+    Optional<User> findById(String userId);
 
 //    @Query("SELECT u FROM User u WHERE u.role.name = 'DOCTOR'")
 //    Optional<User> findDoctorById(String id);
