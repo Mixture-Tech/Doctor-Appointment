@@ -151,6 +151,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentTakenDate(request.getAppointmentTakenDate());
         appointment.setAppointmentBookedDate(LocalDateTime.now());
         appointment.setBookingType(request.getBookingType());
+//        appointment.setUser(request);
+        appointment.setUsername(request.getPatientName());
+        appointment.setAddress(request.getPatientAddress());
+        appointment.setDateOfBirth(request.getPatientDateOfBirth());
+        appointment.setGender(request.getPatientGender());
         appointment.setUser(patient);
         appointment.setAppointmentStatus(AppointmentStatusEnum.CONFIRMED);
         appointment.setDoctorSchedule(availableSlot);
@@ -200,11 +205,11 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .actualEndTime(appointment.getActualEndTime())
                 .appointmentTakenDate(appointment.getAppointmentTakenDate())
                 .bookingType(appointment.getBookingType())
-                .username(appointment.getUsername())
-                .phone(appointment.getPhone())
-                .address(appointment.getAddress())
-                .dateOfBirth(appointment.getDateOfBirth())
-                .gender(appointment.getGender())
+                .username(appointment.getUser().getUsername())
+                .phone(appointment.getUser().getPhone())
+                .address(appointment.getUser().getAddress())
+                .dateOfBirth(appointment.getUser().getDateOfBirth())
+                .gender(appointment.getUser().getGender())
                 .email(patient.getEmail())
                 .doctorName(doctor.getUsername())
                 .status(appointment.getAppointmentStatus())

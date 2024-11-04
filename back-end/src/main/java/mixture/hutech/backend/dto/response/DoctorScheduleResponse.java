@@ -41,4 +41,12 @@ public class DoctorScheduleResponse {
         this.workingDate = workingDate;
         this.doctorName = doctorName;
     }
+
+    public DoctorScheduleResponse(String id, LocalTime startTime, LocalTime endTime, LocalDate workingDate, int currentAppointment) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.workingDate = workingDate;
+        this.currentAppointment = currentAppointment;
+    }
 }

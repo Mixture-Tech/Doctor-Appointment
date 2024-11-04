@@ -16,6 +16,15 @@ import java.util.Optional;
 public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, String> {
 //    Optional<DoctorSchedule> findById(String userId);
 
+    @Query("""
+        SELECT ds
+        FROM DoctorSchedule ds
+        WHERE ds.user.id = :doctorId
+        AND ds.isAvailable = true
+        AND ds.currentAppointment < 3
+    """)
+    List<DoctorSchedule> findSchedulesByDoctorId(String doctorId);
+
     @Query("SELECT new mixture.hutech.backend.dto.response.DoctorScheduleResponse(ds.id, ds.dayOfWeek, ds.startTime, ds.endTime, ds.workingDate, ds.currentAppointment, ds.user.username) FROM DoctorSchedule ds WHERE ds.user.id = :doctorId")
     List<DoctorScheduleResponse> listDoctorScheduleByDoctorId(String doctorId);
 

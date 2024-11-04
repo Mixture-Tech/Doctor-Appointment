@@ -14,7 +14,17 @@ import java.util.Optional;
 @Repository
 public interface DoctorRepository extends JpaRepository<User, String> {
 
-    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorResponse(u.id, u.username, u.description, u.avatar) f from User u WHERE u.role.name = 'DOCTOR'")
+    @Query("""
+        SELECT NEW mixture.hutech.backend.dto.response.DoctorResponse(
+            u.id, 
+            u.username, 
+            u.description, 
+            u.avatar,
+            u.specialization.specializationName
+        )
+        FROM User u
+        WHERE u.role.name = 'DOCTOR'
+    """)
     List<DoctorResponse> findAllDoctor();
 
     @Query("SELECT u FROM User u WHERE u.role.name = 'DOCTOR' AND u.id = :doctorId")

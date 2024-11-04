@@ -23,6 +23,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
             "AND (a.reminderSent = false OR a.reminderSent IS NULL)")
     List<Appointment> findUpcomingAppointments(LocalTime start, LocalTime end, AppointmentStatusEnum status);
 
-    @Query("SELECT new mixture.hutech.backend.dto.response.AppointmentResponse(a.probableStartTime,a.actualEndTime,a.appointmentTakenDate,a.user.username,a.appointmentStatus,a.createdAt) FROM Appointment a WHERE a.user.email = :userId")
+    @Query("SELECT new mixture.hutech.backend.dto.response.AppointmentResponse(a.probableStartTime,a.actualEndTime,a.appointmentTakenDate,a.doctorSchedule.user.username,a.appointmentStatus,a.createdAt) FROM Appointment a WHERE a.user.email = :userId")
     List<AppointmentResponse> listAppointmentByUserId(String userId);
 }
