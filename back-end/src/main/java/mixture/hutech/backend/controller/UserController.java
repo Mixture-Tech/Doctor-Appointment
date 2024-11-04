@@ -56,7 +56,7 @@ public class UserController {
             Optional<UserResponse> updatedUser = userService.updateProfile(userId, request);
             return ResponseEntity.ok(MessageResponse.builder()
                     .errorCode(ErrorCodeEnum.OK)
-                    .message("Profile updated successfully")
+                    .message(ErrorCodeEnum.OK.getMessage())
                     .data(updatedUser.get())
                     .build()
             );
