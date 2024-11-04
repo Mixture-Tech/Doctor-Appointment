@@ -38,4 +38,11 @@ public class DoctorResponse {
         this.doctorImage = doctorImage;
         this.specializationName = specializationName;
     }
+
+    public DoctorResponse(String doctorId, String doctorName, String description, String avatar){
+        this.doctorId = doctorId;
+        this.doctorName = doctorName;
+        this.doctorDescription = description;
+        this.doctorImage = avatar;
+    }
 }

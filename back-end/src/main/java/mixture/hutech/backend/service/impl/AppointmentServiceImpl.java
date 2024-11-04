@@ -20,12 +20,10 @@ import mixture.hutech.backend.service.EmailService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -105,6 +103,20 @@ public class AppointmentServiceImpl implements AppointmentService {
         doctorScheduleRepository.save(doctorSchedule);
 
         return buildAppointmentResponse(appointment, patient, appointment.getDoctorSchedule().getUser(), "Appointment has been cancelled");
+    }
+
+//    @Override
+    public List<AppointmentResponse> getAppointmentsByUserId(String userId) {
+        List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+
+        return appointments.stream()
+                .map(appointment -> buildAppointmentResponse(
+                        appointment,
+                        appointment.getUser(),
+                        appointment.getDoctorSchedule().getUser(),
+                        "Appointment fetched successfully"
+                ))
+                .collect(Collectors.toList());
     }
 
     private void sendConfirmationEmail(User patient, User doctor, Appointment appointment) throws MessagingException {
