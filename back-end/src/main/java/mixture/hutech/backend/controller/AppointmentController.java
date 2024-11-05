@@ -55,13 +55,13 @@ public class AppointmentController {
             @PathVariable String appointmentId,
             @AuthenticationPrincipal CustomUserDetail userDetail){
         try {
-            String currentUserEmail = userDetail.getUsername();
+                                    String currentUserEmail = userDetail.getUsername();
             AppointmentResponse appointmentResponse = appointmentService.cancelAppointment(appointmentId, currentUserEmail);
             return ResponseEntity.ok(MessageResponse.builder()
-                            .errorCode(ErrorCodeEnum.OK)
-                            .message(ErrorCodeEnum.OK.getMessage())
-                            .data(appointmentResponse)
-                            .build());
+                    .errorCode(ErrorCodeEnum.OK)
+                    .message(ErrorCodeEnum.OK.getMessage())
+                    .data(appointmentResponse)
+                    .build());
         } catch (ApiException e) {
             return ResponseEntity
                     .status(e.getErrorCodeEnum().getHttpStatus())

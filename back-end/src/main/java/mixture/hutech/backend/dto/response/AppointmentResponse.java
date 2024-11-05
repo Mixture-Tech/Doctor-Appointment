@@ -25,6 +25,8 @@ public class AppointmentResponse {
 //    private ErrorCodeEnum errorCode;
 //    @JsonProperty("message")
 //    private String message;
+    @JsonProperty("appointment_id")
+    private String id;
     @JsonProperty("start_time")
     private LocalTime probableStartTime;
     @JsonProperty("end_time")
@@ -52,7 +54,8 @@ public class AppointmentResponse {
     @JsonProperty("created_at")
     private Timestamp createdAt;
 
-    public AppointmentResponse(LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {
+    public AppointmentResponse(String appointmentId, LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {
+        this.id = appointmentId;
         this.probableStartTime = probableStartTime;
         this.actualEndTime = actualEndTime;
         this.appointmentTakenDate = appointmentTakenDate;

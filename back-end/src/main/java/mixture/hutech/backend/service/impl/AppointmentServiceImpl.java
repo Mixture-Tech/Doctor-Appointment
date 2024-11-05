@@ -20,9 +20,11 @@ import mixture.hutech.backend.service.EmailService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -168,6 +170,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAddress(request.getPatientAddress());
         appointment.setDateOfBirth(request.getPatientDateOfBirth());
         appointment.setGender(request.getPatientGender());
+//        appointment.setPhone(patient.getPhone());
         appointment.setUser(patient);
         appointment.setAppointmentStatus(AppointmentStatusEnum.CONFIRMED);
         appointment.setDoctorSchedule(availableSlot);
@@ -187,9 +190,29 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else {
             appointment.setUsername(patient.getUsername());
             appointment.setPhone(patient.getPhone());
-            appointment.setAddress(patient.getAddress());
-            appointment.setDateOfBirth(patient.getDateOfBirth());
-            appointment.setGender(patient.getGender());
+            appointment.setAddress(Optional.ofNullable(patient.getAddress()).orElse(request.getPatientAddress()));
+            appointment.setDateOfBirth(Optional.ofNullable(patient.getDateOfBirth()).orElse(request.getPatientDateOfBirth()));
+            appointment.setGender(Optional.ofNullable(patient.getGender()).orElse(request.getPatientGender()));
+//            if (patient.getAddress() == null) {
+//                appointment.setAddress(request.getPatientAddress());
+//            }
+//            else {
+//                appointment.setAddress(patient.getAddress());
+//            }
+//            if (patient.getDateOfBirth() == null) {
+//                appointment.setDateOfBirth(request.getPatientDateOfBirth());
+//            }
+//            else {
+//                appointment.setDateOfBirth(patient.getDateOfBirth());
+//            }
+//            if (patient.getGender() == null) {
+//                appointment.setGender(request.getPatientGender());
+//            }
+//            else {
+//                appointment.setGender(patient.getGender());
+//            }
+//            appointment.setDateOfBirth(patient.getDateOfBirth());
+//            appointment.setGender(patient.getGender());
         }
     }
 
