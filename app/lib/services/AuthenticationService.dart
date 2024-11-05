@@ -135,4 +135,38 @@ class AuthenticationService{
     // print("RESPONSE: " + responseData);
     return AuthenticationResponse.fromJson(responseData);
   }
+
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    final token = await _storageService.getAccessToken();
+    final url = Uri.parse('$baseUrl/auth/change-password');
+
+    try {
+      final response = await _httpClient.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Xử lý nếu thành công (ví dụ: hiển thị thông báo thành công cho người dùng)
+        print('Password changed successfully');
+      } else {
+        // Xử lý nếu gặp lỗi
+        print('Failed to change password: ${response.body}');
+        throw Exception('Failed to change password');
+      }
+    } catch (e) {
+      // Xử lý lỗi mạng hoặc lỗi khác
+      print('Error changing password: $e');
+      throw Exception('Error changing password');
+    }
+  }
+
+
 }
