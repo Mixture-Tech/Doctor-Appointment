@@ -4,7 +4,6 @@ import 'package:app/models/user.dart';
 
 class Appointment{
   Appointment({
-    this.id,
     this.startTime,
     this.endTime,
     this.takenDate,
@@ -15,8 +14,11 @@ class Appointment{
     this.probableStartTime,
     this.actualEndTime,
     this.appointmentTakenDate,
+    this.createdAt,
+    this.doctorName,
+    required this.id,
   });
-  final String? id;
+
   final String? startTime; // Format "HH:mm:ss"
   final String? endTime; // Format "HH:mm:ss"
   final String? takenDate; // Format "yyyy-MM-dd"
@@ -27,14 +29,18 @@ class Appointment{
   final String? probableStartTime; // Format "HH:mm:ss"
   final String? actualEndTime; // Format "HH:mm:ss"
   final String? appointmentTakenDate; // Format "yyyy-MM-dd"
+  final String? createdAt;
+  final String? doctorName;
+  final String id;
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     try {
       // Thêm print để debug
       print('Parsing JSON: $json');
+      print(json['doctor_name']); // Kiểm tra doctor_name
 
       return Appointment(
-        id: json['appointment_id']?.toString(),
+        id: json['appointment_id'].toString(),
         startTime: json['start_time']?.toString(),
         endTime: json['end_time']?.toString(),
         type: json['booking_type']?.toString(),
@@ -51,15 +57,17 @@ class Appointment{
           doctorName: json['doctor']['doctor_name']?.toString(),
           doctorDescription: json['doctor']['doctor_description']?.toString(),
           doctorImage: json['doctor']['doctor_image']?.toString(),
-          specializationName: json['doctor']['specialization_name']?.toString(),
           schedules: json['doctor']['schedules'] == null ? [] :
           List<Schedule>.from((json['doctor']['schedules'] as List)
               .map((x) => Schedule.fromJson(x))),
+          specializationName: json['doctor']['specialization_name']?.toString(),
         ) : null,
         status: json['status']?.toString(),
         probableStartTime: json['probable_start_time']?.toString(),
         actualEndTime: json['actual_end_time']?.toString(),
-        appointmentTakenDate: json['appointment_taken_date']?.toString(),
+        appointmentTakenDate: json['taken_date']?.toString(),
+        createdAt: json['created_at'],
+        doctorName: json['doctor_name'],
       );
     } catch (e) {
       print('Error in fromJson: $json');
@@ -73,7 +81,6 @@ class Appointment{
       // 'start_time': startTime,
       //       // 'end_time': endTime,
       //       // 'taken_date': takenDate,
-      'appointment_id' : id,
       'type': type,
       'username': user?.username,
       'phone': user?.phone,
@@ -86,6 +93,9 @@ class Appointment{
       'probable_start_time': probableStartTime,
       'actual_end_time': actualEndTime,
       'appointment_taken_date': appointmentTakenDate,
+      'created_at': createdAt,
+      'doctor_name': doctorName,
+      'appointment_id': id,
     };
   }
 }

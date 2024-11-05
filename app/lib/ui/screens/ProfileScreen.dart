@@ -7,6 +7,7 @@ import 'package:app/ui/widgets/NavigationBarWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/widgets/ProfileOptionWidget.dart';
+import 'package:app/ui/screens/ChangePasswordScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -32,15 +33,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             HeaderWidget(
               isHomeScreen: true,
               onIconPressed: () {
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(builder: (context) =>
-                //   const LoginScreen()), // Chuyển đến trang đăng nhập
-                // );
+
               },
-              // customIcon: Icons.menu,
             ),
-            // Phần thông tin cá nhân
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
@@ -88,10 +83,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         ),
                         ProfileOptionWidget(
-                          icon: Icons.family_restroom,
-                          label: 'Thành viên gia đình',
+                          icon: Icons.vpn_key,
+                          label: 'Đổi mật khẩu',
                           onTap: () {
-                            // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(builder: (context) => const ChangePasswordScreen()),
+                            );
                           },
                         ),
                         ProfileOptionWidget(
