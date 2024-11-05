@@ -86,7 +86,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           CupertinoPageRoute(builder: (context) => const LoginScreen()),
         );
 
-      }else{
+      }else if (response.errorCode.code == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.errorCode.message),
+          ),
+        );
+      }else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(response.message),

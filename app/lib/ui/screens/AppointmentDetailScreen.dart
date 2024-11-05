@@ -9,6 +9,8 @@ import 'package:app/ui/widgets/DoctorInfoWidget.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/ui/widgets/RadioButtonWidget.dart';
 import 'package:app/ui/widgets/TextFieldWidget.dart';
+import 'package:app/utils/appointment_validator.dart';
+import 'package:app/utils/auth_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -312,34 +314,18 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   }
 
   bool _validateForm() {
-    if (_bookingType == SingingCharacter.OTHER_BOOKING &&
-        (_nameController.text.isEmpty ||
-            _phoneController.text.isEmpty ||
-            _emailController.text.isEmpty)) {
-      setState(() => _error = 'Vui lòng điền đầy đủ thông tin người đặt');
-      return false;
-    }
+    final errors = AppointmentValidator.validateAppointmentForm(
+      isOtherBooking: _bookingType == SingingCharacter.OTHER_BOOKING,
+      patientName: _patientNameController.text,
+      patientPhone: _patientPhoneController.text,
+      dateOfBirth: _selectedDate,
+      province: _selectedProvince,
+      district: _selectedDistrict,
+      ward: _selectedWard,
+    );
 
-    // Add validation for required fields
-    if (_patientNameController.text.isEmpty ||
-        _patientPhoneController.text.isEmpty ||
-        _selectedDate == null ||  // Check date
-        _selectedProvince == null ||
-        _selectedDistrict == null ||
-        _selectedWard == null) {
-      setState(() => _error = 'Vui lòng điền đầy đủ thông tin bệnh nhân');
-      return false;
-    }
-
-    // Ensure address components are selected
-    final addressComponents = [
-      _selectedWard?['WardName'],
-      _selectedDistrict?['DistrictName'],
-      _selectedProvince?['ProvinceName']
-    ];
-
-    if (addressComponents.any((component) => component == null)) {
-      setState(() => _error = 'Vui lòng chọn đầy đủ thông tin địa chỉ');
+    if (errors.isNotEmpty) {
+      setState(() => _error = AppointmentValidator.getErrorMessage(errors));
       return false;
     }
 
@@ -434,7 +420,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: DoctorInfoWidget(
             name: widget.doctorName,
-            imageUrl: 'https://example.com/doctor-image.jpg',
+            imageUrl: widget.doctorImage,
             date: DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!)),
             time: DateTimeUtils.formatScheduleTimeRange(widget.schedule),
             price: widget.price,
