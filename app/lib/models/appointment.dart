@@ -4,6 +4,7 @@ import 'package:app/models/user.dart';
 
 class Appointment{
   Appointment({
+    this.id,
     this.startTime,
     this.endTime,
     this.takenDate,
@@ -15,7 +16,7 @@ class Appointment{
     this.actualEndTime,
     this.appointmentTakenDate,
   });
-
+  final String? id;
   final String? startTime; // Format "HH:mm:ss"
   final String? endTime; // Format "HH:mm:ss"
   final String? takenDate; // Format "yyyy-MM-dd"
@@ -33,6 +34,7 @@ class Appointment{
       print('Parsing JSON: $json');
 
       return Appointment(
+        id: json['appointment_id']?.toString(),
         startTime: json['start_time']?.toString(),
         endTime: json['end_time']?.toString(),
         type: json['booking_type']?.toString(),
@@ -71,6 +73,7 @@ class Appointment{
       // 'start_time': startTime,
       //       // 'end_time': endTime,
       //       // 'taken_date': takenDate,
+      'appointment_id' : id,
       'type': type,
       'username': user?.username,
       'phone': user?.phone,
