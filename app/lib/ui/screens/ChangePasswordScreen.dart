@@ -32,7 +32,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     // Kiểm tra các trường nhập liệu
     if (currentPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
       setState(() {
-        _errorMessage = 'Vui lòng nhập đầy đủ thông tin';
+        // _errorMessage = 'Vui lòng nhập đầy đủ thông tin';
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Vui lòng nhập đầy đủ thông tin'),
+          ),
+        );
       });
       return;
     }
@@ -40,7 +45,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     // Kiểm tra mật khẩu mới và xác nhận mật khẩu
     if (newPassword != confirmPassword) {
       setState(() {
-        _errorMessage = 'Mật khẩu mới chưa trùng khớp.';
+        // _errorMessage = ;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Mật khẩu mới chưa trùng khớp.'),
+          ),
+        );
       });
       return;
     }
@@ -60,8 +70,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đổi mật khẩu thành công'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
         ),
       );
 
@@ -72,7 +80,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     } catch (e) {
       // Xử lý lỗi
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã xảy ra lỗi: $e')),
+        const SnackBar(
+          content: Text('Mật khẩu cũ chưa đúng'),
+        ),
       );
     } finally {
       setState(() {

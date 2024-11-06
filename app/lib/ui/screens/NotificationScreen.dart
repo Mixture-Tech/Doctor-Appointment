@@ -73,9 +73,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Hủy lịch hẹn thành công'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
+          content: Text('Huỷ lịch hẹn thành công'),
         ),
       );
       // Tải lại danh sách lịch hẹn
