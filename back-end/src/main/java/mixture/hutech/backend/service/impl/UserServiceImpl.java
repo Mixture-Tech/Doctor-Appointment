@@ -35,8 +35,8 @@ public class UserServiceImpl implements UserService {
                 .gender(user.getGender())
                 .build();
     }
-    public Optional<UserResponse> getUserProfile(String userId) {
-        return userRepository.findById(userId).map(user -> new UserResponse(
+    public Optional<UserResponse> getUserProfile(String email) {
+        return userRepository.findByEmail(email).map(user -> new UserResponse(
                 null,
                 null,
                 user.getUsername(),
@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserResponse> updateProfile(String userId, UserRequest request) {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public Optional<UserResponse> updateProfile(String email, UserRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         User user = optionalUser.get();
         user.setUsername(request.getUsername());
         user.setDateOfBirth(request.getDateOfBirth());
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         user.setAddress(request.getAddress());
         userRepository.save(user); // Lưu thay đổi
         return Optional.of(new UserResponse(
-                user.getId(),
+                null,
                 null, // email
                 user.getUsername(),
                 null, // phone

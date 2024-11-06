@@ -42,8 +42,8 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<MessageResponse> getCurrentUser(@AuthenticationPrincipal CustomUserDetail userDetail) {
         try {
-            String currentUserId = userDetail.getId();
-            Optional<UserResponse> userResponse = userService.getUserProfile(currentUserId);
+            String currentUserEmail = userDetail.getUsername();
+            Optional<UserResponse> userResponse = userService.getUserProfile(currentUserEmail);
 
             return ResponseEntity.ok(
                     MessageResponse.builder()
@@ -67,8 +67,8 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetail userDetail,
             @RequestBody UserRequest request) {
         try {
-            String userId = userDetail.getId();
-            Optional<UserResponse> updatedUser = userService.updateProfile(userId, request);
+            String userEmail = userDetail.getUsername();
+            Optional<UserResponse> updatedUser = userService.updateProfile(userEmail, request);
             return ResponseEntity.ok(MessageResponse.builder()
                     .errorCode(ErrorCodeEnum.OK)
                     .message(ErrorCodeEnum.OK.getMessage())
