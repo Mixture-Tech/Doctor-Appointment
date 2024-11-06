@@ -6,6 +6,10 @@ class DateTimeUtils {
     return '${date.day}/${date.month}/${date.year}';
   }
 
+  static String formatDayMonth(DateTime date) {
+    return '${date.day}/${date.month}';
+  }
+
   static String formatTimeRange(String? startTime, String? endTime) {
     if (startTime == null || endTime == null) return '';
 

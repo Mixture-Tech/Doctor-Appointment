@@ -20,8 +20,8 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
-    return UserData(
-        id: json['id'],
+        return UserData(
+    id: json['id'],
         email: json['email'],
         username: json['username'],
         phone: json['phone'],

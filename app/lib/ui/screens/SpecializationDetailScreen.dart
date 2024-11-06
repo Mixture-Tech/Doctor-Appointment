@@ -18,11 +18,13 @@ import '../widgets/NavigationBarWidget.dart';
 class SpecializationDetailScreen extends StatefulWidget {
   final String specializationId;
   final String specializationName;
+  // final String specializationImage;
 
   const SpecializationDetailScreen({
     super.key,
     required this.specializationId,
-    required this.specializationName
+    required this.specializationName,
+    // required this.specializationImage
   });
 
   @override
@@ -313,7 +315,7 @@ class _SpecializationDetailScreenState extends State<SpecializationDetailScreen>
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundImage: AssetImage('assets/images/bs1.jpg'),
+                backgroundImage: AssetImage(doctor.doctorImage ?? 'assets/images/doctor.png'),
               ),
               SizedBox(
                 width: 16,
@@ -426,7 +428,7 @@ class _SpecializationDetailScreenState extends State<SpecializationDetailScreen>
                               doctorId: doctor.doctorId ?? '', // Truyền ID của bác sĩ
                               schedule: schedule, // Truyền lịch đã chọn
                               doctorName: doctor.doctorName ?? 'NO NAME DOCTOR', // Truyền tên bác sĩ
-                              doctorImage: 'assets/images/bs1.jpg', // Truyền ảnh bác sĩ
+                              doctorImage: doctor.doctorImage, // Truyền ảnh bác sĩ
                               price: '350.000đ',
                             )
                           )

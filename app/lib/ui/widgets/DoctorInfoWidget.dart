@@ -41,7 +41,7 @@ class DoctorInfoWidget extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: Image.asset(
-              'assets/images/Doctor.png', // Use a placeholder image
+              imageUrl, // Use a placeholder image
               width: 100,
               height: 110,
               fit: BoxFit.cover,

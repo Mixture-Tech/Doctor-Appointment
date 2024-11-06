@@ -49,6 +49,7 @@ class Appointment{
           doctorName: json['doctor']['doctor_name']?.toString(),
           doctorDescription: json['doctor']['doctor_description']?.toString(),
           doctorImage: json['doctor']['doctor_image']?.toString(),
+          specializationName: json['doctor']['specialization_name']?.toString(),
           schedules: json['doctor']['schedules'] == null ? [] :
           List<Schedule>.from((json['doctor']['schedules'] as List)
               .map((x) => Schedule.fromJson(x))),

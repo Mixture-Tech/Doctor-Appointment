@@ -19,8 +19,15 @@ class AuthenticationResponse {
   factory AuthenticationResponse.fromJson(Map<String, dynamic> json) {
     var errorCodeJson = json['error_code'];
     ErrorCode errorCode;
-    if(errorCodeJson is String) {
-      errorCode = ErrorCode(code: 200, message: "Success");
+
+    if (errorCodeJson is String) {
+      switch (errorCodeJson) {
+        case 'OK':
+          errorCode = ErrorCode(code: 200, message: 'Success');
+          break;
+        default:
+          errorCode = ErrorCode(code: 500, message: 'Unknown error');
+      }
     } else {
       errorCode = ErrorCode.fromJson(json['error_code'] ?? {});
     }
@@ -33,4 +40,8 @@ class AuthenticationResponse {
       errorCode: errorCode,
     );
   }
+
+  bool get isSuccess => errorCode.code == 200;
+  bool get isEmailExists => errorCode.code == 400 || (errorCode is String && errorCode == 'EMAIL_ALREADY_EXISTS');
+  bool get isPhoneExists => errorCode.code == 400 || (errorCode is String && errorCode == 'PHONE_ALREADY_EXISTS');
 }

@@ -3,6 +3,8 @@ import 'package:app/ui/widgets/DoctorInfoWidget.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../models/doctor.dart';
+import '../../services/DoctorService.dart';
 import '../../styles/colors.dart';
 import '../../styles/text.dart';
 import '../widgets/DoctorCardWidget.dart';
@@ -17,12 +19,96 @@ class ListDoctorScreen extends StatefulWidget {
 }
 
 class _ListDoctorScreenState extends State<ListDoctorScreen> {
-  void handleDoctorCardTap(String doctorName) {
+  late Future<DoctorService> _doctorService;
+  List<Doctor> doctors = [];
+  bool isLoading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    _doctorService = DoctorService.create();
+    _loadDoctors();
+  }
+
+  Future<void> _loadDoctors() async {
+    try {
+      setState(() {
+        isLoading = true;
+        error = null;
+      });
+
+      final doctorService = await _doctorService;
+      final response = await doctorService.getDoctors();
+
+      final List<Doctor> loadedDoctors = response.map((doctorJson) {
+        return Doctor.fromJson(doctorJson);
+      }).toList();
+
+      setState(() {
+        doctors = loadedDoctors;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
+  void handleDoctorCardTap(Doctor doctor) {
     Navigator.push(
       context,
       CupertinoPageRoute(
-        builder: (context) => const AppointmentScreen(),
+        builder: (context) => AppointmentScreen(doctor: doctor),
       ),
+    );
+  }
+
+  Widget _buildContent() {
+    if (isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
+    if (error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Error: $error'),
+            ElevatedButton(
+              onPressed: _loadDoctors,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (doctors.isEmpty) {
+      return const Center(
+        child: Text('No doctors available'),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: doctors.length,
+      itemBuilder: (context, index) {
+        final doctor = doctors[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: DoctorCardWidget(
+            name: doctor.doctorName ?? 'Unknown Doctor',
+            imageUrl: doctor.doctorImage ?? 'assets/images/default_doctor.jpg',
+            facility: doctor.specializationName ?? 'No description available',
+            description: doctor.doctorDescription ?? 'No description available',
+            onTap: () => handleDoctorCardTap(doctor),
+          ),
+        );
+      },
     );
   }
 
@@ -50,72 +136,9 @@ class _ListDoctorScreenState extends State<ListDoctorScreen> {
                       ),
                     ),
                   ),
-                  ListView(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Column(
-                          children: [
-                            DoctorCardWidget(
-                              name: 'TS. BS. Phạm Minh Anh',
-                              imageUrl: 'assets/images/bs1.jpg',
-                              facility: 'Cơ Xương Khớp',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('TS. BS. Phạm Minh Anh'),
-                            ),
-                            const SizedBox(height: 10),
-                            DoctorCardWidget(
-                              name: 'BS. Nguyễn Thị Kim Hoa',
-                              imageUrl: 'assets/images/bs2.jpg',
-                              facility: 'Thần Kinh',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('BS. Nguyễn Thị Kim Hoa'),
-                            ),
-                            const SizedBox(height: 10),
-                            DoctorCardWidget(
-                              name: 'PGS. TS. BS. Trần Văn B',
-                              imageUrl: 'assets/images/bs3.png',
-                              facility: 'Tim mạch',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('PGS. TS. BS. Trần Văn B'),
-                            ),
-                            const SizedBox(height: 10),
-                            DoctorCardWidget(
-                              name: 'PGS. TS. BS. Trần Văn B',
-                              imageUrl: 'assets/images/bs3.png',
-                              facility: 'Tim mạch',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('PGS. TS. BS. Trần Văn B'),
-                            ),
-                            const SizedBox(height: 10),
-                            DoctorCardWidget(
-                              name: 'PGS. TS. BS. Trần Văn B',
-                              imageUrl: 'assets/images/bs3.png',
-                              facility: 'Tim mạch',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('PGS. TS. BS. Trần Văn B'),
-                            ),
-                            const SizedBox(height: 10),
-                            DoctorCardWidget(
-                              name: 'PGS. TS. BS. Trần Văn B',
-                              imageUrl: 'assets/images/bs3.png',
-                              facility: 'Tim mạch',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('PGS. TS. BS. Trần Văn B'),
-                            ),
-                            const SizedBox(height: 10),
-                            DoctorCardWidget(
-                              name: 'PGS. TS. BS. Trần Văn B',
-                              imageUrl: 'assets/images/bs3.png',
-                              facility: 'Tim mạch',
-                              description: 'ABCXYZ',
-                              onTap: () => handleDoctorCardTap('PGS. TS. BS. Trần Văn B'),
-                            ),
-                            const SizedBox(height: 100),
-                          ],
-                        ),
-                      ),
-                    ],
+                  RefreshIndicator(
+                    onRefresh: _loadDoctors,
+                    child: _buildContent(),
                   ),
                 ],
               ),

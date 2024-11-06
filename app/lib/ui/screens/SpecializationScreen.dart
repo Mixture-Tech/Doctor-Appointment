@@ -123,7 +123,7 @@ class _SpecializationScreenState extends State<SpecializationScreen> {
               context,
               specialization.name,
               specialization.id,
-              // specialization.imagePath,
+              specialization.imgPath,
             );
           },
         ),
@@ -131,7 +131,7 @@ class _SpecializationScreenState extends State<SpecializationScreen> {
     );
   }
 
-  Widget _buildSpecializationItem(BuildContext context, String name, String id) {
+  Widget _buildSpecializationItem(BuildContext context, String name, String id, String imagePath) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -139,6 +139,7 @@ class _SpecializationScreenState extends State<SpecializationScreen> {
           CupertinoPageRoute(builder: (context) => SpecializationDetailScreen(
             specializationId: id,
             specializationName: name,
+            // specializationImage: imagePath,
           )),
         );
       },
@@ -153,7 +154,7 @@ class _SpecializationScreenState extends State<SpecializationScreen> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: AppColors.lightYellow,
+                    color: AppColors.lightGrey,
                     borderRadius: BorderRadius.circular(8.0),
                     boxShadow: [
                       BoxShadow(
@@ -164,14 +165,15 @@ class _SpecializationScreenState extends State<SpecializationScreen> {
                       ),
                     ],
                   ),
-                  // child: Center(
-                  //   child: Image.asset(
-                  //     imagePath,
-                  //     height: 100,
-                  //     width: 100,
-                  //     fit: BoxFit.contain,
-                  //   ),
-                  // ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: Image.asset(
+                      imagePath,
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
