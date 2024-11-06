@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 20),
+                        SizedBox(height: 80),
 
                         // Hình đại diện và tên người dùng
                         CircleAvatar(
@@ -71,7 +71,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: AppColors.accentBlue,
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 80),
 
                         ProfileOptionWidget(
                           icon: Icons.person,
@@ -92,15 +92,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         ),
                         ProfileOptionWidget(
-                          icon: Icons.history,
-                          label: 'Lịch sử khám bệnh',
-                          onTap: () {
-                            // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
-                          },
-                        ),
-                        ProfileOptionWidget(
-                          icon: Icons.folder,
-                          label: 'Hồ sơ khám bệnh',
+                          icon: Icons.logout,
+                          label: 'Đăng xuất',
                           onTap: () {
                             // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
                           },

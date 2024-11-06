@@ -6,7 +6,7 @@ import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:app/utils/auth_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:app/ui/widgets/TextFieldWidget.dart';
+import 'package:app/ui/widgets/TextChangePassword.dart';
 import 'package:app/styles/text.dart';
 import 'package:app/ui/screens/LoginScreen.dart';
 
@@ -25,9 +25,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   String? _errorMessage;
 
   Future<void> _submitChangePassword() async {
-    final currentPassword = _currentPasswordController.text;
-    final newPassword = _newPasswordController.text;
-    final confirmPassword = _confirmPasswordController.text;
+    final currentPassword = _currentPasswordController.text.trim();
+    final newPassword = _newPasswordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
+
+    // Kiểm tra các trường nhập liệu
+    if (currentPassword.isEmpty || newPassword.isEmpty || confirmPassword.isEmpty) {
+      setState(() {
+        _errorMessage = 'Vui lòng nhập đầy đủ thông tin';
+      });
+      return;
+    }
 
     // Kiểm tra mật khẩu mới và xác nhận mật khẩu
     if (newPassword != confirmPassword) {
@@ -46,7 +54,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       // Gọi service để đổi mật khẩu
       final authService = await AuthenticationService.create();
       final response = await authService.changePassword(currentPassword, newPassword);
-      //
+
       // Hiển thị thông báo thành công
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -123,16 +131,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 10),
-                          if (_errorMessage != null) // Hiện thông báo lỗi
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Text(
-                                _errorMessage!,
-                                style: TextStyle(color: Colors.red, fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
                             child: Text(
@@ -146,23 +144,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                           const SizedBox(height: 30),
                           // Mật khẩu cũ
-                          TextFieldWidget(
+                          TextChangePassword(
                             controller: _currentPasswordController,
                             hintText: 'Nhập mật khẩu cũ',
                             prefixIcon: Icons.lock_outline,
                             isRequired: true,
                           ),
                           const SizedBox(height: 20),
-                          // Mật khẩu mới
-                          TextFieldWidget(
+// New Password
+                          TextChangePassword(
                             controller: _newPasswordController,
                             hintText: 'Nhập mật khẩu mới',
                             prefixIcon: Icons.lock,
                             isRequired: true,
                           ),
                           const SizedBox(height: 20),
-                          // Xác nhận mật khẩu mới
-                          TextFieldWidget(
+                          TextChangePassword(
                             controller: _confirmPasswordController,
                             hintText: 'Xác nhận mật khẩu mới',
                             prefixIcon: Icons.lock,
@@ -173,7 +170,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: Text(
                                 _errorMessage!,
-                                style: TextStyle(color: Colors.red, fontSize: 13),
+                                style: TextStyle(color: Colors.red, fontSize: 16),
                                 textAlign: TextAlign.center,
                               ),
                             ),
