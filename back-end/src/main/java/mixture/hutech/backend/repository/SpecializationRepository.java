@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface SpecializationRepository extends JpaRepository<Specialization, String> {
 
-    @Query("SELECT new mixture.hutech.backend.dto.response.SpecializationResponse(s.id, s.specializationName) FROM Specialization s")
+    @Query("SELECT new mixture.hutech.backend.dto.response.SpecializationResponse(s.id, s.specializationName, s.image) FROM Specialization s")
     List<SpecializationResponse> findAllSpecialization();
 }

@@ -1,5 +1,6 @@
 package mixture.hutech.backend.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +53,7 @@ public class AppointmentResponse {
     @JsonProperty("status")
     private AppointmentStatusEnum status;
     @JsonProperty("created_at")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Ho_Chi_Minh")
     private Timestamp createdAt;
 
     public AppointmentResponse(String appointmentId, LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {

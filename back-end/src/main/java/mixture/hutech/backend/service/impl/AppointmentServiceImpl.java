@@ -104,7 +104,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         doctorSchedule.setCurrentAppointment(doctorSchedule.getCurrentAppointment() - 1);
         doctorScheduleRepository.save(doctorSchedule);
 
-        return buildAppointmentResponse(appointment, patient, appointment.getDoctorSchedule().getUser(), "Appointment has been cancelled");
+        return buildAppointmentResponse(appointment, patient, doctorSchedule.getUser(), "Appointment has been cancelled");
     }
 
 //    @Override
@@ -236,6 +236,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return AppointmentResponse.builder()
 //                .errorCode(ErrorCodeEnum.OK)
 //                .message(message)
+                .id(appointment.getId())
                 .probableStartTime(appointment.getProbableStartTime())
                 .actualEndTime(appointment.getActualEndTime())
                 .appointmentTakenDate(appointment.getAppointmentTakenDate())

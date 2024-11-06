@@ -18,7 +18,7 @@ public interface DoctorRepository extends JpaRepository<User, String> {
         SELECT NEW mixture.hutech.backend.dto.response.DoctorResponse(
             u.id, 
             u.username, 
-            u.description, 
+            u.professionalStatement, 
             u.avatar,
             u.specialization.specializationName
         )
@@ -40,7 +40,7 @@ public interface DoctorRepository extends JpaRepository<User, String> {
     )
     List<DoctorScheduleResponse> listDoctorScheduleBySpecializationId(String specializationId);
 
-    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorSpecializationResponse(u.id, u.username, u.description, u.avatar, null) " +
+    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorSpecializationResponse(u.id, u.username, u.professionalStatement, u.avatar, null) " +
             "FROM User u " +
             "WHERE u.role.name = 'DOCTOR' " +
             "AND  u.specialization.id = :specializationId"

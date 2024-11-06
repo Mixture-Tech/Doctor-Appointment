@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TokenRepository extends JpaRepository<Token, String> {
@@ -16,4 +17,5 @@ public interface TokenRepository extends JpaRepository<Token, String> {
       """)
     List<Token> findAllValidTokenByUser(String id);
 
+    Optional<Token> findByToken(String jwt);
 }

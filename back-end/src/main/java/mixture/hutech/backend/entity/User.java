@@ -65,7 +65,7 @@ public class User {
     @Column(name = "medical_fee")
     private Double medicalFee;
 
-    @Column(name = "professional_statement", unique = true, length = 500)
+    @Column(name = "professional_statement", length = 500)
     private String professionalStatement;
 
     @Column(name = "current_working")

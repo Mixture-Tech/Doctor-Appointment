@@ -16,4 +16,6 @@ public class SpecializationResponse {
     private String specializationId;
     @JsonProperty("specialization_name")
     private String specializationName;
+    @JsonProperty("specialization_image")
+    private String specializationImage;
 }
