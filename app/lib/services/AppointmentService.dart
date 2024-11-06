@@ -59,4 +59,53 @@ class AppointmentService {
       throw Exception('Failed to create appointment: $e');
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchAppointments() async {
+    final response = await _apiService.get('/appointments');
+
+    if (response['error_code'] == 'OK') {
+      return List<Map<String, dynamic>>.from(response['data']);
+    }
+
+    // Kiểm tra mã lỗi để xử lý khi không có lịch hẹn
+    if (response['error_code'] == 'APPOINTMENT_NOT_FOUND') {
+      // Trả về danh sách rỗng thay vì ném lỗi
+      return [];
+    }
+
+    // Ném lỗi chung cho các trường hợp khác
+    throw Exception(response['message']);
+  }
+
+  Future<void> cancelAppointment(String appointmentId) async {
+    try {
+      final response = await _apiService.post(
+        '/appointments/$appointmentId/cancel',
+        {},
+      );
+
+      // Kiểm tra response có dữ liệu không
+      if (response == null || response is! Map) {
+        throw Exception('Empty or invalid response from server');
+      }
+
+      // Kiểm tra error_code
+      if (response['error_code'] == 'OK') {
+        print('Appointment cancelled successfully');
+        // Có thể thêm callback để cập nhật UI nếu cần
+        return;
+      } else {
+        // Nếu error_code không phải OK, ném exception với message từ server
+        throw Exception(response['message'] ?? 'Unknown error occurred');
+      }
+
+    } catch (e) {
+      // Xử lý các lỗi khác
+      print('Error cancelling appointment: $e');
+      throw Exception('Failed to cancel appointment: ${e.toString()}');
+    }
+  }
+
+
+
 }

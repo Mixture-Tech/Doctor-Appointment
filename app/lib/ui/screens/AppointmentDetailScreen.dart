@@ -1,4 +1,7 @@
 import 'package:app/services/AppointmentService.dart';
+import 'package:app/services/NotificationService.dart';
+// import 'package:app/services/NotificationService.dart';
+import 'package:app/services/NotifyService.dart';
 import 'package:app/services/ProvinceGHNApiService.dart';
 import 'package:app/services/StorageService.dart';
 import 'package:app/ui/screens/BookingSuccessScreen.dart';
@@ -236,12 +239,51 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       _userData = _createUserData();
 
       if (_userData != null) {
-        await appointmentService.createAppointment(
+        final appointment = await appointmentService.createAppointment(
           doctorId: widget.doctorId,
           schedule: widget.schedule,
           user: _userData!,
           type: _bookingType.name,
         );
+
+        if (_bookingType == SingingCharacter.OTHER_BOOKING) {
+          await NotificationService.sendImmediateNotification(
+            title: 'Đặt lịch thành công',
+            description: 'Bạn đã đặt lịch khám cho người thân với Bác sĩ ${widget.doctorName} '
+                'vào lúc ${DateTimeUtils.formatScheduleTimeRange(widget.schedule)} '
+                'ngày ${DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!))}',
+            additionalData: {
+              'type': 'appointment_created_for_other',
+              'appointmentId': appointment.id,
+              'doctorName': widget.doctorName,
+            },
+          );
+        } else {
+          await NotificationService.sendImmediateNotification(
+            title: 'Đặt lịch thành công',
+            description: 'Bạn đã đặt lịch khám thành công với Bác sĩ ${widget.doctorName} '
+                'vào lúc ${DateTimeUtils.formatScheduleTimeRange(widget.schedule)} '
+                'ngày ${DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!))}',
+            additionalData: {
+              'type': 'appointment_created',
+              'appointmentId': appointment.id,
+              'doctorName': widget.doctorName,
+            },
+          );
+        }
+
+        // Đặt lịch nhắc nhở trước 1 giờ
+        // await NotificationService.sheduleAppointmentReminder(
+        //   appointmentId: appointment.id ?? '',
+        //   patientName: _userData!.username ?? '',
+        //   doctorName: widget.doctorName,
+        //   appointmentTime: DateTime.parse('${widget.schedule.workingDate!} ${widget.schedule.startTime!}'),
+        // );
+
+        // await NotifyService().sendNotification(
+        //   'Đặt lịch thành công',
+        //   'Bạn đã đặt lịch khám thành công với bác sĩ ${widget.doctorName} vào lúc ${DateTimeUtils.formatScheduleTimeRange(widget.schedule)} ngày ${DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!))}',
+        // );
 
         if (mounted) {
           Navigator.pushReplacement(
