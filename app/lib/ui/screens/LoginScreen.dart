@@ -22,7 +22,17 @@ class _LoginState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
   bool _isLoading = false;
-  final AuthenticationService _authenticationService = AuthenticationService();
+  late AuthenticationService _authenticationService;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAuthenticationService();
+  }
+
+  Future<void> _initializeAuthenticationService() async {
+    _authenticationService = await AuthenticationService.create();
+  }
 
   Future<void> _login() async {
     final errors = AuthenticationValidator.validateForm(
@@ -50,7 +60,7 @@ class _LoginState extends State<LoginScreen> {
           password: _passwordController.text
       );
 
-      final response = await _authenticationService.authenticate(request);
+        final response = await _authenticationService.authenticate(request);
 
       if (!mounted) return;
 

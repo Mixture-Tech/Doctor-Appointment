@@ -18,7 +18,18 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final AuthenticationService _authenticationService = AuthenticationService();
+  late AuthenticationService _authenticationService;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeAuthenticationService();
+  }
+
+  Future<void> _initializeAuthenticationService() async {
+    _authenticationService = await AuthenticationService.create();
+  }
+
   bool _isLoading = false;
   Future<void> _submitForgotPassword() async {
 

@@ -59,10 +59,12 @@ class DoctorCardWidget extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'Khoa: $facility',
-                    style: AppTextStyles.infoStyle,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),
                   ),
                   Text(
-                    'Mô tả: $description',
+                    '$description',
                     style: AppTextStyles.infoStyle,
                   ),
                 ],

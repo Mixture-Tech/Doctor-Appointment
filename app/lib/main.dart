@@ -1,3 +1,4 @@
+import 'package:app/services/NotificationService.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/AppointmentDetailScreen.dart';
@@ -13,10 +14,12 @@ import 'package:app/ui/screens/RegisterScreen.dart';
 import 'package:app/ui/screens/SpecializationScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');
   runApp(const MyApp());
+  await NotificationService.init();
 }
 
 class MyApp extends StatelessWidget {

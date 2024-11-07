@@ -6,11 +6,11 @@ class AddressDropdownField extends StatefulWidget {
   final String hintText;
   final IconData prefixIcon;
   final bool isRequired;
-  // final List<String> items;
-  // final Function(String?)? onChanged;
-
   final Future<List<Map<String, dynamic>>> Function() fetchItems;
   final Function(Map<String, dynamic>?) onChanged;
+  final bool enabled;
+  final bool readOnly;
+  final Map<String, dynamic>? initialValue;
 
   const AddressDropdownField({
     Key? key,
@@ -19,6 +19,9 @@ class AddressDropdownField extends StatefulWidget {
     this.isRequired = false,
     required this.fetchItems,
     required this.onChanged,
+    this.enabled = true,
+    this.readOnly = false,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -31,26 +34,63 @@ class _AddressDropdownFieldState extends State<AddressDropdownField> {
   bool _isLoading = false;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
+    _selectedValue = widget.initialValue;
     _loadItems();
   }
 
-  Future<void> _loadItems() async{
+  @override
+  void didUpdateWidget(AddressDropdownField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != oldWidget.initialValue) {
+      setState(() {
+        _selectedValue = widget.initialValue;
+      });
+    }
+
+    if(oldWidget.fetchItems != widget.fetchItems) {
+      _loadItems();
+    }
+  }
+
+  Future<void> _loadItems() async {
+    if (!widget.enabled) return;
+
     setState(() {
       _isLoading = true;
     });
-    try{
+    try {
       final items = await widget.fetchItems();
-      setState(() {
-        _items = items;
-        _isLoading = false;
-      });
+      if (mounted) {  // Check if widget is still mounted
+        setState(() {
+          _items = items;
+          _isLoading = false;
+
+          // Validate selected value still exists in new items
+          if (_selectedValue != null) {
+            final stillExists = items.any((item) =>
+            _getDisplayText(item) == _getDisplayText(_selectedValue!));
+            if (!stillExists) {
+              _selectedValue = null;
+              widget.onChanged(null);
+            }
+          }
+        });
+      }
     }catch(e){
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _items = [];
+        });
+      }
+      print('Error loading items: $e');
     }
+  }
+
+  String _getDisplayText(Map<String, dynamic> item) {
+    return item['ProvinceName'] ?? item['DistrictName'] ?? item['WardName'] ?? '';
   }
 
   @override
@@ -60,21 +100,32 @@ class _AddressDropdownFieldState extends State<AddressDropdownField> {
       child: Container(
         height: 40,
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: widget.enabled ? AppColors.white : AppColors.grey.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.grey),
+          border: Border.all(
+              color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5)
+          ),
         ),
         child: DropdownButtonHideUnderline(
-          child: DropdownButton<Map<String, dynamic>>(
-            value: _selectedValue,
-            icon: const Icon(Icons.arrow_drop_down, color: AppColors.grey),
+          child: DropdownButton<String>(
+            value: _selectedValue != null ? _getDisplayText(_selectedValue!) : null,
+            icon: Icon(
+                Icons.arrow_drop_down,
+                color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5)
+            ),
             hint: Row(
               children: [
-                Icon(widget.prefixIcon, color: AppColors.grey, size: 22),
+                Icon(
+                    widget.prefixIcon,
+                    color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                    size: 22
+                ),
                 const SizedBox(width: 8),
                 Text(
                   widget.hintText,
-                  style: AppTextStyles.labelStyle,
+                  style: AppTextStyles.labelStyle.copyWith(
+                      color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5)
+                  ),
                 ),
                 if (widget.isRequired)
                   const Text(' *', style: TextStyle(color: AppColors.red)),
@@ -84,23 +135,42 @@ class _AddressDropdownFieldState extends State<AddressDropdownField> {
               return _items.map<Widget>((Map<String, dynamic> item) {
                 return Row(
                   children: [
-                    Icon(widget.prefixIcon, color: AppColors.grey, size: 22),
+                    Icon(
+                        widget.prefixIcon,
+                        color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                        size: 22
+                    ),
                     const SizedBox(width: 8),
-                    Text(item['ProvinceName'] ?? item['DistrictName'] ?? item['WardName'] ?? ''),
+                    Text(
+                      _getDisplayText(item),
+                      style: TextStyle(
+                          color: widget.enabled ? Colors.black : AppColors.grey.withOpacity(0.5)
+                      ),
+                    ),
                   ],
                 );
               }).toList();
             },
-            onChanged: (Map<String, dynamic>? newValue) {
+            onChanged: widget.enabled && !widget.readOnly ? (String? newValue) {
+              final selectedItem = _items.firstWhere(
+                    (item) => _getDisplayText(item) == newValue,
+                orElse: () => {},
+              );
+
               setState(() {
-                _selectedValue = newValue;
+                _selectedValue = selectedItem;
               });
-                widget.onChanged(newValue);
-            },
-            items: _items.map<DropdownMenuItem<Map<String, dynamic>>>((Map<String, dynamic> value) {
-              return DropdownMenuItem<Map<String, dynamic>>(
-                value: value,
-                child: Text(value['ProvinceName'] ?? value['DistrictName'] ?? value['WardName'] ?? ''),
+              widget.onChanged(selectedItem);
+            } : null,
+            items: _items.map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
+              return DropdownMenuItem<String>(
+                value: _getDisplayText(value),
+                child: Text(
+                  _getDisplayText(value),
+                  style: TextStyle(
+                      color: widget.enabled ? Colors.black : AppColors.grey.withOpacity(0.5)
+                  ),
+                ),
               );
             }).toList(),
             isExpanded: true,

@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:app/styles/colors.dart';
 import 'package:app/styles/text.dart';
 import 'package:app/ui/screens/PersonalInformationScreen.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:app/ui/screens/LoginScreen.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/widgets/ProfileOptionWidget.dart';
+import 'package:app/ui/screens/ChangePasswordScreen.dart';
+
+import '../../models/user.dart';
+import '../../services/StorageService.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -21,6 +29,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Xử lý thông tin cá nhân ở đây
   }
 
+  String username = '';
+  UserData? _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserInfo();
+  }
+
+  Future<void> _fetchUserInfo() async {
+    try {
+      final storageService = await StorageService.getInstance();
+      _currentUser = await storageService.getUserDataFromToken();
+
+      if (_currentUser != null) {
+        setState(() {
+          // Update fields with _currentUser data
+          username = _currentUser?.username ?? '';
+        });
+      }
+    } catch (e) {
+      print('Error fetching user info: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +64,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             HeaderWidget(
               isHomeScreen: true,
               onIconPressed: () {
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(builder: (context) =>
-                //   const LoginScreen()), // Chuyển đến trang đăng nhập
-                // );
+
               },
-              // customIcon: Icons.menu,
             ),
-            // Phần thông tin cá nhân
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
@@ -60,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 20),
+                        SizedBox(height: 80),
 
                         // Hình đại diện và tên người dùng
                         CircleAvatar(
@@ -69,14 +95,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          'Nguyễn Văn A',
+                          username.isEmpty ? 'Đang tải...' : username, // Kiểm tra nếu chưa có username thì hiển thị "Đang tải..."
                           style: AppTextStyles.labelStyle.copyWith(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: AppColors.accentBlue,
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 80),
 
                         ProfileOptionWidget(
                           icon: Icons.person,
@@ -88,22 +114,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           },
                         ),
                         ProfileOptionWidget(
-                          icon: Icons.family_restroom,
-                          label: 'Thành viên gia đình',
+                          icon: Icons.vpn_key,
+                          label: 'Đổi mật khẩu',
                           onTap: () {
-                            // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(builder: (context) => const ChangePasswordScreen()),
+                            );
                           },
                         ),
                         ProfileOptionWidget(
-                          icon: Icons.history,
-                          label: 'Lịch sử khám bệnh',
-                          onTap: () {
-                            // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
-                          },
-                        ),
-                        ProfileOptionWidget(
-                          icon: Icons.folder,
-                          label: 'Hồ sơ khám bệnh',
+                          icon: Icons.logout,
+                          label: 'Đăng xuất',
                           onTap: () {
                             // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
                           },

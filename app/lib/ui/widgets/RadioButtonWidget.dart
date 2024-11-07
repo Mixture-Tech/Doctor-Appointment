@@ -3,7 +3,7 @@ import 'package:app/styles/text.dart';
 import 'package:flutter/material.dart';
 
 // Enum cho other_booking và self_booking
-enum SingingCharacter { other_booking, self_booking }
+enum SingingCharacter { OTHER_BOOKING, SELF_BOOKING }
 
 // Enum cho male và female
 enum Gender { male, female }
@@ -25,7 +25,7 @@ class TypeSelectorWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Radio<SingingCharacter>(
-          value: SingingCharacter.self_booking,
+          value: SingingCharacter.SELF_BOOKING,
           groupValue: character,
           activeColor: AppColors.primaryBlue,
           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -33,12 +33,19 @@ class TypeSelectorWidget extends StatelessWidget {
                 ? AppColors.primaryBlue
                 : AppColors.grey;
           }),
-          onChanged: onChanged,
+          onChanged: (value) {
+            if (value != null) {
+              onChanged(value);
+            }
+          },
         ),
-        const Text('Đặt cho bản thân'),
+        GestureDetector(
+          onTap: () => onChanged(SingingCharacter.SELF_BOOKING),
+          child: const Text('Đặt cho bản thân'),
+        ),
         const SizedBox(width: 20),
         Radio<SingingCharacter>(
-          value: SingingCharacter.other_booking,
+          value: SingingCharacter.OTHER_BOOKING,
           groupValue: character,
           activeColor: AppColors.primaryBlue,
           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
@@ -46,24 +53,40 @@ class TypeSelectorWidget extends StatelessWidget {
                 ? AppColors.primaryBlue
                 : AppColors.grey;
           }),
-          onChanged: onChanged,
+          onChanged: (value) {
+            if (value != null) {
+              onChanged(value);
+            }
+          },
         ),
-        const Text('Đặt cho người thân'),
+        GestureDetector(
+          onTap: () => onChanged(SingingCharacter.OTHER_BOOKING),
+          child: const Text('Đặt cho người thân'),
+        ),
       ],
     );
   }
 }
 // GenderSelectorWidget cho lựa chọn giới tính
 class GenderSelectorWidget extends StatefulWidget {
-  const GenderSelectorWidget({super.key});
+  final Gender selectedGender;
+  final ValueChanged<Gender> onChanged;
+  final bool enabled;
+  final bool readOnly;
+
+  const GenderSelectorWidget({
+    super.key,
+    required this.selectedGender,
+    required this.onChanged,
+    this.enabled = true,
+    this.readOnly = false,
+  });
 
   @override
   _GenderSelectorWidgetState createState() => _GenderSelectorWidgetState();
 }
 
 class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
-  Gender _gender = Gender.male;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -71,46 +94,48 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
       children: <Widget>[
         Radio<Gender>(
           value: Gender.male,
-          groupValue: _gender,
-          activeColor: AppColors.grey,
+          groupValue: widget.selectedGender,
+          activeColor: widget.enabled ? AppColors.primaryBlue : AppColors.grey.withOpacity(0.5),
           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            if (!widget.enabled) return AppColors.grey.withOpacity(0.5);
             return states.contains(MaterialState.selected)
-                ? AppColors.grey // Màu khi được chọn
-                : AppColors.grey; // Màu viền xám khi không được chọn
+                ? AppColors.primaryBlue
+                : AppColors.grey;
           }),
-          onChanged: (Gender? value) {
-            setState(() {
-              _gender = value!;
-            });
-          },
+          onChanged: widget.enabled && !widget.readOnly ? (Gender? value) {
+            if (value != null) {
+              widget.onChanged(value);
+            }
+          } : null,
         ),
-        const Text(
+        Text(
           'Nam',
           style: TextStyle(
             fontSize: 14,
-            color: AppColors.grey
+            color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
           ),
         ),
         Radio<Gender>(
           value: Gender.female,
-          groupValue: _gender,
-          activeColor: AppColors.grey,
+          groupValue: widget.selectedGender,
+          activeColor: widget.enabled ? AppColors.primaryBlue : AppColors.grey.withOpacity(0.5),
           fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            if (!widget.enabled) return AppColors.grey.withOpacity(0.5);
             return states.contains(MaterialState.selected)
-                ? AppColors.grey
+                ? AppColors.primaryBlue
                 : AppColors.grey;
           }),
-          onChanged: (Gender? value) {
-            setState(() {
-              _gender = value!;
-            });
-          },
+          onChanged: widget.enabled && !widget.readOnly ? (Gender? value) {
+            if (value != null) {
+              widget.onChanged(value);
+            }
+          } : null,
         ),
-        const Text(
+        Text(
           'Nữ',
           style: TextStyle(
             fontSize: 14,
-            color: AppColors.grey
+            color: widget.enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
           ),
         ),
       ],

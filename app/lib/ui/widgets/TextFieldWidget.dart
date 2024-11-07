@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:app/styles/colors.dart';
 import 'package:app/styles/text.dart';
-import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
   final String hintText;
@@ -8,6 +8,8 @@ class TextFieldWidget extends StatelessWidget {
   final bool isRequired;
   final String? helperText;
   final TextEditingController? controller;
+  final bool enabled;
+  final bool readOnly;
 
   const TextFieldWidget({
     super.key,
@@ -16,6 +18,8 @@ class TextFieldWidget extends StatelessWidget {
     this.isRequired = false,
     this.helperText,
     this.controller,
+    this.enabled = true,
+    this.readOnly = false,
   });
 
   @override
@@ -24,52 +28,66 @@ class TextFieldWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 40, // Đặt chiều cao cố định cho TextField
+          height: 40,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: TextField(
               controller: controller,
-              style: const TextStyle(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w500
-              ), // Đặt màu chữ là xám
+              enabled: enabled,
+              readOnly: readOnly,
+              style: TextStyle(
+                color: enabled ? AppColors.black : AppColors.grey,
+                fontWeight: FontWeight.w500,
+              ),
               decoration: InputDecoration(
-                hintText: null, // Không sử dụng hintText gốc
-                // floatingLabelBehavior: FloatingLabelBehavior.never,
                 label: RichText(
                   text: TextSpan(
-                    text: hintText, // Nội dung hintText
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.grey,
-                        fontSize: 16
+                    text: hintText,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                      fontSize: 16,
                     ),
                     children: isRequired
                         ? [
                       const TextSpan(
-                        text: ' *', // Dấu * màu đỏ
+                        text: ' *',
                         style: TextStyle(color: AppColors.red),
                       ),
                     ]
                         : [],
                   ),
                 ),
-                prefixIcon: Icon(prefixIcon, color: AppColors.grey, size: 22), // Giảm kích thước icon
+                prefixIcon: Icon(
+                    prefixIcon,
+                    color: enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                    size: 22
+                ),
                 filled: true,
-                fillColor: AppColors.white, // Đặt màu nền là trắng
+                fillColor: enabled ? AppColors.white : const Color(0xFFF5F5F5),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.grey),
+                  borderSide: BorderSide(
+                    color: enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                  ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: AppColors.grey),
+                  borderSide: BorderSide(
+                    color: enabled ? AppColors.grey : AppColors.grey.withOpacity(0.5),
+                  ),
+                ),
+                disabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                    color: AppColors.grey.withOpacity(0.5),
+                  ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(color: AppColors.primaryBlue),
                 ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10), // Giảm padding bên trong
+                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
               ),
             ),
           ),
@@ -79,7 +97,10 @@ class TextFieldWidget extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4, left: 18),
             child: Text(
               helperText!,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                  color: enabled ? Colors.grey : Colors.grey.withOpacity(0.5),
+                  fontSize: 12
+              ),
             ),
           ),
       ],
