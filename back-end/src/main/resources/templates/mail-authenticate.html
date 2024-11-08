@@ -100,7 +100,7 @@
     <br>
     <br>
     <p style="font-weight: bold">Thank <You></You>,</p>
-    <p style="font-weight: bold">&copy;<span id="year"></span>HEALTH CONNECT - MIXTURE TEAM </p>
+    <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2024</span> HEALTH CONNECT - MIXTURE TEAM</p>
     <script>
         document.getElementById("year").innerHTML = new Date().getFullYear();
     </script>

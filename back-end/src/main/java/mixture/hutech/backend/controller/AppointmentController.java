@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/appointments")
 @RequiredArgsConstructor
@@ -53,13 +55,34 @@ public class AppointmentController {
             @PathVariable String appointmentId,
             @AuthenticationPrincipal CustomUserDetail userDetail){
         try {
-            String currentUserEmail = userDetail.getUsername();
+                                    String currentUserEmail = userDetail.getUsername();
             AppointmentResponse appointmentResponse = appointmentService.cancelAppointment(appointmentId, currentUserEmail);
             return ResponseEntity.ok(MessageResponse.builder()
-                            .errorCode(ErrorCodeEnum.OK)
-                            .message(ErrorCodeEnum.OK.getMessage())
-                            .data(appointmentResponse)
+                    .errorCode(ErrorCodeEnum.OK)
+                    .message(ErrorCodeEnum.OK.getMessage())
+                    .data(appointmentResponse)
+                    .build());
+        } catch (ApiException e) {
+            return ResponseEntity
+                    .status(e.getErrorCodeEnum().getHttpStatus())
+                    .body(MessageResponse.builder()
+                            .errorCode(e.getErrorCodeEnum())
+                            .message(e.getMessage())
                             .build());
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<MessageResponse> listAppointmentByUser(
+            @AuthenticationPrincipal CustomUserDetail userDetail){
+        try {
+            String currentUserEmail = userDetail.getUsername();
+            List<AppointmentResponse> appointmentResponse = appointmentService.listAppointmentByUser(currentUserEmail);
+            return ResponseEntity.ok(MessageResponse.builder()
+                    .errorCode(ErrorCodeEnum.OK)
+                    .message(ErrorCodeEnum.OK.getMessage())
+                    .data(appointmentResponse)
+                    .build());
         } catch (ApiException e) {
             return ResponseEntity
                     .status(e.getErrorCodeEnum().getHttpStatus())

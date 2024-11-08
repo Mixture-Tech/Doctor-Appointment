@@ -66,7 +66,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
             throw new ApiException(ErrorCodeEnum.EMAIL_ALREADY_EXISTS);
         }
-
+        if(userRepository.findByPhone(request.getPhone()).isPresent()){
+            throw new ApiException(ErrorCodeEnum.PHONE_ALREADY_EXISTS);
+        }
         Role role = roleRepository.findById(request.getRole())
                 .orElse(roleRepository.findFirstByOrderByIdAsc());
 
@@ -196,9 +198,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public MessageResponse changePassword(String username, String currentPassword, String newPassword) {
+    public MessageResponse changePassword(String userEmail, String currentPassword, String newPassword) {
         // Tìm người dùng dựa trên username
-        User user = userRepository.findByEmail(username)
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new ApiException(ErrorCodeEnum.USER_NOT_FOUND));
 
         // Kiểm tra xem mật khẩu hiện tại có đúng không

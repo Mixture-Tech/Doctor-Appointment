@@ -45,6 +45,15 @@
             font-size: 0.9em;
             color: #7f8c8d;
         }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            max-width: 200px;
+            height: auto;
+        }
+        span {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -67,10 +76,10 @@
 
     <p th:if="${isConfirmation}">Cuộc hẹn của bạn đã được đặt thành công. Chúng tôi mong được gặp bạn.</p>
 
-    <a th:href="${url}" class="cta-button" th:text="${textBtn}">Xem chi tiết cuộc hẹn</a>
+<!--    <a th:href="${url}" class="cta-button" th:text="${textBtn}">Xem chi tiết cuộc hẹn</a>-->
 
     <div class="footer">
-        <p>Cảm ơn bạn đã chọn dịch vụ chăm sóc sức khỏe của chúng tôi.</p>
+        <p>Cảm ơn bạn đã chọn dịch vụ đặt lịch hẹn khám sức khỏe của chúng tôi.</p>
         <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2024</span> HEALTH CONNECT - MIXTURE TEAM</p>
     </div>
 </div>

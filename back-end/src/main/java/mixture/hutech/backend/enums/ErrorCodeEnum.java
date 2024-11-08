@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCodeEnum {
     OK(200,"Success", HttpStatus.OK),
     EMAIL_ALREADY_EXISTS(409, "Email đã tồn tại", HttpStatus.CONFLICT),
+    PHONE_ALREADY_EXISTS(409,"Số điện thoại đã tồn tại", HttpStatus.CONFLICT),
     INVALID_CREDENTIALS(401, "Thông tin đăng nhập không hợp lệ", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND(404, "Tài khoản chưa được đăng ký", HttpStatus.NOT_FOUND),
     REGISTRATION_FAILED(400, "Đăng ký thất bại", HttpStatus.BAD_REQUEST),
@@ -32,6 +33,7 @@ public enum ErrorCodeEnum {
     TOKEN_NOT_FOUND(400,"Không tìm thấy token hợp lệ" , HttpStatus.BAD_REQUEST ),
     VERIFICATION_FAILED(401,"Xác thực thất bại",HttpStatus.UNAUTHORIZED ),
     INVALID_CURRENT_PASSWORD(401,"Mật khẩu hiện tại không đúng", HttpStatus.UNAUTHORIZED ),
+    DISEASE_NOT_FOUND(404,"Không tìm thấy bệnh", HttpStatus.NOT_FOUND),
     ;
 
     private final int code;

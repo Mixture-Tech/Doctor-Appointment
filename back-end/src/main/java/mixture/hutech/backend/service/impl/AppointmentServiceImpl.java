@@ -20,12 +20,12 @@ import mixture.hutech.backend.service.EmailService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDate;
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +45,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponse createAppointment(AppointmentRequest request, String userEmail) {
         User patient = getUserByEmail(userEmail);
         User doctor = getDoctorById(request.getDoctor());
+
+        // Thêm log để debug
+        System.out.println("Doctor ID: " + doctor.getId());
+        System.out.println("Day of week: " + request.getAppointmentTakenDate().getDayOfWeek().toString());
+        System.out.println("Working date: " + request.getAppointmentTakenDate());
+        System.out.println("Start time: " + request.getStartTime());
+        System.out.println("End time: " + request.getEndTime());
+
+
         DoctorSchedule availableSlot = getAvailableSlot(doctor.getId(), request);
 
         if(availableSlot.getCurrentAppointment() >= MAX_APPOINTMENTS_PER_SLOT){
@@ -95,7 +104,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         doctorSchedule.setCurrentAppointment(doctorSchedule.getCurrentAppointment() - 1);
         doctorScheduleRepository.save(doctorSchedule);
 
-        return buildAppointmentResponse(appointment, patient, appointment.getDoctorSchedule().getUser(), "Appointment has been cancelled");
+        return buildAppointmentResponse(appointment, patient, doctorSchedule.getUser(), "Appointment has been cancelled");
+    }
+
+//    @Override
+    public List<AppointmentResponse> getAppointmentsByUserId(String userId) {
+        List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+
+        return appointments.stream()
+                .map(appointment -> buildAppointmentResponse(
+                        appointment,
+                        appointment.getUser(),
+                        appointment.getDoctorSchedule().getUser(),
+                        "Appointment fetched successfully"
+                ))
+                .collect(Collectors.toList());
     }
 
     private void sendConfirmationEmail(User patient, User doctor, Appointment appointment) throws MessagingException {
@@ -142,6 +165,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setAppointmentTakenDate(request.getAppointmentTakenDate());
         appointment.setAppointmentBookedDate(LocalDateTime.now());
         appointment.setBookingType(request.getBookingType());
+//        appointment.setUser(request);
+        appointment.setUsername(request.getPatientName());
+        appointment.setAddress(request.getPatientAddress());
+        appointment.setDateOfBirth(request.getPatientDateOfBirth());
+        appointment.setGender(request.getPatientGender());
+//        appointment.setPhone(patient.getPhone());
         appointment.setUser(patient);
         appointment.setAppointmentStatus(AppointmentStatusEnum.CONFIRMED);
         appointment.setDoctorSchedule(availableSlot);
@@ -161,9 +190,29 @@ public class AppointmentServiceImpl implements AppointmentService {
         } else {
             appointment.setUsername(patient.getUsername());
             appointment.setPhone(patient.getPhone());
-            appointment.setAddress(patient.getAddress());
-            appointment.setDateOfBirth(patient.getDateOfBirth());
-            appointment.setGender(patient.getGender());
+            appointment.setAddress(Optional.ofNullable(patient.getAddress()).orElse(request.getPatientAddress()));
+            appointment.setDateOfBirth(Optional.ofNullable(patient.getDateOfBirth()).orElse(request.getPatientDateOfBirth()));
+            appointment.setGender(Optional.ofNullable(patient.getGender()).orElse(request.getPatientGender()));
+//            if (patient.getAddress() == null) {
+//                appointment.setAddress(request.getPatientAddress());
+//            }
+//            else {
+//                appointment.setAddress(patient.getAddress());
+//            }
+//            if (patient.getDateOfBirth() == null) {
+//                appointment.setDateOfBirth(request.getPatientDateOfBirth());
+//            }
+//            else {
+//                appointment.setDateOfBirth(patient.getDateOfBirth());
+//            }
+//            if (patient.getGender() == null) {
+//                appointment.setGender(request.getPatientGender());
+//            }
+//            else {
+//                appointment.setGender(patient.getGender());
+//            }
+//            appointment.setDateOfBirth(patient.getDateOfBirth());
+//            appointment.setGender(patient.getGender());
         }
     }
 
@@ -185,17 +234,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentResponse buildAppointmentResponse(Appointment appointment, User patient, User doctor, String message) {
         return AppointmentResponse.builder()
-                .errorCode(ErrorCodeEnum.OK)
-                .message(message)
+//                .errorCode(ErrorCodeEnum.OK)
+//                .message(message)
+                .id(appointment.getId())
                 .probableStartTime(appointment.getProbableStartTime())
                 .actualEndTime(appointment.getActualEndTime())
                 .appointmentTakenDate(appointment.getAppointmentTakenDate())
                 .bookingType(appointment.getBookingType())
-                .username(appointment.getUsername())
-                .phone(appointment.getPhone())
-                .address(appointment.getAddress())
-                .dateOfBirth(appointment.getDateOfBirth())
-                .gender(appointment.getGender())
+                .username(appointment.getUser().getUsername())
+                .phone(appointment.getUser().getPhone())
+                .address(appointment.getUser().getAddress())
+                .dateOfBirth(appointment.getUser().getDateOfBirth())
+                .gender(appointment.getUser().getGender())
                 .email(patient.getEmail())
                 .doctorName(doctor.getUsername())
                 .status(appointment.getAppointmentStatus())
@@ -216,4 +266,15 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new ApiException(ErrorCodeEnum.INVALID_BOOKING_DATE);
         }
     }
+
+
+    @Override
+    public List<AppointmentResponse> listAppointmentByUser(String userEmail) {
+        List<AppointmentResponse> appointments = appointmentRepository.listAppointmentByUserId(userEmail);
+        if(appointments.isEmpty()){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FOUND);
+        }
+        return appointments;
+    }
+
 }

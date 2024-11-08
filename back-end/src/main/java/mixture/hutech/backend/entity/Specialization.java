@@ -20,6 +20,9 @@ public class Specialization {
     @Column(name = "specialization_name")
     private String specializationName;
 
+    @Column(name = "image_path")
+    private String image;
+
     @OneToMany(mappedBy = "specialization")
     private Set<User> users = new HashSet<>();
 

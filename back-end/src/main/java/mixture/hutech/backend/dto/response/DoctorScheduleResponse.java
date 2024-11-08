@@ -28,6 +28,25 @@ public class DoctorScheduleResponse {
     private LocalTime endTime;
     @JsonProperty("working_date")
     private LocalDate workingDate;
+    @JsonProperty("current_appointment")
+    private int currentAppointment;
     @JsonProperty("doctor_name")
     private String doctorName;
+
+    public DoctorScheduleResponse(String id, String dayOfWeek, LocalTime startTime, LocalTime endTime, LocalDate workingDate, String doctorName) {
+        this.id = id;
+        this.dayOfWeek = dayOfWeek;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.workingDate = workingDate;
+        this.doctorName = doctorName;
+    }
+
+    public DoctorScheduleResponse(String id, LocalTime startTime, LocalTime endTime, LocalDate workingDate, int currentAppointment) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.workingDate = workingDate;
+        this.currentAppointment = currentAppointment;
+    }
 }

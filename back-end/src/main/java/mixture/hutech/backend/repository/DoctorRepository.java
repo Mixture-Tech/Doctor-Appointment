@@ -14,7 +14,17 @@ import java.util.Optional;
 @Repository
 public interface DoctorRepository extends JpaRepository<User, String> {
 
-    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorResponse(u.id, u.username, u.description, u.avatar) f from User u WHERE u.role.name = 'DOCTOR'")
+    @Query("""
+        SELECT NEW mixture.hutech.backend.dto.response.DoctorResponse(
+            u.id, 
+            u.username, 
+            u.professionalStatement, 
+            u.avatar,
+            u.specialization.specializationName
+        )
+        FROM User u
+        WHERE u.role.name = 'DOCTOR'
+    """)
     List<DoctorResponse> findAllDoctor();
 
     @Query("SELECT u FROM User u WHERE u.role.name = 'DOCTOR' AND u.id = :doctorId")
@@ -25,14 +35,21 @@ public interface DoctorRepository extends JpaRepository<User, String> {
             "ON u.id = ds.user.id " +
             "WHERE u.role.name = 'DOCTOR' " +
             "AND u.specialization.id = :specializationId " +
+            "AND ds.currentAppointment < 3 " +
             "ORDER BY ds.id, ds.workingDate, ds.dayOfWeek, ds.startTime"
     )
     List<DoctorScheduleResponse> listDoctorScheduleBySpecializationId(String specializationId);
 
-    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorSpecializationResponse(u.id, u.username, u.description, u.avatar, null) " +
+    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorSpecializationResponse(u.id, u.username, u.professionalStatement, u.avatar, null) " +
             "FROM User u " +
             "WHERE u.role.name = 'DOCTOR' " +
             "AND  u.specialization.id = :specializationId"
     )
     List<DoctorSpecializationResponse> listDoctorsBySpecializationId(String specializationId);
+
+    @Query("SELECT new mixture.hutech.backend.dto.response.DoctorResponse(u.id, u.username, u.description, u.avatar) " +
+            "FROM User u WHERE u.role.name = 'DOCTOR' " +
+            "AND LOWER(u.username) LIKE LOWER(CONCAT('%', :name, '%'))")
+    List<DoctorResponse> searchDoctorsByName(String name);
+
 }
