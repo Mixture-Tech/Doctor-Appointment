@@ -5,7 +5,7 @@ import BasicLayout from "./layouts/BasicLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-const Home = loadable(() => import("./pages/Home/Home"));
+const Home = loadable(() => import("./pages/Home/index"));
 const Login = loadable(() => import("./pages/Login/Login"));
 
 function App() {

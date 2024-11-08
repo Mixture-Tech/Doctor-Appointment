@@ -2,8 +2,8 @@
 // import Footer from "~/components/Footer";
 // import Header from "../components/Header/Header";
 // import NavigatorCard from "../components/Header/components/Navbar";
-import Footer from "../components/Footer/Footer";
-import Header from "../components/Header/Header";
+import Footer from "../components/Footer/index";
+import Header from "../components/Header/index";
 // import { StorageKeys } from "~/common/constants/keys.js";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
