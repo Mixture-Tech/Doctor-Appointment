@@ -33,5 +33,5 @@ build/
 .vscode/
 
 # Configuration files
-back-end/.env
+.env
 
