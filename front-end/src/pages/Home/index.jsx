@@ -1,8 +1,15 @@
-import React from 'react';
-import Header from '../../components/Header/index';
+import React, {useState} from 'react';
+import Doctor from './components/Doctor';
+import InfoPage from './components/InfoPage';
+import Specialization from './components/Specialization';
 
 export default function Home() {
-  return<>
-    <Header />
-  </>;
+
+  return ( 
+    <>
+      <InfoPage />
+      <Specialization />
+      <Doctor />
+    </>
+  );
 }

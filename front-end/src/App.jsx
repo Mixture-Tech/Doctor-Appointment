@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import loadable from "@loadable/component";
-import { CircularProgress } from "@mui/material";
-import BasicLayout from "./layouts/BasicLayout";
 import AuthLayout from "./layouts/AuthLayout";
+import BasicLayout from "./layouts/BasicLayout";
+import { CircularProgress } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const Home = loadable(() => import("./pages/Home/index"));
-const Login = loadable(() => import("./pages/Login/Login"));
+const Login = loadable(() => import("./pages/Auth/Login/index"));
 
 function App() {
     return (

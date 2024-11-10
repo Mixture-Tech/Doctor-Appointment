@@ -1,10 +1,8 @@
 
 import React from "react";
-
-// react icons
 import {CgFacebook} from "react-icons/cg";
-import {BsInstagram, BsLinkedin, BsTwitter} from "react-icons/bs";
-import {SlArrowUp} from "react-icons/sl";
+import {BsInstagram, BsLinkedin, BsTwitter, BsGithub} from "react-icons/bs";
+import Button from "../Form/Button";
 
 export default function Footer() {
 
@@ -16,23 +14,23 @@ export default function Footer() {
                 <img src="https://i.ibb.co/ZHYQ04D/footer-logo.png" alt="logo"
                      className="w-[150px]"/>
 
-                <p className="text-[0.9rem] text-center sm:text-start text-gray-600">High level
-                    experience in web design and development knowledge, producing quality work.
+                <p className="text-[0.9rem] text-center sm:text-start text-gray-600">
+                    Chúng tôi cam kết mang đến chất lượng dịch vụ tốt nhất để đáp ứng nhu cầu chăm sóc sức khỏe của bạn.
                 </p>
 
-                <button className="py-3 px-6 rounded-full bg-primary text-white hover:bg-primary-600">Contact Us</button>
+                <Button>Liên hệ với chúng tôi</Button>
 
-                <div className="flex gap-[15px] text-black mt-4">
-                    <a className="text-[1.3rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
+                <div className="flex gap-[15px] text-primary-1000 mt-4">
+                    <a href="https://www.facebook.com/" className="text-[1.3rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
                         <CgFacebook/>
                     </a>
-                    <a className="text-[1.2rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
-                        <BsTwitter/>
+                    <a href="https://github.com/hoangnguyen229" className="text-[1.2rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
+                        <BsGithub/>
                     </a>
-                    <a className="text-[1.2rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
+                    <a href="https://www.instagram.com/" className="text-[1.2rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
                         <BsInstagram/>
                     </a>
-                    <a className="text-[1.2rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
+                    <a href="https://www.linkedin.com/in/hoangnguyen-dev-a2a62529b/" className="text-[1.2rem] p-1.5 cursor-pointer rounded-full bg-white text-text boxShadow">
                         <BsLinkedin/>
                     </a>
                 </div>

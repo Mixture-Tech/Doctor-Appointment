@@ -4,6 +4,8 @@ import { CiMenuFries } from "react-icons/ci";
 import { FiUser } from "react-icons/fi";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbLogout2} from "react-icons/tb";
+import { pages } from '../../../mocks/header.data';
+import Button from "../../Form/Button";
 
 export default function Navbar() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -18,12 +20,16 @@ export default function Navbar() {
 
       {/* Menu */}
       <ul className="flex-1 flex items-center justify-center gap-[20px] text-[1rem] text-[#424242] lg:flex hidden">
-        <li className="hover:border-b-[#3B9DF8] border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize">home</li>
-        <li className="hover:border-b-[#3B9DF8] border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize">about us</li>
-        <li className="hover:border-b-[#3B9DF8] border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize">services</li>
-        <li className="hover:border-b-[#3B9DF8] border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize">doctors</li>
-        <li className="hover:border-b-[#3B9DF8] border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize">blog</li>
-        <li className="hover:border-b-[#3B9DF8] border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize">contact</li>
+        {pages.map((page) => (
+          <li
+            key={page.key}
+            className={`hover:border-primary-1000 border-b-[2px] border-transparent transition-all duration-500 cursor-pointer hover:text-primary-900 capitalize ${
+              page.current ? "text-primary-900" : ""
+            }`}
+          >
+            <a href={page.href}>{page.name}</a>
+          </li>
+        ))}
       </ul>
 
       {/* Search and Account */}
@@ -36,7 +42,7 @@ export default function Navbar() {
           <IoIosSearch className="absolute top-[9px] left-3 text-[#424242] text-[1.3rem]" />
         </div>
 
-        <div
+        {/* <div
           className="flex items-center gap-[15px] relative"
           onClick={() => setAccountMenuOpen(!accountMenuOpen)}
         >
@@ -48,7 +54,7 @@ export default function Navbar() {
             />
             <div className="w-[10px] h-[10px] rounded-full bg-green-500 absolute bottom-[0px] right-0 border-2 border-white"></div>
           </div>
-          <h1 className="text-[1rem] font-[400] text-secondary sm:block hidden">Văn Hoàng</h1>
+          <h1 className="text-[1rem] font-[400] text-secondary sm:block hidden cursor-pointer">Văn Hoàng</h1>
 
           <div
             className={`${
@@ -75,6 +81,10 @@ export default function Navbar() {
             onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
             className="text-[1.8rem] text-[#424242] cursor-pointer lg:hidden flex"
           />
+        </div> */}
+        <div className="flex items-center gap-[5px] relative" >
+          <Button className="login-button px-[10px]">Đăng nhập</Button>
+          <Button className="register-button px-[10px]">Đăng ký</Button>
         </div>
       </div>
     </nav>
