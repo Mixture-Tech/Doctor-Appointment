@@ -7,7 +7,7 @@ export default function DoctorCard({ name, imageUrl, specialty }) {
             <img
                 src={imageUrl}
                 alt={name}
-                className="w-20 h-20 object-cover rounded-full"
+                className="w-32 h-32 object-cover rounded-full"
             />
             <span className="mt-2 text-lg font-medium text-center">{name}</span>
             <span className="mt-1 text-sm text-gray-500">{specialty}</span>

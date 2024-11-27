@@ -16,6 +16,8 @@ export default function DoctorCard({ doctor, availableDates, selectedDate, setSe
                     <p className="text-gray-700">{doctor.position}</p>
                     <p className="text-gray-700">Bác sĩ nhận khám từ {doctor.ageRange}</p>
                     <p className="text-gray-700">Khu vực: {doctor.location}</p>
+                    <p className="text-gray-700">Địa chỉ khám: {doctor.clinic}</p>
+                    <p className="text-gray-700">Giá khám: {doctor.price}</p>
                 </div>
             </div>
             <DoctorSchedule

@@ -45,8 +45,6 @@ export default function DoctorSchedule({ doctor, availableDates, selectedDate, s
                     );
                 })}
             </div>
-            <p className="text-gray-700">Địa chỉ khám: {doctor.clinic}</p>
-            <p className="text-gray-700">Giá khám: {doctor.price}</p>
         </div>
     );
 }
