@@ -20,7 +20,7 @@ export default function ForgotPasswordForm() {
             {/* Submit Button */}
             <button
                 type="submit"
-                className="w-full py-2 text-white font-bold bg-gradient-to-r from-primary-100 to-primary-500 rounded-full hover:opacity-90"
+                className="w-full py-2 text-white font-bold bg-primary-500 rounded-full hover:opacity-90"
             >
                 Gửi liên kết
             </button>
