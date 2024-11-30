@@ -14,23 +14,27 @@ import java.util.Map;
 @Configuration
 public class DotenvConfig implements EnvironmentPostProcessor {
 
+    private Dotenv dotenv;
+
+    @Bean
+    public Dotenv dotenv() {
+        if (dotenv == null) {
+            dotenv = Dotenv.configure()
+                    .directory("./")
+                    .filename(".env")
+                    .ignoreIfMalformed()
+                    .ignoreIfMissing()
+                    .load();
+        }
+        return dotenv;
+    }
+
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
-        // Nạp các biến từ file .env
-        Dotenv dotenv = Dotenv.configure()
-                .directory("./")   // Đặt thư mục chứa file .env
-                .filename(".env")  // Tên file .env
-                .ignoreIfMalformed() // Bỏ qua nếu file bị hỏng
-                .ignoreIfMissing()   // Bỏ qua nếu file không tồn tại
-                .load();
-
-        // Tạo một Map để chứa các biến môi trường từ .env
+        dotenv(); // Khởi tạo hoặc tái sử dụng bean Dotenv
         Map<String, Object> dotenvMap = new HashMap<>();
-
-        // Đưa từng biến vào Map, key là tên biến và value là giá trị biến
         dotenv.entries().forEach(entry -> dotenvMap.put(entry.getKey(), entry.getValue()));
-
-        // Thêm Map này vào PropertySource của Spring Environment
         environment.getPropertySources().addLast(new MapPropertySource("dotenvProperties", dotenvMap));
     }
 }
+

@@ -1,5 +1,6 @@
 package mixture.hutech.backend.service.impl;
 
+import mixture.hutech.backend.config.TranslateConfiguration;
 import mixture.hutech.backend.service.CustomTranslateService;
 import org.springframework.stereotype.Service;
 
@@ -9,110 +10,26 @@ import java.util.*;
 @Service
 public class CustomTranslateServiceImpl implements CustomTranslateService {
 
-    private final Map<String, String> viToEnSymptoms = new HashMap<>();
-    private final Map<String, String> enToViSymptoms = new HashMap<>();
-    private final Map<String, String> viToEnDiseases = new HashMap<>();
-    private final Map<String, String> enToViDiseases = new HashMap<>();
-    private final Map<Integer, String> diseaseIdToNameMap = new HashMap<>();
+    private Map<String, String> viToEnSymptoms = new HashMap<>();
+    private Map<String, String> enToViSymptoms = new HashMap<>();
+    private Map<String, String> viToEnDiseases = new HashMap<>();
+    private Map<String, String> enToViDiseases = new HashMap<>();
+    private Map<Integer, String> diseaseIdToNameMap = new HashMap<>();
 
     public CustomTranslateServiceImpl() {
-        initializeSymptomsDictionary();
-        initializeDiseasesDictionary();
-        initializeDiseaseIdMapping();
-    }
+        this.viToEnSymptoms = TranslateConfiguration.getViToEnSymptoms();
+        this.viToEnDiseases = TranslateConfiguration.getViToEnDiseases();
+        this.diseaseIdToNameMap = TranslateConfiguration.getDiseaseIdMapping();
 
-    private void initializeDiseaseIdMapping() {
-        // Ánh xạ ID bệnh với tên bệnh tiếng Anh
-        diseaseIdToNameMap.put(0, "Drug Reaction");
-        diseaseIdToNameMap.put(1, "Malaria");
-        diseaseIdToNameMap.put(2, "Allergy");
-        diseaseIdToNameMap.put(3, "Hypothyroidism");
-        diseaseIdToNameMap.put(4, "Psoriasis");
-        diseaseIdToNameMap.put(5, "GERD");
-        diseaseIdToNameMap.put(6, "Chronic cholestasis");
-        diseaseIdToNameMap.put(7, "Hepatitis A");
-        // Tiếp tục thêm các bệnh khác theo thứ tự ID
-        // ...
-        diseaseIdToNameMap.put(29, "Hepatitis D");
-        // Thêm các bệnh còn lại
-    }
+        // Tạo các map ngược
+        this.enToViSymptoms = new HashMap<>();
+        this.enToViDiseases = new HashMap<>();
 
-    private void initializeSymptomsDictionary() {
-        // Mapping tiếng Việt - tiếng Anh cho các triệu chứng
-        viToEnSymptoms.put("ngứa", "itching");
-        viToEnSymptoms.put("phát ban", "skin_rash");
-        viToEnSymptoms.put("nổi mẩn da", "nodal_skin_eruptions");
-        viToEnSymptoms.put("hắt hơi liên tục", "continuous_sneezing");
-        viToEnSymptoms.put("run rẩy", "shivering");
-        viToEnSymptoms.put("ớn lạnh", "chills");
-        viToEnSymptoms.put("đau khớp", "joint_pain");
-        viToEnSymptoms.put("đau dạ dày", "stomach_pain");
-        viToEnSymptoms.put("axit dạ dày", "acidity");
-        viToEnSymptoms.put("loét lưỡi", "ulcers_on_tongue");
-        viToEnSymptoms.put("teo cơ", "muscle_wasting");
-        viToEnSymptoms.put("nôn", "vomiting");
-        viToEnSymptoms.put("tiểu buốt", "burning_micturition");
-        viToEnSymptoms.put("tiểu lắt nhắt", "spotting_urination");
-        viToEnSymptoms.put("mệt mỏi", "fatigue");
-        viToEnSymptoms.put("tăng cân", "weight_gain");
-        viToEnSymptoms.put("lo âu", "anxiety");
-        viToEnSymptoms.put("tay chân lạnh", "cold_hands_and_feets");
-        viToEnSymptoms.put("thay đổi tâm trạng", "mood_swings");
-        viToEnSymptoms.put("sụt cân", "weight_loss");
-        viToEnSymptoms.put("bồn chồn", "restlessness");
-        viToEnSymptoms.put("uể oải", "lethargy");
-        viToEnSymptoms.put("đốm trắng trong cổ họng", "patches_in_throat");
-        viToEnSymptoms.put("đường huyết không đều", "irregular_sugar_level");
-        viToEnSymptoms.put("ho", "cough");
-        viToEnSymptoms.put("sốt cao", "high_fever");
-        viToEnSymptoms.put("mắt trũng", "sunken_eyes");
-        viToEnSymptoms.put("khó thở", "breathlessness");
-        viToEnSymptoms.put("đổ mồ hôi", "sweating");
-        viToEnSymptoms.put("mất nước", "dehydration");
-        viToEnSymptoms.put("khó tiêu", "indigestion");
-        viToEnSymptoms.put("nhức đầu", "headache");
-        viToEnSymptoms.put("da vàng", "yellowish_skin");
-        viToEnSymptoms.put("nước tiểu sẫm màu", "dark_urine");
-        viToEnSymptoms.put("buồn nôn", "nausea");
-        viToEnSymptoms.put("chán ăn", "loss_of_appetite");
-        viToEnSymptoms.put("đau sau mắt", "pain_behind_the_eyes");
-        viToEnSymptoms.put("đau lưng", "back_pain");
-        viToEnSymptoms.put("táo bón", "constipation");
-        viToEnSymptoms.put("đau bụng", "abdominal_pain");
-        viToEnSymptoms.put("tiêu chảy", "diarrhoea");
-        // ... thêm các triệu chứng khác tương tự
-
-        // Tạo mapping ngược
+        // Khởi tạo các map ngược
         viToEnSymptoms.forEach((vi, en) -> enToViSymptoms.put(en, vi));
-    }
-
-    private void initializeDiseasesDictionary() {
-        // Mapping tiếng Việt - tiếng Anh cho các bệnh
-        viToEnDiseases.put("phản ứng thuốc", "Drug Reaction");
-        viToEnDiseases.put("sốt rét", "Malaria");
-        viToEnDiseases.put("dị ứng", "Allergy");
-        viToEnDiseases.put("suy giáp", "Hypothyroidism");
-        viToEnDiseases.put("vẩy nến", "Psoriasis");
-        viToEnDiseases.put("trào ngược dạ dày", "GERD");
-        viToEnDiseases.put("ứ mật mãn tính", "Chronic cholestasis");
-        viToEnDiseases.put("viêm gan A", "Hepatitis A");
-        viToEnDiseases.put("thoái hóa khớp", "Osteoarthristis");
-        viToEnDiseases.put("chóng mặt tư thế", "Paroymsal Positional Vertigo");
-        viToEnDiseases.put("hạ đường huyết", "Hypoglycemia");
-        viToEnDiseases.put("mụn trứng cá", "Acne");
-        viToEnDiseases.put("tiểu đường", "Diabetes");
-        viToEnDiseases.put("chốc lở", "Impetigo");
-        viToEnDiseases.put("cao huyết áp", "Hypertension");
-        viToEnDiseases.put("loét dạ dày", "Peptic ulcer diseae");
-        viToEnDiseases.put("trĩ", "Dimorphic hemorrhoids(piles)");
-        viToEnDiseases.put("cảm lạnh thông thường", "Common Cold");
-        viToEnDiseases.put("thủy đậu", "Chicken pox");
-        viToEnDiseases.put("thoái hóa cột sống cổ", "Cervical spondylosis");
-        // ... thêm các bệnh khác tương tự
-
-        // Tạo mapping ngược
         viToEnDiseases.forEach((vi, en) -> enToViDiseases.put(en, vi));
     }
+
 
 
     @Override
@@ -223,6 +140,51 @@ public class CustomTranslateServiceImpl implements CustomTranslateService {
     @Override
     public String getDiseaseNameById(int diseaseId) {
         return diseaseIdToNameMap.getOrDefault(diseaseId, "Unknown Disease");
+    }
+
+    @Override
+    public List<String> getOrderedEnglishSymptoms() {
+        // Danh sách triệu chứng theo thứ tự từ 1-132
+        List<String> orderedSymptoms = Arrays.asList(
+                "itching", "skin_rash", "nodal_skin_eruptions", "continuous_sneezing",
+                "shivering", "chills", "joint_pain", "stomach_pain", "acidity",
+                "ulcers_on_tongue", "muscle_wasting", "vomiting", "burning_micturition",
+                "spotting_urination", "fatigue", "weight_gain", "anxiety",
+                "cold_hands_and_feets", "mood_swings", "weight_loss", "restlessness",
+                "lethargy", "patches_in_throat", "irregular_sugar_level", "cough",
+                "high_fever", "sunken_eyes", "breathlessness", "sweating", "dehydration",
+                "indigestion", "headache", "yellowish_skin", "dark_urine", "nausea",
+                "loss_of_appetite", "pain_behind_the_eyes", "back_pain", "constipation",
+                "abdominal_pain", "diarrhoea", "mild_fever", "yellow_urine",
+                "yellowing_of_eyes", "acute_liver_failure", "fluid_overload",
+                "swelling_of_stomach", "swelled_lymph_nodes", "malaise",
+                "blurred_and_distorted_vision", "phlegm", "throat_irritation",
+                "redness_of_eyes", "sinus_pressure", "runny_nose", "congestion",
+                "chest_pain", "weakness_in_limbs", "fast_heart_rate",
+                "pain_during_bowel_movements", "pain_in_anal_region", "bloody_stool",
+                "irritation_in_anus", "neck_pain", "dizziness", "cramps", "bruising",
+                "obesity", "swollen_legs", "swollen_blood_vessels", "puffy_face_and_eyes",
+                "enlarged_thyroid", "brittle_nails", "swollen_extremeties",
+                "excessive_hunger", "extra_marital_contacts", "drying_and_tingling_lips",
+                "slurred_speech", "knee_pain", "hip_joint_pain", "muscle_weakness",
+                "stiff_neck", "swelling_joints", "movement_stiffness",
+                "spinning_movements", "loss_of_balance", "unsteadiness",
+                "weakness_of_one_body_side", "loss_of_smell", "bladder_discomfort",
+                "foul_smell_of_urine", "continuous_feel_of_urine", "passage_of_gases",
+                "internal_itching", "toxic_look_(typhos)", "depression", "irritability",
+                "muscle_pain", "altered_sensorium", "red_spots_over_body", "belly_pain",
+                "abnormal_menstruation", "dischromic_patches", "watering_from_eyes",
+                "increased_appetite", "polyuria", "family_history", "mucoid_sputum",
+                "rusty_sputum", "lack_of_concentration", "visual_disturbances",
+                "receiving_blood_transfusion", "receiving_unsterile_injections", "coma",
+                "stomach_bleeding", "distention_of_abdomen",
+                "history_of_alcohol_consumption", "fluid_overload.1", "blood_in_sputum",
+                "prominent_veins_on_calf", "palpitations", "painful_walking",
+                "pus_filled_pimples", "blackheads", "scurring", "skin_peeling",
+                "silver_like_dusting", "small_dents_in_nails", "inflammatory_nails",
+                "blister", "red_sore_around_nose", "yellow_crust_ooze"
+        );
+        return orderedSymptoms;
     }
 
 }

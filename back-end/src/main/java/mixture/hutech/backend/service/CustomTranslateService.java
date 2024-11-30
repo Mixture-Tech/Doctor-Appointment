@@ -10,4 +10,5 @@ public interface CustomTranslateService {
     Set<String> getAllVietnameseDiseases();
     Set<String> getAllEnglishSymptoms();
     String getDiseaseNameById(int diseaseId);
+    List<String> getOrderedEnglishSymptoms();
 }

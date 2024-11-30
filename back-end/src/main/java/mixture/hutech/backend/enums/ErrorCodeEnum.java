@@ -34,6 +34,7 @@ public enum ErrorCodeEnum {
     VERIFICATION_FAILED(401,"Xác thực thất bại",HttpStatus.UNAUTHORIZED ),
     INVALID_CURRENT_PASSWORD(401,"Mật khẩu hiện tại không đúng", HttpStatus.UNAUTHORIZED ),
     DISEASE_NOT_FOUND(404,"Không tìm thấy bệnh", HttpStatus.NOT_FOUND),
+    SYMPTOM_NOT_FOUND(400, "Không tìm thấy triệu chứng", HttpStatus.NOT_FOUND),
     ;
 
     private final int code;
