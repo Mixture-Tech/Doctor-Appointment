@@ -2,9 +2,10 @@ package mixture.hutech.backend.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import mixture.hutech.backend.service.CustomTranslateService;
+import mixture.hutech.backend.repository.DiseaseRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @Builder
@@ -12,24 +13,22 @@ import java.util.List;
 @NoArgsConstructor
 public class DiseaseResponse {
     @JsonProperty("disease_id")
-    private String diseaseId;
-    @JsonProperty("disease_name")
-    private String diseaseName;
-
-    private int disease_Id;
-    private List<String> extractedSymptoms;
+    private int diseaseId;
+    @JsonProperty("disease_eng_name")
     private String englishDisease;
+    @JsonProperty("disease_vie_name")
     private String vietnameseDisease;
+    private List<String> extractedSymptoms;
 
-    public DiseaseResponse(String diseaseId, String diseaseName){
+    public DiseaseResponse(int diseaseId, String vietnameseDisease){
         this.diseaseId = diseaseId;
-        this.diseaseName = diseaseName;
+        this.vietnameseDisease = vietnameseDisease;
     }
 
-    public DiseaseResponse(int disease_Id, List<String> extractedSymptoms, CustomTranslateService translateService) {
-        this.disease_Id = disease_Id;
+    public DiseaseResponse(int disease_Id, List<String> extractedSymptoms, DiseaseRepository diseaseRepository) {
+        this.diseaseId = disease_Id;
         this.extractedSymptoms = extractedSymptoms;
-        this.englishDisease = translateService.getDiseaseNameById(disease_Id);
-        this.vietnameseDisease = translateService.translateDiseaseToVietnamese(this.englishDisease);
+        this.englishDisease = diseaseRepository.getDiseaseEnglishNameById(disease_Id);
+        this.vietnameseDisease = diseaseRepository.findDiseaseByVietnameseNameByEnglishName(this.englishDisease);
     }
 }

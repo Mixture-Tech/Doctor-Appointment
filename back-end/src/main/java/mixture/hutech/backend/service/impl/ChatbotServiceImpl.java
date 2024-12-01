@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import mixture.hutech.backend.dto.request.SymptomRequest;
 import mixture.hutech.backend.dto.response.DiseaseResponse;
+import mixture.hutech.backend.dto.response.SymptomResponse;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
+import mixture.hutech.backend.repository.DiseaseRepository;
+import mixture.hutech.backend.repository.SymptomRepository;
 import mixture.hutech.backend.service.ChatbotService;
-import mixture.hutech.backend.service.CustomTranslateService;
 import mixture.hutech.backend.service.NLPService;
 import org.hibernate.cfg.Environment;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,8 @@ public class ChatbotServiceImpl implements ChatbotService {
     private final Dotenv dotenv;
     private final NLPService nlpService;
     private final RestTemplate restTemplate;
-    private final CustomTranslateService translateService;
+    private final DiseaseRepository diseaseRepository;
+    private final SymptomRepository symptomRepository;
 
     @Override
     public DiseaseResponse predictDisease(SymptomRequest symptomRequest) {
@@ -60,17 +63,19 @@ public class ChatbotServiceImpl implements ChatbotService {
         return new DiseaseResponse(
                 diseaseId,
                 extractedSymptoms,
-                translateService
+                diseaseRepository
         );
     }
 
     private List<Integer> convertSymptomsToBinaryArray(String normalizedSymptoms) {
         List<Integer> binaryArray = new ArrayList<>(Collections.nCopies(132, 0));
-        List<String> orderedSymptoms = translateService.getOrderedEnglishSymptoms();
+        List<String> orderedSymptoms = symptomRepository.findAllSymptomEnglishName().stream()
+                .map(SymptomResponse::getSymptomName)
+                .toList();
 
         List<String> symptomsList = Arrays.stream(normalizedSymptoms.split(" "))
                 .map(symptom -> symptom.replaceAll("[\\[\\]]", ""))
-                .collect(Collectors.toList());
+                .toList();
 
         for (String symptom : symptomsList) {
             int index = orderedSymptoms.indexOf(symptom);

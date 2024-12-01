@@ -5,5 +5,4 @@ import java.util.List;
 public interface NLPService {
     List<String> extractSymptoms(String symptomName);
     String normalizeSymptoms(List<String> symptoms);
-    String translateDiseaseToVietnamese(String diseaseName);
 }

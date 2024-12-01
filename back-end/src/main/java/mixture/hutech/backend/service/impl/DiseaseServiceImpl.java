@@ -23,4 +23,9 @@ public class DiseaseServiceImpl implements DiseaseService {
         }
         return diseases;
     }
+
+    @Override
+    public List<DiseaseResponse> findAllDiseaseEnglishName() {
+        return diseaseRepository.findAllDiseaseEnglishName();
+    }
 }

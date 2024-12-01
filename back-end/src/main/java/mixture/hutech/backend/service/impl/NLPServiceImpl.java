@@ -1,7 +1,8 @@
 package mixture.hutech.backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import mixture.hutech.backend.service.CustomTranslateService;
+import mixture.hutech.backend.dto.response.SymptomResponse;
+import mixture.hutech.backend.repository.SymptomRepository;
 import mixture.hutech.backend.service.NLPService;
 import org.springframework.stereotype.Service;
 import vn.pipeline.Annotation;
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NLPServiceImpl implements NLPService {
     private final VnCoreNLP vnCoreNLP;
-    private final CustomTranslateService customTranslateService;
+
+    private final SymptomRepository symptomRepository;
 
     /**
      * Trích xuất triệu chứng từ văn bản tiếng Việt và dịch sang tiếng Anh
@@ -38,14 +40,19 @@ public class NLPServiceImpl implements NLPService {
 
             String[] symptomParts = segmentedText.split(" ");
             List<String> identifiedSymptoms = new ArrayList<>();
-            Set<String> knownVietnameseSymptoms = customTranslateService.getAllVietnameseSymptoms();
+//            Set<String> knownVietnameseSymptoms = customTranslateService.getAllVietnameseSymptoms();
+
+            Set<String> knownVietnameseSymptoms = symptomRepository.findAllSymptomVietnameseName().stream()
+                    .map(SymptomResponse::getSymptomName)
+                    .collect(Collectors.toSet());
 
             for (String symptomPart : symptomParts) {
                 String normalizedText = symptomPart.toLowerCase().trim();
 
                 for (String symptom : knownVietnameseSymptoms){
                     if(normalizedText.contains(symptom.toLowerCase())){
-                        String englishSymptom = String.valueOf(customTranslateService.translateSymptomsToEnglish(symptom));
+//                        String englishSymptom = String.valueOf(customTranslateService.translateSymptomsToEnglish(symptom));
+                        String englishSymptom = String.valueOf(symptomRepository.findSymptomEnglishNameByVietnameseName(symptom));
                         if (englishSymptom != null){
                             identifiedSymptoms.add(englishSymptom);
                         }
@@ -80,23 +87,7 @@ public class NLPServiceImpl implements NLPService {
      * @param englishDisease Tên bệnh bằng tiếng Anh
      * @return dịch tiếng Việt về dịch bệnh
      */
-    public String translateDiseaseToVietnamese(String englishDisease) {
-        return customTranslateService.translateDiseaseToVietnamese(englishDisease);
-    }
-
-    /**
-     * Hỗ trợ đầy đủ các triệu chứng bằng tiếng Việt
-     * @return Bộ triệu chứng tiếng Việt
-     */
-    public Set<String> getAllSupportedSymptoms() {
-        return customTranslateService.getAllVietnameseSymptoms();
-    }
-
-    /**
-     * Hỗ trợ tất cả các bệnh bằng tiếng Việt
-     * @return Bộ bệnh Việt
-     */
-    public Set<String> getAllSupportedDiseases() {
-        return customTranslateService.getAllVietnameseDiseases();
-    }
+//    public String translateDiseaseToVietnamese(String englishDisease) {
+//        return customTranslateService.translateDiseaseToVietnamese(englishDisease);
+//    }
 }
