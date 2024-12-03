@@ -30,11 +30,12 @@ public enum ErrorCodeEnum {
     APPOINTMENT_NOT_FOUND(404,"Không tìm thấy lịch hẹn", HttpStatus.NOT_FOUND),
     SPECIALIZATION_NOT_FOUND(404,"Không tìm thấy chuyên khoa", HttpStatus.NOT_FOUND),
     TOKEN_ALREADY_ACTIVATED(400,"Tài khoản đã được kích hoạt" ,HttpStatus.BAD_REQUEST ),
-    TOKEN_NOT_FOUND(400,"Không tìm thấy token hợp lệ" , HttpStatus.BAD_REQUEST ),
+    TOKEN_NOT_FOUND(404,"Không tìm thấy token hợp lệ" , HttpStatus.NOT_FOUND ),
     VERIFICATION_FAILED(401,"Xác thực thất bại",HttpStatus.UNAUTHORIZED ),
     INVALID_CURRENT_PASSWORD(401,"Mật khẩu hiện tại không đúng", HttpStatus.UNAUTHORIZED ),
     DISEASE_NOT_FOUND(404,"Không tìm thấy bệnh", HttpStatus.NOT_FOUND),
-    SYMPTOM_NOT_FOUND(400, "Không tìm thấy triệu chứng", HttpStatus.NOT_FOUND),
+    SYMPTOM_NOT_FOUND(404, "Không tìm thấy triệu chứng", HttpStatus.NOT_FOUND),
+    EXTERNAL_SERVICE_ERROR(500, "Lỗi kết nối dịch vụ ngoại vi", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     private final int code;

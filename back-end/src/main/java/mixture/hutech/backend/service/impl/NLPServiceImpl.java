@@ -18,14 +18,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NLPServiceImpl implements NLPService {
     private final VnCoreNLP vnCoreNLP;
-
     private final SymptomRepository symptomRepository;
 
-    /**
-     * Trích xuất triệu chứng từ văn bản tiếng Việt và dịch sang tiếng Anh
-     * @param vietnameseSymptom Văn bản đầu vào bằng tiếng Việt
-     * @return Danh sách các triệu chứng được xác định bằng tiếng Anh
-     */
     @Override
     public List<String> extractSymptoms(String vietnameseSymptom) {
         try{
@@ -40,7 +34,6 @@ public class NLPServiceImpl implements NLPService {
 
             String[] symptomParts = segmentedText.split(" ");
             List<String> identifiedSymptoms = new ArrayList<>();
-//            Set<String> knownVietnameseSymptoms = customTranslateService.getAllVietnameseSymptoms();
 
             Set<String> knownVietnameseSymptoms = symptomRepository.findAllSymptomVietnameseName().stream()
                     .map(SymptomResponse::getSymptomName)
@@ -51,8 +44,8 @@ public class NLPServiceImpl implements NLPService {
 
                 for (String symptom : knownVietnameseSymptoms){
                     if(normalizedText.contains(symptom.toLowerCase())){
-//                        String englishSymptom = String.valueOf(customTranslateService.translateSymptomsToEnglish(symptom));
                         String englishSymptom = String.valueOf(symptomRepository.findSymptomEnglishNameByVietnameseName(symptom));
+
                         if (englishSymptom != null){
                             identifiedSymptoms.add(englishSymptom);
                         }

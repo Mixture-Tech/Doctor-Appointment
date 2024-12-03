@@ -15,6 +15,7 @@ import mixture.hutech.backend.service.NLPService;
 import org.hibernate.cfg.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -48,13 +49,17 @@ public class ChatbotServiceImpl implements ChatbotService {
         flaskRequest.put("symptoms", convertSymptomsToBinaryArray(normalizedSymptoms));
 
         // 4. Gọi Flask API
-//        String flaskApiUrl = environment.getProperty("API_PREDICT_URL");
         String flaskApiUrl = dotenv.get("FLASK_API_URL");
-        ResponseEntity<Map> flaskResponse = restTemplate.postForEntity(
-                flaskApiUrl + "/predict",
-                flaskRequest,
-                Map.class
-        );
+        ResponseEntity<Map> flaskResponse;
+        try {
+            flaskResponse = restTemplate.postForEntity(
+                    flaskApiUrl + "/predict",
+                    flaskRequest,
+                    Map.class
+            );
+        } catch (RestClientException e) {
+            throw new ApiException(ErrorCodeEnum.EXTERNAL_SERVICE_ERROR);
+        }
 
         // 5. Lấy ID bệnh từ response
         int diseaseId = (int) flaskResponse.getBody().get("predicted_disease");

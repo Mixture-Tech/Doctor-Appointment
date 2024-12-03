@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SpecializationService {
     List<SpecializationResponse> listSpecialization();
+    SpecializationResponse findSpecializationByDiseaseId(int diseaseId);
 }

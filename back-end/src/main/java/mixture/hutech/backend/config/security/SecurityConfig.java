@@ -28,7 +28,7 @@ public class SecurityConfig {
             "/api/auth/**",
 //            "/api/appointments/**",
 //            "/api/doctor-schedules/**",
-//            "/api/specializations/**",
+            "/api/specializations/**",
 //            "/api/doctors",
 //            "/api/doctors/**",
             "api/chatbot/**",

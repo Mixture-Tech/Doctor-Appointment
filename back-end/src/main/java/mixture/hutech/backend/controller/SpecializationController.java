@@ -63,4 +63,23 @@ public class SpecializationController {
         }
     }
 
+    @GetMapping("/disease/{diseaseId}")
+    public ResponseEntity<MessageResponse> getSpecializationByDisease(@PathVariable int diseaseId){
+        try{
+            SpecializationResponse specializationResponse = specializationService.findSpecializationByDiseaseId(diseaseId);
+            return ResponseEntity.ok(MessageResponse.builder()
+                    .errorCode(ErrorCodeEnum.OK)
+                    .message(ErrorCodeEnum.OK.getMessage())
+                    .data(specializationResponse)
+                    .build());
+        }catch(ApiException e){
+            return ResponseEntity
+                    .status(e.getErrorCodeEnum().getHttpStatus())
+                    .body(MessageResponse.builder()
+                            .errorCode(e.getErrorCodeEnum())
+                            .message(e.getMessage())
+                            .build());
+        }
+    }
+
 }
