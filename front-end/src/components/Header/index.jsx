@@ -5,9 +5,11 @@ import Banner from './components/Banner';
 
 export default function Header() {
     return (
-        // <div className="relative h-screen">
-        //     {/* <Banner /> */}
-        // </div>
-        <Navbar />
+        <>
+            <Navbar />
+            <div className="relative h-screen">
+                <Banner />
+            </div>
+        </>
     );
 }

@@ -1,14 +1,11 @@
 // import Cookies from "js-cookie";
-// import Footer from "~/components/Footer";
-// import Header from "../components/Header/Header";
-// import NavigatorCard from "../components/Header/components/Navbar";
 import Footer from "../components/Footer/index";
 import Header from "../components/Header/index";
-// import { StorageKeys } from "~/common/constants/keys.js";
+import Navbar from "../components/Header/components/Navbar";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 export default function BasicLayout() {
-    // const location = useLocation();
+    const location = useLocation();
 
     // return Cookies.get(StorageKeys.ACCESS_TOKEN) &&
     //     (location.pathname === "/dang-nhap" || location.pathname === "/dang-ky") ? (
@@ -22,7 +19,7 @@ export default function BasicLayout() {
     // );
     return (
         <div className="flex flex-col min-h-screen">
-            <Header />
+            {location.pathname === "/" ? <Header /> : <Navbar />}
             <Outlet />
             <Footer />
         </div>

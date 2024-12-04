@@ -1,6 +1,8 @@
 import React from "react";
-import InputField from "./InputField";
-import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
+import { MdEmail } from "react-icons/md";
+import { RiLockPasswordFill } from "react-icons/ri";
+import Button from "../../../../components/Form/Button/index";
+import InputField from "../../../../components/Form/Auth/AuthTextField";
 
 export default function LoginForm() {
     return (
@@ -10,7 +12,7 @@ export default function LoginForm() {
                 label="Email"
                 type="text"
                 placeholder="Nhập email"
-                icon={faEnvelope}
+                icon={MdEmail}
             />
 
             {/* Password Input */}
@@ -18,7 +20,7 @@ export default function LoginForm() {
                 label="Mật khẩu"
                 type="password"
                 placeholder="Nhập mật khẩu"
-                icon={faLock}
+                icon={RiLockPasswordFill}
             />
 
             {/* Forgot Password */}
@@ -28,13 +30,9 @@ export default function LoginForm() {
                 </a>
             </div>
 
-            {/* Submit Button */}
-            <button
-                type="submit"
-                className="w-full py-2 text-white font-bold bg-primary-500 rounded-full hover:opacity-90"
-            >
-                Đăng nhập
-            </button>
+            <div className="flex justify-center">
+                <Button className="login-button">Đăng nhập</Button>
+            </div>
         </form>
     );
 }

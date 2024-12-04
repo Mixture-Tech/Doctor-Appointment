@@ -1,6 +1,6 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { MdEmail } from "react-icons/md";
+import Button from "../../../../components/Form/Button/index";
 
 export default function ForgotPasswordForm() {
     return (
@@ -8,7 +8,8 @@ export default function ForgotPasswordForm() {
             {/* Email Input */}
             <div className="mb-4">
                 <div className="flex items-center border rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-blue-500">
-                    <FontAwesomeIcon icon={faEnvelope} className="text-gray-500 mr-3" />
+                    {/* <FontAwesomeIcon icon={faEnvelope} className="text-gray-500 mr-3" /> */}
+                    <MdEmail className="text-gray-500 mr-3" />
                     <input
                         type="text"
                         placeholder="Nhập email"
@@ -18,12 +19,9 @@ export default function ForgotPasswordForm() {
             </div>
 
             {/* Submit Button */}
-            <button
-                type="submit"
-                className="w-full py-2 text-white font-bold bg-primary-500 rounded-full hover:opacity-90"
-            >
-                Gửi liên kết
-            </button>
+            <div className="flex justify-center">
+                <Button className="forgot-password-button">Quên mật khẩu</Button>
+            </div>
         </form>
     );
 }

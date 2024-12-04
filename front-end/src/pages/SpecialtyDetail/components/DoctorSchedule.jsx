@@ -34,7 +34,7 @@ export default function DoctorSchedule({ doctor, availableDates, selectedDate, s
                                     console.log(`Đặt lịch vào ${selectedDate} lúc ${slot.time}`);
                                 }
                             }}
-                            className={`flex justify-center items-center w-24 h-10 rounded md:w-20 md:h-8 ${
+                            className={`flex justify-center items-center w-26 h-12 rounded md:w-20 md:h-8 ${
                                 slot.status === 'available' && selectedDate
                                     ? 'bg-primary-500 text-white hover:bg-primary-600'
                                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'

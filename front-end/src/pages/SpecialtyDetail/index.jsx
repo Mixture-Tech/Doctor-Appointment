@@ -61,7 +61,7 @@ export default function BoneJointPage() {
     ];
 
     return (
-        <div className="bone-joint-page container mx-auto px-4 py-8 md:px-28">
+        <div className="bone-joint-page container mx-auto px-4 py-8">
             <Header />
             <DiseaseList />
             <section>

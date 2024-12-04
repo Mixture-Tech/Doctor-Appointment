@@ -5,7 +5,7 @@ import { FaClock, FaHeadset, FaHouseUser } from "react-icons/fa";
 
 export default function InfoPage() {
     return (
-        <section className="relative h-100">
+        <section className="relative h-100 transform -translate-y-1/4">
             <div className="container mx-auto px-4">
                 <div className="flex flex-col lg:flex-row">
                     <div className="lg:w-1/3 flex items-stretch">

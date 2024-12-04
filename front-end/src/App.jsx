@@ -28,7 +28,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/chuyen-khoa"
+                        path="/danh-sach-chuyen-khoa"
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <Specialities title="Chuyên khoa" />
@@ -69,8 +69,6 @@ function App() {
                             </Suspense>
                         }
                     />
-                </Route>
-                <Route>
                     <Route
                         path="/dang-ky"
                         element={

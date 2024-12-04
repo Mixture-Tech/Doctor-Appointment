@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "./components/Logo";
+import Logo from "../../../components/Form/Auth/Logo";
 import ForgotPasswordForm from "./components/ForgotPasswordForm";
 
 export default function ForgotPassword() {
@@ -10,13 +10,11 @@ export default function ForgotPassword() {
                 <Logo />
 
                 {/* Title */}
-                <h2 className="text-2xl font-semibold text-center mb-6">
-                    Quên mật khẩu
-                </h2>
+                <h2 className="text-3xl font-bold text-center mb-6">Quên mật khẩu</h2>
 
                 {/* Instruction Text */}
                 <p className="text-center text-gray-600 mb-6">
-                    Nhập email của bạn để nhận liên kết đặt lại mật khẩu
+                    Để khôi phục mật khẩu, vui lòng nhập email đã đăng ký để được cấp mật khẩu mới.
                 </p>
 
                 {/* Forgot Password Form */}
