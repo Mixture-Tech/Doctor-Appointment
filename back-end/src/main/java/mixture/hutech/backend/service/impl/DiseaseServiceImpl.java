@@ -2,6 +2,8 @@ package mixture.hutech.backend.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import mixture.hutech.backend.dto.response.DiseaseResponse;
+import mixture.hutech.backend.dto.response.SpecializationResponse;
+import mixture.hutech.backend.entity.Disease;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.repository.DiseaseRepository;
@@ -28,4 +30,23 @@ public class DiseaseServiceImpl implements DiseaseService {
     public List<DiseaseResponse> findAllDiseaseEnglishName() {
         return diseaseRepository.findAllDiseaseEnglishName();
     }
+
+//    public DiseaseResponse getDiseaseResponse(int diseaseId, List<String> extractedSymptoms) {
+//        Disease disease = diseaseRepository.findById(diseaseId)
+//                .orElseThrow(() -> new ApiException(ErrorCodeEnum.DISEASE_NOT_FOUND));
+//
+//        String englishDisease = diseaseRepository.getDiseaseEnglishNameById(diseaseId);
+//        String vietnameseDisease = diseaseRepository.findDiseaseByVietnameseNameByEnglishName(englishDisease);
+//
+//        SpecializationResponse specializationResponse = null;
+//        if (disease.getSpecialization() != null) {
+//            specializationResponse = new SpecializationResponse(
+//                    disease.getSpecialization().getId(),
+//                    disease.getSpecialization().getSpecializationName(),
+//                    disease.getSpecialization().getImage()
+//            );
+//        }
+//
+//        return new DiseaseResponse(diseaseId, englishDisease, vietnameseDisease, extractedSymptoms, specializationResponse);
+//    }
 }

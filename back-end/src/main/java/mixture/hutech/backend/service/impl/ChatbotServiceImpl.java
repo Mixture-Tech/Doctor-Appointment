@@ -1,78 +1,66 @@
 package mixture.hutech.backend.service.impl;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import mixture.hutech.backend.client.FlaskClient;
 import mixture.hutech.backend.dto.request.SymptomRequest;
 import mixture.hutech.backend.dto.response.DiseaseResponse;
+import mixture.hutech.backend.dto.response.SpecializationResponse;
 import mixture.hutech.backend.dto.response.SymptomResponse;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.repository.DiseaseRepository;
+import mixture.hutech.backend.repository.SpecializationRepository;
 import mixture.hutech.backend.repository.SymptomRepository;
 import mixture.hutech.backend.service.ChatbotService;
 import mixture.hutech.backend.service.NLPService;
-import org.hibernate.cfg.Environment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ChatbotServiceImpl implements ChatbotService {
 
-    private final Dotenv dotenv;
     private final NLPService nlpService;
-    private final RestTemplate restTemplate;
+    private final FlaskClient flaskClient;
     private final DiseaseRepository diseaseRepository;
     private final SymptomRepository symptomRepository;
+    private final SpecializationRepository specializationRepository;
 
     @Override
     public DiseaseResponse predictDisease(SymptomRequest symptomRequest) {
-        // 1. Xử lý các triệu chứng nhập vào bằng NLP
+        // 1. Process input symptoms
+        List<String> extractedSymptoms = processSymptoms(symptomRequest);
+
+        // 2. Prepare request for Flask API
+        List<Integer> symptomBinaryArray = prepareSymptomBinaryArray(extractedSymptoms);
+
+        // 3. Call Flask API
+        int predictedDiseaseId = flaskClient.predictDisease(symptomBinaryArray);
+
+        // 4. Create disease response
+        return createDiseaseResponse(predictedDiseaseId, extractedSymptoms);
+    }
+
+    // Rest of the methods remain the same as in the previous implementation
+    private List<String> processSymptoms(SymptomRequest symptomRequest) {
         List<String> extractedSymptoms = nlpService.extractSymptoms(symptomRequest.getSymptomName());
 
-        // Kiểm tra nếu không tìm thấy triệu chứng
-        if(extractedSymptoms.isEmpty()) {
+        if (extractedSymptoms.isEmpty()) {
             throw new ApiException(ErrorCodeEnum.SYMPTOM_NOT_FOUND);
         }
 
-        // 2. Chuẩn hóa triệu chứng
-        String normalizedSymptoms = nlpService.normalizeSymptoms(extractedSymptoms);
-
-        // 3. Chuẩn bị request cho Flask API
-        Map<String, Object> flaskRequest = new HashMap<>();
-        flaskRequest.put("symptoms", convertSymptomsToBinaryArray(normalizedSymptoms));
-
-        // 4. Gọi Flask API
-        String flaskApiUrl = dotenv.get("FLASK_API_URL");
-        ResponseEntity<Map> flaskResponse;
-        try {
-            flaskResponse = restTemplate.postForEntity(
-                    flaskApiUrl + "/predict",
-                    flaskRequest,
-                    Map.class
-            );
-        } catch (RestClientException e) {
-            throw new ApiException(ErrorCodeEnum.EXTERNAL_SERVICE_ERROR);
-        }
-
-        // 5. Lấy ID bệnh từ response
-        int diseaseId = (int) flaskResponse.getBody().get("predicted_disease");
-
-        // 6. Tạo response với thông tin bệnh
-        return new DiseaseResponse(
-                diseaseId,
-                extractedSymptoms,
-                diseaseRepository
-        );
+        return extractedSymptoms;
     }
 
-    private List<Integer> convertSymptomsToBinaryArray(String normalizedSymptoms) {
+    private List<Integer> prepareSymptomBinaryArray(List<String> extractedSymptoms) {
+        // Normalize symptoms
+        String normalizedSymptoms = nlpService.normalizeSymptoms(extractedSymptoms);
+
+        // Convert to binary array
         List<Integer> binaryArray = new ArrayList<>(Collections.nCopies(132, 0));
         List<String> orderedSymptoms = symptomRepository.findAllSymptomEnglishName().stream()
                 .map(SymptomResponse::getSymptomName)
@@ -84,10 +72,25 @@ public class ChatbotServiceImpl implements ChatbotService {
 
         for (String symptom : symptomsList) {
             int index = orderedSymptoms.indexOf(symptom);
-            if(index != -1) {
+            if (index != -1) {
                 binaryArray.set(index, 1);
             }
         }
         return binaryArray;
+    }
+
+    private DiseaseResponse createDiseaseResponse(int diseaseId, List<String> extractedSymptoms) {
+        // Fetch disease details from repository
+        String englishDisease = diseaseRepository.getDiseaseEnglishNameById(diseaseId);
+        String vietnameseDisease = diseaseRepository.findDiseaseByVietnameseNameByEnglishName(englishDisease);
+        SpecializationResponse specializationResponse = specializationRepository.findSpecializationByDiseaseId(diseaseId);
+
+        return DiseaseResponse.builder()
+                .diseaseId(diseaseId)
+                .englishDisease(englishDisease)
+                .vietnameseDisease(vietnameseDisease)
+                .extractedSymptoms(extractedSymptoms)
+                .specialization(specializationResponse)
+                .build();
     }
 }
