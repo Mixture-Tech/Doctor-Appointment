@@ -1,10 +1,7 @@
 // import Cookies from "js-cookie";
-import Footer from "../components/Footer/index";
-import Header from "../components/Header/index";
-import Navbar from "../components/Header/components/Navbar";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-export default function BasicLayout() {
+export default function ChatbotLayout() {
     const location = useLocation();
 
     // return Cookies.get(StorageKeys.ACCESS_TOKEN) &&
@@ -19,9 +16,7 @@ export default function BasicLayout() {
     // );
     return (
         <div className="flex flex-col min-h-screen">
-            {location.pathname === "/" ? <Header /> : <Navbar />}
             <Outlet />
-            {location.pathname === "/chat-bot" ? null : <Footer />}
         </div>
     );
 }

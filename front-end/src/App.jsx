@@ -3,13 +3,14 @@ import loadable from "@loadable/component";
 import AuthLayout from "./layouts/AuthLayout";
 import BasicLayout from "./layouts/BasicLayout";
 import { CircularProgress } from "@mui/material";
+import ChatbotLayout from "./layouts/ChatbotLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const Home = loadable(() => import("./pages/Home/index"));
 const Chatbot = loadable(() => import("./pages/Chatbot/index"));
 const Login = loadable(() => import("./pages/Auth/Login/index"));
 const Register = loadable(() => import("./pages/Auth/Register/index"));
-const Specialities = loadable(() => import ("./pages/Specialities/index"));
+const Specialities = loadable(() => import("./pages/Specialities/index"));
 const ListDoctor = loadable(() => import("./pages/Doctor/ListDoctors/index"));
 const SpecialtyDetail = loadable(() => import("./pages/SpecialtyDetail/index"));
 const ForgotPassword = loadable(() => import("./pages/Auth/ForgotPassword/index"));
@@ -65,14 +66,6 @@ function App() {
                         }
                     />
                     <Route
-                        path="/chat-bot"
-                        element={
-                            <Suspense fallback={<CircularProgress />}>
-                                <Chatbot title="Chatbot" />
-                            </Suspense>
-                        }
-                    />  
-                    <Route
                         path="/dat-lich-thanh-cong"
                         element={
                             <Suspense fallback={<CircularProgress />}>
@@ -127,6 +120,16 @@ function App() {
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <ForgotPassword title="Quên mật khẩu" />
+                            </Suspense>
+                        }
+                    />
+                </Route>
+                <Route element={<ChatbotLayout />}>
+                    <Route
+                        path="/chat-bot"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <Chatbot title="Chatbot" />
                             </Suspense>
                         }
                     />
