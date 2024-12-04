@@ -6,13 +6,18 @@ import { CircularProgress } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 const Home = loadable(() => import("./pages/Home/index"));
+const Chatbot = loadable(() => import("./pages/Chatbot/index"));
 const Login = loadable(() => import("./pages/Auth/Login/index"));
 const Register = loadable(() => import("./pages/Auth/Register/index"));
-const ForgotPassword = loadable(() => import("./pages/Auth/ForgotPassword/index"));
 const Specialities = loadable(() => import ("./pages/Specialities/index"));
 const ListDoctor = loadable(() => import("./pages/Doctor/ListDoctors/index"));
-const DoctorSchedule = loadable(() => import("./pages/Doctor/DoctorSchedule/index"));
 const SpecialtyDetail = loadable(() => import("./pages/SpecialtyDetail/index"));
+const ForgotPassword = loadable(() => import("./pages/Auth/ForgotPassword/index"));
+const DoctorSchedule = loadable(() => import("./pages/Doctor/DoctorSchedule/index"));
+const ListAppointments = loadable(() => import("./pages/Appointment/ListAppointments/index"));
+const AppointmentDetail = loadable(() => import("./pages/Appointment/AppointmentDetail/index"));
+const AppointmentBooking = loadable(() => import("./pages/Appointment/AppointmentBooking/index"));
+const AppointmentSuccessfully = loadable(() => import("./pages/Appointment/AppointmentSuccessfully/index"));
 
 function App() {
     return (
@@ -56,6 +61,46 @@ function App() {
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <SpecialtyDetail title="Chi tiết chuyên khoa" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/chat-bot"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <Chatbot title="Chatbot" />
+                            </Suspense>
+                        }
+                    />  
+                    <Route
+                        path="/dat-lich-thanh-cong"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <AppointmentSuccessfully title="Đặt lịch hẹn thành công" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/danh-sach-lich-hen"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <ListAppointments title="Danh sách lịch hẹn" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/chi-tiet-lich-hen"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <AppointmentDetail title="Chi tiết lịch hẹn" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/dat-lich"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <AppointmentBooking title="Đặt lịch" />
                             </Suspense>
                         }
                     />

@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function AppointmentTextField({ icon: Icon, type = "text", placeholder }) {
   return (
-    <div className="w-[80%] relative">
+    <div className="w-[100%] relative">
       <Icon className="absolute top-3.5 left-3 text-[1.5rem] text-secondary-300" />
       <input
         type={type}
