@@ -6,6 +6,7 @@ import { CircularProgress } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
+
 const Home = loadable(() => import("./pages/Home/index"));
 const Login = loadable(() => import("./pages/Auth/Login/index"));
 const ListAppointments = loadable(() => import("./pages/Appointment/ListAppointments/index"));
@@ -13,6 +14,7 @@ const AppointmentDetail = loadable(() => import("./pages/Appointment/Appointment
 const AppointmentBooking = loadable(() => import("./pages/Appointment/AppointmentBooking/index"));
 const AppointmentSuccessfully = loadable(() => import("./pages/Appointment/AppointmentSuccessfully/index"));
 const Specialities = loadable(() => import("./pages/Specialities/index"));
+const Chatbot = loadable(() => import("./pages/Chatbot/index"));
 
 function App() {
     return (
@@ -64,6 +66,14 @@ function App() {
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <Specialities title="Chuyên Khoa" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/chat-bot"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <Chatbot title="Chatbot" />
                             </Suspense>
                         }
                     />
