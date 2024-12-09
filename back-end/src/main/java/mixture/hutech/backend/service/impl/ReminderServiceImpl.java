@@ -10,6 +10,7 @@ import mixture.hutech.backend.service.ReminderService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -22,24 +23,26 @@ public class ReminderServiceImpl implements ReminderService {
     private final EmailService emailService;
 
     @Override
-    @Scheduled(fixedRate = 3600000)
+    @Scheduled(fixedRate = 3600000) // Run every hour
     public void sendAppointmentReminder() {
-        LocalTime now = LocalTime.now();
-        LocalTime reminderTime = LocalTime.from(now.plusHours(12));
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
 
-        List<Appointment> upcomingAppointments = appointmentRepository.findUpcomingAppointments(
-                now,
-                reminderTime,
+        List<Appointment> upcomingAppointments = appointmentRepository.findByAppointmentTakenDateAndAppointmentStatus(
+                tomorrow,
                 AppointmentStatusEnum.CONFIRMED
         );
 
         for (Appointment appointment : upcomingAppointments) {
-            try{
-                sendReminderEmail(appointment);
-                appointment.setReminderSent(true);
-                appointmentRepository.save(appointment);
-            }catch (Exception e) {
-                e.printStackTrace();
+            // Check if reminder hasn't been sent already
+            if (Boolean.FALSE.equals(appointment.getReminderSent())) {
+                try {
+                    sendReminderEmail(appointment);
+                    appointment.setReminderSent(true);
+                    appointmentRepository.save(appointment);
+                } catch (Exception e) {
+                    // Log the error or handle it appropriately
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -49,7 +52,8 @@ public class ReminderServiceImpl implements ReminderService {
         String patientName = appointment.getUser().getUsername();
         String doctorName = appointment.getDoctorSchedule().getUser().getUsername();
         String appointmentDate = appointment.getAppointmentTakenDate().toString();
-        String appointmentTime = appointment.getProbableStartTime().toString() + appointment.getActualEndTime().toString();
+        String appointmentTime = appointment.getProbableStartTime().toString() + " - " +
+                appointment.getActualEndTime().toString();
 
         emailService.sendMailAppointmentReminder(
                 recipientEmail,

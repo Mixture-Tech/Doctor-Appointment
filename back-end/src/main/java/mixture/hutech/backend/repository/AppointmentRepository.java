@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -29,4 +30,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, String
 
     @Query("SELECT new mixture.hutech.backend.dto.response.AppointmentResponse(a.id,a.probableStartTime,a.actualEndTime,a.appointmentTakenDate,a.doctorSchedule.user.username,a.appointmentStatus,a.createdAt) FROM Appointment a WHERE a.user.email = :userId")
     List<AppointmentResponse> listAppointmentByUserId(String userId);
+
+    @Query("SELECT a FROM Appointment a WHERE a.appointmentTakenDate = :date AND a.appointmentStatus = :status")
+    List<Appointment> findByAppointmentTakenDateAndAppointmentStatus(
+            @Param("date") LocalDate date,
+            @Param("status") AppointmentStatusEnum status);
+
 }

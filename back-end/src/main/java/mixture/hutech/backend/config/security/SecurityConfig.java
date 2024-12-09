@@ -33,6 +33,7 @@ public class SecurityConfig {
 //            "/api/doctors/**",
             "api/chatbot/**",
             "api/demo-controller/**",
+            "api/ghn/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
