@@ -23,6 +23,8 @@ public class DiseaseResponse {
     private String vietnameseDisease;
     @JsonProperty("extractedSymptoms")
     private List<String> extractedSymptoms;
+    @JsonProperty("cause_of_disease")
+    private String causeOfDisease;
     @JsonProperty("specialization")
     private SpecializationResponse specialization;
 

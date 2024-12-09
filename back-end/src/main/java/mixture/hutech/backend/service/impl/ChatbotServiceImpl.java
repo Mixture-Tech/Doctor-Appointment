@@ -84,12 +84,14 @@ public class ChatbotServiceImpl implements ChatbotService {
         String englishDisease = diseaseRepository.getDiseaseEnglishNameById(diseaseId);
         String vietnameseDisease = diseaseRepository.findDiseaseByVietnameseNameByEnglishName(englishDisease);
         SpecializationResponse specializationResponse = specializationRepository.findSpecializationByDiseaseId(diseaseId);
+        String causeOfDisease = diseaseRepository.getCauseOfDiseaseById(diseaseId);
 
         return DiseaseResponse.builder()
                 .diseaseId(diseaseId)
                 .englishDisease(englishDisease)
                 .vietnameseDisease(vietnameseDisease)
                 .extractedSymptoms(extractedSymptoms)
+                .causeOfDisease(causeOfDisease)
                 .specialization(specializationResponse)
                 .build();
     }

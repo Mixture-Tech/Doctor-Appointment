@@ -25,4 +25,7 @@ public interface DiseaseRepository extends JpaRepository<Disease, Integer> {
 
     @Query("SELECT d.diseaseVietnameseName FROM Disease d WHERE d.diseaseEnglishName = ?1")
     String findDiseaseByVietnameseNameByEnglishName(String englishDisease);
+
+    @Query("SELECT d.causeOfDisease FROM Disease d WHERE d.id = ?1")
+    String getCauseOfDiseaseById(int diseaseId);
 }

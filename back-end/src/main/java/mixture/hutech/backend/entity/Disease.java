@@ -20,6 +20,9 @@ public class Disease {
     @Column(name = "disease_vie_name")
     private String diseaseVietnameseName;
 
+    @Column(name = "cause_of_disease", length = 1000)
+    private String causeOfDisease;
+
     @ManyToOne
     @JoinColumn(name = "specialization_id")
     private Specialization specialization;
