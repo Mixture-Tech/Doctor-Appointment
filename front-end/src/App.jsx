@@ -51,21 +51,23 @@ function App() {
                         }
                     />
                     <Route
-                        path="/chi-tiet-bac-si"
+                        path="/chi-tiet-bac-si/:id"
                         element={
                             <Suspense fallback={<CircularProgress />}>
-                                <DoctorSchedule title="Lịch hẹn" />
+                                <DoctorSchedule title="Chi tiết bác sĩ" />
                             </Suspense>
                         }
                     />
+
                     <Route
-                        path="/chi-tiet-chuyen-khoa"
+                        path="/chi-tiet-chuyen-khoa/:id"
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <SpecialtyDetail title="Chi tiết chuyên khoa" />
                             </Suspense>
                         }
                     />
+
                     <Route
                         path="/dat-lich-thanh-cong"
                         element={

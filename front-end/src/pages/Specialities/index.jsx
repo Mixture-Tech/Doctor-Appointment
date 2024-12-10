@@ -1,19 +1,42 @@
-import React from 'react'
-import Speciality from "./components/Speciality";
+import React, { useEffect, useState } from 'react';
+import axiosClient from '../../services/apis/axiosClient';
+import Speciality from './components/Speciality';
 
 export default function Specialities() {
-  const specialties = [
-    { id: 1, name: "Cơ Xương Khớp", imageUrl: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101627-co-xuong-khop.png" },
-    { id: 2, name: "Thần kinh", imageUrl: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101739-than-kinh.png" },
-    { id: 3, name: "Tiêu hoá", imageUrl: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tieu-hoa.png" },
-    { id: 4, name: "Tim mạch", imageUrl: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tim-mach.png" },
-    { id: 5, name: "Tai Mũi Họng", imageUrl: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101713-tai-mui-hong.png" },
-    { id: 6, name: "Cột sống", imageUrl: "https://cdn.bookingcare.vn/fo/w640/2023/12/26/101627-cot-song.png" },
-  ];
+  const [specialties, setSpecialties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSpecialties = async () => {
+      try {
+        const response = await axiosClient.get("/specializations");
+        if (Array.isArray(response.data)) {
+          setSpecialties(response.data); // Truyền đúng dữ liệu vào state
+        } else {
+          setError("Dữ liệu không hợp lệ");
+        }
+        setLoading(false);
+      } catch (err) {
+        setError("Lỗi khi tải dữ liệu chuyên khoa");
+        setLoading(false);
+      }
+    };
+
+    fetchSpecialties();
+  }, []);
+
+  if (loading) {
+    return <div>Đang tải dữ liệu...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
-      <main>
-          <Speciality item={specialties} />
-      </main>
+    <main>
+      <Speciality item={specialties} />
+    </main>
   );
 }
