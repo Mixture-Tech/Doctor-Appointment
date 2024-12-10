@@ -1,9 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-export default function SpecialtyCard({ name, imageUrl }) {
+export default function SpecialtyCard({ id, name, imageUrl }) {
+    const navigate = useNavigate();
+
+    const handleNavigate = () => {
+        navigate(`/chi-tiet-chuyen-khoa/${id}`);
+    };
+
     return (
-        <div className="flex flex-col items-center p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
+        <div
+            className="flex flex-col items-center p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+            onClick={handleNavigate}
+        >
             <img
                 src={imageUrl}
                 alt={name}
@@ -15,6 +25,7 @@ export default function SpecialtyCard({ name, imageUrl }) {
 }
 
 SpecialtyCard.propTypes = {
+    id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    imageUrl: PropTypes.string.isRequired
+    imageUrl: PropTypes.string.isRequired,
 };

@@ -1,30 +1,35 @@
 import React from 'react';
 import DoctorSchedule from './DoctorSchedule';
 
-export default function DoctorCard({ doctor, availableDates, selectedDate, setSelectedDate }) {
+export default function DoctorCard({
+    doctor,
+    availableDates,
+    selectedDate,
+    setSelectedDate
+}) {
     return (
         <div className="border border-gray-200 shadow-sm rounded-lg p-6 bg-white md:p-4">
             <div className="mb-4 flex flex-col md:flex-row items-center gap-4">
                 <img
-                    src={doctor.avatar}
-                    alt={doctor.name}
+                    src={doctor.doctor_image}
+                    alt={doctor.doctor_name}
                     className="w-16 h-16 rounded-full object-cover md:w-12 md:h-12"
                 />
-                <div>
-                    <h3 className="text-xl font-semibold text-primary-600">{doctor.name}</h3>
-                    <p className="text-gray-700">{doctor.experience}</p>
-                    <p className="text-gray-700">{doctor.position}</p>
-                    <p className="text-gray-700">Bác sĩ nhận khám từ {doctor.ageRange}</p>
-                    <p className="text-gray-700">Khu vực: {doctor.location}</p>
-                    <p className="text-gray-700">Địa chỉ khám: {doctor.clinic}</p>
-                    <p className="text-gray-700">Giá khám: {doctor.price}</p>
+                <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-primary-600">{doctor.doctor_name}</h3>
+                    <p
+                        className="text-gray-700 text-sm line-clamp-4 min-h-[5.5rem] max-h-[5.5rem]"
+                        title={doctor.doctor_description} // Tooltip hiển thị toàn bộ nội dung
+                    >
+                        {doctor.doctor_description}
+                    </p>
                 </div>
             </div>
             <DoctorSchedule
                 doctor={doctor}
                 availableDates={availableDates}
-                selectedDate={selectedDate}
-                setSelectedDate={setSelectedDate}
+                selectedDate={selectedDate}  // Ngày riêng cho bác sĩ này
+                setSelectedDate={(date) => setSelectedDate(date)}  // Hàm cập nhật ngày cho bác sĩ
             />
         </div>
     );
