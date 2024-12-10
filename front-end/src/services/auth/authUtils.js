@@ -1,3 +1,7 @@
+import {jwtDecode} from "jwt-decode";
+import Cookies from "js-cookie";
+import {StorageKeys} from "../key/keys";
+
 export const setToken = (token, name , role) => {
     const decodedToken = jwtDecode(token);
     const expirationTime = decodedToken.exp * 1000;

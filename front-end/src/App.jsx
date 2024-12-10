@@ -5,6 +5,7 @@ import BasicLayout from "./layouts/BasicLayout";
 import { CircularProgress } from "@mui/material";
 import ChatbotLayout from "./layouts/ChatbotLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {ToastContainer} from "react-toastify";
 
 const Home = loadable(() => import("./pages/Home/index"));
 const Chatbot = loadable(() => import("./pages/Chatbot/index"));

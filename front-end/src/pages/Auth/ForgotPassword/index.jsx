@@ -1,8 +1,16 @@
 import React from "react";
 import Logo from "../../../components/Form/Auth/Logo";
 import ForgotPasswordForm from "./components/ForgotPasswordForm";
+import {ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {useNavigate} from "react-router-dom";
 
 export default function ForgotPassword() {
+    const navigate = useNavigate();
+    const handleLoginRedirect = () => {
+        navigate("/dang-nhap");
+    };
+
     return (
         <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-primary-50 to-primary-200">
             <div className="w-full max-w-lg bg-white rounded-lg shadow-lg p-10">
@@ -22,11 +30,14 @@ export default function ForgotPassword() {
 
                 {/* Back to Login Link */}
                 <div className="text-center mt-6">
-                    <a href="#" className="text-sm text-gray-600 hover:underline">
+                    <button
+                        onClick={handleLoginRedirect}
+                        className="text-sm text-gray-600 hover:underline">
                         Trở về trang đăng nhập
-                    </a>
+                    </button>
                 </div>
             </div>
+            <ToastContainer/>
         </div>
     );
 }

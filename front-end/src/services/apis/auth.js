@@ -7,19 +7,24 @@ export const register = (registerRequest) => {
 };
 
 export const authenticate = async (authenticateRequest) => {
+    const urlAuthenticate = "/auth/authenticate";
+
     try {
-        const urlAuthenticate = "/auth/authenticate"
         const response = await axiosClient.post(urlAuthenticate, authenticateRequest);
 
-        const { access_token, name, role } = response.data;
+        // Giải nén trực tiếp từ response (không phải response.data)
+        const { access_token, name, role } = response; // Truy cập trực tiếp vào response, không cần .data
+
+        // Lưu token vào cookie hoặc storage
         setToken(access_token, name, role);
 
         return response;
     } catch (error) {
-        console.error("Authenticate: ", error);
+        console.error("Authenticate Error:", error);
         throw error;
     }
 };
+
 
 // export const verifyEmail = (verifyRequest) => {
 //     const url = urlAuth + "confirm-email";
