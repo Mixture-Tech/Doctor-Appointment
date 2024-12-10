@@ -1,3 +1,4 @@
+import 'package:app/ui/screens/ChatbotScreen.dart';
 import 'package:app/ui/screens/ListDoctorScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
@@ -17,6 +18,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -65,6 +67,7 @@ class _MainScreenState extends State<MainScreen> {
             _buildOffstageNavigator(1),
             _buildOffstageNavigator(2),
             _buildOffstageNavigator(3),
+            _buildOffstageNavigator(4),
           ],
         ),
         bottomNavigationBar: NavigationBarWidget(
@@ -76,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-enum TabItem { home, notification, appointment, profile }
+enum TabItem { home, notification, appointment, chatbot, profile }
 
 class TabNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -100,6 +103,9 @@ class TabNavigator extends StatelessWidget {
         break;
       case TabItem.appointment:
         child = const ListDoctorScreen();
+        break;
+      case TabItem.chatbot:
+        child = const ChatbotScreen();
         break;
       case TabItem.profile:
         child = const ProfileScreen();

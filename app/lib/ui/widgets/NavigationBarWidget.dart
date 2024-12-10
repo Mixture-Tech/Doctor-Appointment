@@ -28,6 +28,10 @@ class NavigationBarWidget extends StatelessWidget {
           label: 'Lịch hẹn',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.model_training),
+          label: 'Trợ lý AI',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Cá nhân',
         )

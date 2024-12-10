@@ -4,13 +4,13 @@ class Disease{
     required this.name,
   });
 
-  final String id;
+  final int id;
   final String name;
 
   factory Disease.fromJson(Map<String, dynamic> json){
     return Disease(
       id: json['disease_id'] != null && json['disease_id'] != '' ? json['disease_id'] : 'Unknown ID',
-      name: json['disease_name'] != null && json['disease_name'] != '' ? json['disease_name'] : 'Unknown Name',
+      name: json['disease_vie_name'] != null && json['disease_vie_name'] != '' ? json['disease_vie_name'] : 'Unknown Name',
     );
   }
 }
