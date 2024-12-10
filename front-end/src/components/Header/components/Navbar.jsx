@@ -6,6 +6,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TbLogout2} from "react-icons/tb";
 import { pages } from '../../../mocks/header.data';
 import Button from "../../Form/Button";
+import Logo from "../../../assets/images/logo.png";
 
 export default function Navbar() {
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Navbar() {
     <nav className="flex bg-primary-100 items-center justify-between w-full relative px-4">
       {/* Logo */}
       <div className="flex-1 flex justify-start">
-        <img src="https://i.ibb.co/0BZfPq6/darklogo.png" alt="logo" className="w-[80px]" />
+        <img src={Logo} alt="logo" className="w-[80px]" />
       </div>
 
       {/* Menu */}

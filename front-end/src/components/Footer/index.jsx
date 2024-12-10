@@ -37,7 +37,7 @@ export default function Footer() {
             </div>
 
             <div className="border-t border-gray-200 pt-[20px] flex items-center w-full flex-wrap gap-[20px] justify-center">
-                <p className="text-[0.8rem] sm:text-[0.9rem] text-gray-600">© 2024 Mixture Team. All Rights Reserved.</p>  
+                <p className="text-[0.8rem] sm:text-[0.9rem] text-gray-600">© 2024 Health Connect. All Rights Reserved.</p>  
             </div>
         </footer>
     );
