@@ -3,7 +3,7 @@ import React from 'react';
 export default function Header() {
     return (
         <section className="mb-8">
-            <h1 className="text-4xl font-semibold text-primary-600">Tên chuyên khoa</h1>
+            <h1 className="text-4xl font-semibold text-primary-600">Cơ Xương Khớp</h1>
             <h2 className="text-2xl font-semibold mt-4">Bác sĩ Cơ Xương Khớp giỏi</h2>
             <h3 className="mt-4 space-y-2 text-gray-700">
                 Danh sách các bác sĩ uy tín đầu ngành Cơ Xương Khớp tại Việt Nam:

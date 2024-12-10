@@ -1,87 +1,50 @@
-// DoctorSchedule Component
-import React, { useEffect } from 'react';
+import React from 'react';
 import TimeButton from '../../../components/Form/Appointment/TimeButton';
 
-export default function DoctorSchedule({
-    doctor,
-    availableDates,
-    selectedDate,
-    setSelectedDate
-}) {
-    // Tìm ngày gần nhất có lịch khám
-    useEffect(() => {
-        if (!selectedDate && availableDates.length > 0) {
-            const today = new Date();
-            const closestDate = availableDates
-                .filter((date) => {
-                    // Lọc các ngày sau hoặc bằng hôm nay
-                    const dateObj = new Date(date);
-                    return dateObj >= today && doctor.schedules.some(
-                        (schedule) => schedule.working_date === date
-                    );
-                })
-                .sort((a, b) => new Date(a) - new Date(b))[0]; // Lấy ngày gần nhất
-
-            if (closestDate) {
-                setSelectedDate(closestDate);
-            }
-        }
-    }, [selectedDate, availableDates, doctor.schedules, setSelectedDate]);
-
-    const filteredSchedules = doctor.schedules.filter(
-        (schedule) => schedule.working_date === selectedDate
-    );
-
-    // Lọc ra những ngày có lịch khám cho bác sĩ này
-    const availableDaysForDoctor = availableDates.filter((date) =>
-        doctor.schedules.some((schedule) => schedule.working_date === date)
-    );
-
+export default function DoctorSchedule({ doctor, availableDates, selectedDate, setSelectedDate }) {
     return (
         <div>
             <h4 className="text-center md:text-left font-semibold mb-2">Lịch khám</h4>
-
-            {/* Dropdown cho ngày */}
             <div className="mb-4 text-center md:text-left">
-                <label
-                    htmlFor={`date-select-${doctor.doctor_name}`}
-                    className="block mb-2 text-gray-700"
-                >
+                <label htmlFor={`date-select-${doctor.name}`} className="block mb-2 text-gray-700">
                     Chọn ngày khám:
                 </label>
                 <select
-                    id={`date-select-${doctor.doctor_name}`}
+                    id={`date-select-${doctor.name}`}
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     className="border border-gray-300 rounded px-4 py-2 w-auto"
                 >
-
-                    {availableDaysForDoctor.map((date, i) => (
+                    <option value="">27/11/2024</option>
+                    {availableDates.map((date, i) => (
                         <option key={i} value={date}>
-                            {new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(date))}
+                            {new Date(date).toLocaleDateString('vi-VN')}
                         </option>
                     ))}
                 </select>
             </div>
-
-            {/* Hiển thị lịch làm việc nếu có ngày được chọn */}
-            {selectedDate && filteredSchedules.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 mb-2">
-                    {filteredSchedules.map((schedule, i) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 mb-2">
+                {doctor.schedule.map((time, i) => {
+                    const slot = { time, status: 'available' };
+                    return (
                         <TimeButton
                             key={i}
                             onClick={() => {
-                                console.log(`Đặt lịch vào ${selectedDate} lúc ${schedule.start_time}`);
+                                if (slot.status === 'available' && selectedDate) {
+                                    console.log(`Đặt lịch vào ${selectedDate} lúc ${slot.time}`);
+                                }
                             }}
-                            className={`flex justify-center items-center w-26 h-12 rounded md:w-20 md:h-8 bg-primary-500 text-white hover:bg-primary-600`}
+                            className={`flex justify-center items-center w-26 h-12 rounded md:w-20 md:h-8 ${
+                                slot.status === 'available' && selectedDate
+                                    ? 'bg-primary-500 text-white hover:bg-primary-600'
+                                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                            }`}
                         >
-                            <span>{`${schedule.start_time.slice(0, 5)} - ${schedule.end_time.slice(0, 5)}`}</span>
+                            <span>{slot.time}</span>
                         </TimeButton>
-                    ))}
-                </div>
-            ) : (
-                <p>Không có lịch khám cho ngày này</p>
-            )}
+                    );
+                })}
+            </div>
         </div>
     );
 }
