@@ -1,54 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Doctors from "./components/Doctors";
-import axiosClient from "../../../services/apis/axiosClient";
+import React from 'react'
+import Doctor from "./components/Doctors";
 
 export default function ListDoctors() {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const response = await axiosClient.get("/doctors");
-        if (response.data && Array.isArray(response.data)) {
-          const formattedDoctors = response.data.map((doctor) => ({
-            id: doctor.doctor_id,
-            name: doctor.doctor_name,
-            imageUrl: doctor.doctor_image,
-            specialty: doctor.specialization_name,
-          }));
-          setDoctors(formattedDoctors);
-        } else {
-          setError("Dữ liệu không hợp lệ.");
-        }
-        setLoading(false);
-      } catch (err) {
-        setError("Lỗi khi tải danh sách bác sĩ.");
-        setLoading(false);
-      }
-    };
-
-    fetchDoctors();
-  }, []);
-
-  const handleDoctorClick = (doctorId) => {
-    navigate(`/chi-tiet-bac-si/${doctorId}`);
-  };
-
-  if (loading) {
-    return <div>Đang tải dữ liệu...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  const doctors = [
+    { id: 1, name: "TS, BS chuyên khoa II Chu Minh Hà", imageUrl: "https://cdn.bookingcare.vn/fo/w384/2021/05/20/100159-bs-chu-minh-ha.png", specialty: "Tim mạch, Nội khoa" },
+    { id: 2, name: "GS, TS Thái Hồng Quang", imageUrl: "https://cdn.bookingcare.vn/fo/w256/2019/09/04/093422giao-su-thai-hong-quang.jpg", specialty: "Nội khoa" },
+    { id: 3, name: "BS Chuyên khoa I Nguyễn Thị Thanh Xuân", imageUrl: "https://cdn.bookingcare.vn/fo/w256/2023/02/10/110232-bs-cki-nguy-n-th-thanh-xu-n-1.jpg", specialty: "Tim Mạch" },
+    { id: 4, name: "ThS, BS Nguyễn Duy Khánh ", imageUrl: "https://cdn.bookingcare.vn/fo/w256/2022/01/22/095108-bs-nguyen-duy-khanh.png", specialty: "Nam học" },
+    { id: 5, name: "PGS, TS, BS Nguyễn Khoa Diệu Vân", imageUrl: "https://cdn.bookingcare.vn/fo/w256/2022/04/05/155306-bs-dieu-van.jpg", specialty: "Tiểu đường - Nội tiết, Tuyến giáp" },
+    { id: 6, name: "BS chuyên khoa II Phan Duy Kiên", imageUrl: "https://cdn.bookingcare.vn/fo/w256/2022/02/28/155511-bs-kien.png", specialty: "Tim mạch" },
+  ];
 
   return (
-    <main>
-      <Doctors item={doctors} onDoctorClick={handleDoctorClick} />
-    </main>
+      <main>
+        <Doctor item={doctors} />
+      </main>
   );
 }
