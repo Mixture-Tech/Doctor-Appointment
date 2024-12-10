@@ -10,7 +10,7 @@ import InputField from "../../../../components/Form/Auth/AuthTextField";
 import { register } from "../../../../services/apis/auth"; // Đường dẫn phù hợp tới API
 
 export default function RegisterForm() {
-    const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,7 +22,7 @@ export default function RegisterForm() {
 
     const validateForm = () => {
         setFormErrors("");
-        if (!name) {
+        if (!username) {
             setFormErrors("Vui lòng nhập họ và tên.");
             return false;
         }
@@ -62,7 +62,7 @@ export default function RegisterForm() {
         setIsLoading(true); // Bắt đầu trạng thái loading
 
         try {
-            const response = await register({ name, phone, email, password });
+            const response = await register({ username, phone, email, password });
 
             if (response.error_code === "OK") {
                 toast.success("Đăng ký thành công! Vui lòng xác nhận email", {
@@ -100,8 +100,8 @@ export default function RegisterForm() {
                 type="text"
                 placeholder="Nhập họ và tên"
                 icon={FaUserMd}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
             />
             {formErrors && formErrors.startsWith("Vui lòng nhập họ và tên.") && (
                 <p className="text-red-500 text-sm">{formErrors}</p>
