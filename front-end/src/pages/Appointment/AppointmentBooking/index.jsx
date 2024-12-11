@@ -3,8 +3,6 @@ import Appointment from './components/Appointment';
 import DoctorReferral from './components/Referral';
 
 export default function AppointmentBooking() {
-
-
   return (
     <>
       <DoctorReferral />

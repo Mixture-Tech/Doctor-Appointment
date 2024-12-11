@@ -5,7 +5,7 @@ export default function DoctorCard({
     doctor,
     availableDates,
     selectedDate,
-    setSelectedDate
+    setSelectedDate,
 }) {
     return (
         <div className="border border-gray-200 shadow-sm rounded-lg p-6 bg-white md:p-4">

@@ -4,6 +4,7 @@ import DiseaseList from './components/DiseaseList';
 import DoctorCard from './components/DoctorCard';
 import { useParams } from 'react-router-dom';
 import { fetchDoctorsBySpecialization } from '../../services/apis/speciality';
+import { fetchSpecialties } from '../../services/apis/speciality';
 
 export default function BoneJointPage() {
     const { id } = useParams();
@@ -12,6 +13,7 @@ export default function BoneJointPage() {
     const [error, setError] = useState(null);
     const [selectedDates, setSelectedDates] = useState({});
     const [availableDates, setAvailableDates] = useState([]);
+    const [specialityName, setSpecialityName] = useState('');
 
     useEffect(() => {
         const getDoctors = async () => {
@@ -25,6 +27,12 @@ export default function BoneJointPage() {
                     setAvailableDates(uniqueDates);
                     setDoctors(data);
                 }
+
+                const speciality = await fetchSpecialties();
+                const selectedSpeciality = speciality.data.find(
+                    (item) => item.specialization_id === id
+                );
+                setSpecialityName(selectedSpeciality?.specialization_name || '');
             } catch (err) {
                 console.error(err);
                 setError(err.message);
@@ -59,8 +67,8 @@ export default function BoneJointPage() {
 
     return (
         <div className="bone-joint-page container mx-auto px-4 py-8">
-            <Header />
-            <DiseaseList />
+            <Header specialityName={specialityName}/>
+            <DiseaseList specialityName={specialityName}/>
             <section>
                 <h2 className="text-2xl font-semibold mb-6">Danh sách bác sĩ</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

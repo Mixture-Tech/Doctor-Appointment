@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { fetchSpecialties } from '../../services/apis/speciality';
 import Speciality from './components/Speciality';
@@ -18,7 +19,7 @@ export default function Specialities() {
       }
       setLoading(false);
     };
-
+    
     getSpecialties();
   }, []);
 
@@ -29,7 +30,7 @@ export default function Specialities() {
   if (error) {
     return <div>{error}</div>;
   }
-  
+
   return (
       <main>
           <Speciality item={specialties} />
