@@ -10,9 +10,10 @@ export default function Speciality({ item }) {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {item.map((specialty) => (
                     <SpecialtyCard
-                        key={specialty.id}
-                        name={specialty.name}
-                        imageUrl={specialty.imageUrl}
+                        key={specialty.specialization_id}
+                        id={specialty.specialization_id}
+                        name={specialty.specialization_name}
+                        imageUrl={specialty.specialization_image}
                     />
                 ))}
             </div>

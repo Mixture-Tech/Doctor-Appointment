@@ -59,7 +59,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/chi-tiet-chuyen-khoa"
+                        path="/chi-tiet-chuyen-khoa/:id"
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <SpecialtyDetail title="Chi tiết chuyên khoa" />
