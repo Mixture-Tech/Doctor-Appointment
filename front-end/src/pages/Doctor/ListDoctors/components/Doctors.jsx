@@ -10,14 +10,15 @@ export default function Doctors({ item, onDoctorClick }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {item.map((doctor) => (
                     <DoctorCard
-                        key={doctor.id}
-                        name={doctor.name}
-                        imageUrl={doctor.imageUrl}
-                        specialty={doctor.specialty}
-                        onClick={() => onDoctorClick(doctor.id)}
+                        key={doctor.doctor_id}  // Dùng doctor_id thay vì id
+                        name={doctor.doctor_name}  // Dùng doctor_name thay vì name
+                        imageUrl={doctor.doctor_image}  // Dùng doctor_image thay vì imageUrl
+                        specialty={doctor.specialization_name}  // Dùng specialization_name thay vì specialty
+                        onClick={() => onDoctorClick(doctor.doctor_id)}  // Dùng doctor_id trong onClick
                     />
                 ))}
             </div>
+
         </div>
     );
 }

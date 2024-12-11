@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Doctors from "./components/Doctors";
-import axiosClient from "../../../services/apis/axiosClient";
+import { fetchDoctors } from "../../../services/apis/doctor";
 
 export default function ListDoctors() {
   const [doctors, setDoctors] = useState([]);
@@ -10,28 +10,18 @@ export default function ListDoctors() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const getDoctors = async () => {
       try {
-        const response = await axiosClient.get("/doctors");
-        if (response.data && Array.isArray(response.data)) {
-          const formattedDoctors = response.data.map((doctor) => ({
-            id: doctor.doctor_id,
-            name: doctor.doctor_name,
-            imageUrl: doctor.doctor_image,
-            specialty: doctor.specialization_name,
-          }));
-          setDoctors(formattedDoctors);
-        } else {
-          setError("Dữ liệu không hợp lệ.");
-        }
-        setLoading(false);
+        const data = await fetchDoctors();
+        setDoctors(data);
       } catch (err) {
-        setError("Lỗi khi tải danh sách bác sĩ.");
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchDoctors();
+    getDoctors();
   }, []);
 
   const handleDoctorClick = (doctorId) => {

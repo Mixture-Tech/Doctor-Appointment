@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosClient from '../../services/apis/axiosClient';
+import { fetchSpecialties } from '../../services/apis/speciality';
 import Speciality from './components/Speciality';
 
 export default function Specialities() {
@@ -8,22 +8,18 @@ export default function Specialities() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSpecialties = async () => {
-      try {
-        const response = await axiosClient.get("/specializations");
-        if (Array.isArray(response.data)) {
-          setSpecialties(response.data); // Truyền đúng dữ liệu vào state
-        } else {
-          setError("Dữ liệu không hợp lệ");
-        }
-        setLoading(false);
-      } catch (err) {
-        setError("Lỗi khi tải dữ liệu chuyên khoa");
-        setLoading(false);
+    const getSpecialties = async () => {
+      setLoading(true);
+      const { data, error } = await fetchSpecialties();
+      if (data) {
+        setSpecialties(data);
+      } else {
+        setError(error);
       }
+      setLoading(false);
     };
 
-    fetchSpecialties();
+    getSpecialties();
   }, []);
 
   if (loading) {

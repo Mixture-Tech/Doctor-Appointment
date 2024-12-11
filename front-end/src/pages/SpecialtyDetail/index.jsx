@@ -1,46 +1,45 @@
-// BoneJointPage Component
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import DiseaseList from './components/DiseaseList';
 import DoctorCard from './components/DoctorCard';
-import axiosClient from '../../services/apis/axiosClient';
 import { useParams } from 'react-router-dom';
+import { fetchDoctorsBySpecialization } from '../../services/apis/speciality';
 
 export default function BoneJointPage() {
     const { id } = useParams();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedDates, setSelectedDates] = useState({}); // Lưu trữ ngày làm việc của từng bác sĩ
+    const [selectedDates, setSelectedDates] = useState({});
     const [availableDates, setAvailableDates] = useState([]);
 
     useEffect(() => {
-        const fetchDoctorsBySpecialization = async () => {
+        const getDoctors = async () => {
             try {
-                const response = await axiosClient.get(`/specializations/${id}`);
-                if (response.data) {
-                    const dates = response.data.flatMap((doctor) =>
+                const data = await fetchDoctorsBySpecialization(id);
+                if (data) {
+                    const dates = data.flatMap((doctor) =>
                         doctor.schedules.map((schedule) => schedule.working_date)
                     );
                     const uniqueDates = [...new Set(dates)];
                     setAvailableDates(uniqueDates);
-                    setDoctors(response.data);
+                    setDoctors(data);
                 }
             } catch (err) {
-                console.error('Error fetching doctors:', err);
-                setError('Có lỗi xảy ra khi tải dữ liệu bác sĩ');
+                console.error(err);
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
         if (id) {
-            fetchDoctorsBySpecialization();
+            getDoctors();
         }
     }, [id]);
 
     const handleDateChange = (doctorId, date) => {
-        console.log("doctorId:", doctorId, "date:", date); // Log values to verify
+        console.log("doctorId:", doctorId, "date:", date);
         if (doctorId && date) {
             setSelectedDates((prevDates) => ({
                 ...prevDates,
@@ -53,7 +52,7 @@ export default function BoneJointPage() {
 
     useEffect(() => {
         console.log('Selected Dates:', selectedDates);
-    }, [selectedDates]); // Kiểm tra sự thay đổi trong selectedDates
+    }, [selectedDates]);
 
     if (loading) return <div>Đang tải danh sách bác sĩ...</div>;
     if (error) return <div>{error}</div>;
@@ -80,7 +79,6 @@ export default function BoneJointPage() {
                                 }
                             }}
                         />
-
                     ))}
                 </div>
             </section>

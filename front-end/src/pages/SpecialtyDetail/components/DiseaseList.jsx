@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axiosClient from '../../../services/apis/axiosClient';
 import { useParams } from 'react-router-dom';
+import { fetchDiseasesBySpecialization } from '../../../services/apis/speciality';
 
 export default function DiseaseList() {
     const { id } = useParams();
@@ -9,23 +9,23 @@ export default function DiseaseList() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchDiseasesBySpecialization = async () => {
+        const getDiseases = async () => {
             try {
-                const response = await axiosClient.get(`/diseases/${id}`);
-                console.log('Diseases Response:', response);
-                if (response.data) {
-                    setDiseases(response.data);
+                const data = await fetchDiseasesBySpecialization(id);
+                console.log('Diseases Response:', data);
+                if (data) {
+                    setDiseases(data);
                 }
             } catch (err) {
-                console.error('Error fetching diseases:', err);
-                setError('Không có bệnh cho chuyên khoa này');
+                console.error(err);
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
         };
 
         if (id) {
-            fetchDiseasesBySpecialization();
+            getDiseases();
         }
     }, [id]);
 
