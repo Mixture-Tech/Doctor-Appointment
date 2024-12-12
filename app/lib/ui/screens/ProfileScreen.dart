@@ -54,6 +54,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    try {
+      final storageService = await StorageService.getInstance();
+      await storageService.clearAuthData(); // Xóa dữ liệu người dùng, ví dụ token
+
+      // Chuyển hướng về màn hình đăng nhập
+      Navigator.of(context).pushAndRemoveUntil(
+        CupertinoPageRoute(builder: (context) => const LoginScreen()),
+            (route) => false, // Loại bỏ tất cả các route trước đó
+      );
+    } catch (e) {
+      print('Error during logout: $e');
+      // Hiển thị thông báo lỗi nếu cần
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -125,8 +142,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ProfileOptionWidget(
                           icon: Icons.logout,
                           label: 'Đăng xuất',
-                          onTap: () {
-                            // Xử lý khi người dùng bấm vào mục "Thông tin cá nhân"
+                          onTap: () async {
+                            await _logout();
                           },
                         ),
                       ],

@@ -58,9 +58,6 @@ class StorageService {
     return null;
   }
 
-
-
-
   Future<void> clearAuthData() async {
     await _prefs.remove(accessTokenKey);
     await _prefs.remove(refreshTokenKey);
