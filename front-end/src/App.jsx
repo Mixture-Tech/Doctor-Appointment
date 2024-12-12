@@ -51,7 +51,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/chi-tiet-bac-si"
+                        path="/chi-tiet-bac-si/:id"
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <DoctorSchedule title="Lịch hẹn" />
