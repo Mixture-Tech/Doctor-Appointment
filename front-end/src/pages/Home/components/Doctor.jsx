@@ -59,7 +59,7 @@ export default function Doctor() {
     const visibleDoctors = getCurrentDoctors();
 
     return (
-        <section className="mb-20 mt-20">
+        <section className="mb-20 mt-20" style={{ backgroundImage: `url(${require('../../../assets/images/background-doctor.png')})` }}>
             <div className="container mx-auto px-4">
                 <h2 className="text-3xl font-bold text-center mb-10 text-primary-1000">
                     Bác sĩ
@@ -86,11 +86,12 @@ export default function Doctor() {
                                         className="bg-white shadow-2xl p-6 rounded-lg flex flex-col items-center text-center h-72 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
                                         onClick={() => handleDoctorClick(item.doctor_id)} // Thêm sự kiện click
                                     >
-                                        <div className="h-40 w-full mb-4 overflow-hidden rounded">
+                                        <div
+                                            className="h-40 w-40 mb-4 overflow-hidden rounded-full flex justify-center items-center">
                                             <img
                                                 src={require(`../../../${item.doctor_image}`)} // Đường dẫn ảnh tĩnh từ API
                                                 alt={`Bác sĩ ${item.doctor_name}` || "Không rõ bác sĩ"}
-                                                className="w-full h-full object-cover rounded transition-transform duration-300 hover:scale-110"
+                                                className="w-full h-full object-cover rounded-full transition-transform duration-300 hover:scale-110"
                                             />
                                         </div>
                                         <div className="flex-1">
