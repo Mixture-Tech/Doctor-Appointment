@@ -5,6 +5,7 @@ import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/ProfileScreen.dart';
+import 'package:app/ui/screens/AnswerScreen.dart'; // Đảm bảo thêm AnswerScreen vào import
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  bool _isInAnswerScreen = false; // Biến theo dõi nếu đang ở AnswerScreen
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -26,11 +28,23 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   void _onItemTapped(int index) {
+    // Nếu đang ở AnswerScreen và người dùng nhấn vào chatbot thì ngừng việc điều hướng
+    if (index == 3 && _isInAnswerScreen) {
+      return;  // Không chuyển về ChatbotScreen khi đang ở AnswerScreen
+    }
+
     if (index == _selectedIndex) {
-      // Pop to first route in current tab
+      // Nếu đang ở tab hiện tại, pop về màn hình đầu tiên
       _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
     } else {
       setState(() {
+        // Cập nhật trạng thái khi chuyển tab
+        if (index == 3) {
+          _isInAnswerScreen = true; // Đang ở AnswerScreen khi chọn Chatbot tab
+        } else if (_selectedIndex == 3) {
+          _isInAnswerScreen = false; // Không còn ở AnswerScreen khi chuyển tab khác
+        }
+
         _selectedIndex = index;
       });
     }
