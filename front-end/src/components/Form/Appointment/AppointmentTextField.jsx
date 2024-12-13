@@ -1,44 +1,26 @@
 import React from 'react'
 
-export default function AppointmentTextField({ icon: Icon, type = "text", placeholder }) {
+export default function AppointmentTextField({ 
+  icon: Icon, 
+  type = "text", 
+  placeholder, 
+  value = '', // Thêm prop value với giá trị mặc định là chuỗi rỗng
+  onChange, // Thêm prop onChange để xử lý sự kiện thay đổi
+  readOnly = false, // Thêm prop readOnly để có thể disable việc chỉnh sửa
+  className = '' // Thêm prop className để có thể tùy chỉnh thêm class
+}) {
   return (
-    <div className="w-[100%] relative">
+    <div className={`w-[100%] relative ${className}`}>
       <Icon className="absolute top-3.5 left-3 text-[1.5rem] text-secondary-300" />
       <input
         type={type}
         placeholder={placeholder}
-        className="peer border-secondary-100 border rounded-md outline-none pl-12 pr-4 py-3 w-full focus:border-primary transition-colors duration-300"
+        value={value} // Bind giá trị value
+        onChange={onChange} // Gán sự kiện onChange
+        readOnly={readOnly} // Áp dụng thuộc tính readOnly
+        className="peer border-secondary-100 border rounded-md outline-none pl-12 pr-4 py-3 w-full focus:border-primary transition-colors duration-300 
+        disabled:bg-gray-100 disabled:cursor-not-allowed" // Thêm style cho trạng thái readOnly
       />
     </div>
   );
 }
-
-// Usage example
-
-/*
-// import InputField from "./InputField";
-import { RiAccountCircleLine, RiLockPasswordLine } from "react-icons/ri";
-import { MdOutlineMail } from "react-icons/md";
-import AppointmentTextField from "../../../components/Form/TextField/AppointmentTextField";
-
-const Inputs = () => {
-  return (
-    <div className="space-y-4">
-      <div>
-        <AppointmentTextField icon={RiAccountCircleLine} type="text" placeholder="Tên người dùng" />
-      </div>
-
-      <div>
-        <AppointmentTextField icon={RiLockPasswordLine} type="password" placeholder="Mật khẩu" />
-      </div>
-
-      <div>
-        <AppointmentTextField icon={MdOutlineMail} type="email" placeholder="Địa chỉ Email" />
-      </div>
-    </div>
-  );
-};
-
-export default Inputs;
-
-*/

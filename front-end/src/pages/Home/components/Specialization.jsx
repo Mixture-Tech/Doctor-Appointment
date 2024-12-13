@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-import DaLieu from '../../../assets/images/specialities/da-lieu.png';
-import CotSong from '../../../assets/images/specialities/cot-song.png';
-import ChamCuu from '../../../assets/images/specialities/cham-cuu.png';
-import ChupXQuang from '../../../assets/images/specialities/chup-x-quang.png';
-import CoXuongKhop from '../../../assets/images/specialities/co-xuong-khop.png';
-import DiUngMienDich from '../../../assets/images/specialities/di-ung-mien-dich.png';
-import ChanThuongChinhHinh from '../../../assets/images/specialities/chan-thuong-chinh-hinh.png';
+import DaLieu from '../../../assets/images/specializations/da-lieu.png';
+import CotSong from '../../../assets/images/specializations/cot-song.png';
+import ChamCuu from '../../../assets/images/specializations/cham-cuu.png';
+import ChupXQuang from '../../../assets/images/specializations/chup-x-quang.png';
+import CoXuongKhop from '../../../assets/images/specializations/co-xuong-khop.png';
+import DiUngMienDich from '../../../assets/images/specializations/di-ung-mien-dich.png';
+import ChanThuongChinhHinh from '../../../assets/images/specializations/chan-thuong-chinh-hinh.png';
 
 export default function Specialization() {
     const allImages = [

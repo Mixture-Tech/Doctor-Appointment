@@ -1,6 +1,8 @@
 // DoctorSchedule Component
 import React, { useEffect } from 'react';
 import TimeButton from '../../../components/Form/Appointment/TimeButton';
+import { useNavigate } from 'react-router-dom';
+import { useAppointmentContext } from '../../../contexts/appointmentContext';
 
 export default function DoctorSchedule({
     doctor,
@@ -8,6 +10,9 @@ export default function DoctorSchedule({
     selectedDate,
     setSelectedDate
 }) {
+    const navigate = useNavigate();
+    const { updateAppointmentData } = useAppointmentContext();
+
     // Tìm ngày gần nhất có lịch khám
     useEffect(() => {
         if (!selectedDate && availableDates.length > 0) {
@@ -27,6 +32,25 @@ export default function DoctorSchedule({
             }
         }
     }, [selectedDate, availableDates, doctor.schedules, setSelectedDate]);
+
+    const handleBookAppointment = (schedule) => {
+        // Cập nhật thông tin đặt lịch 
+        updateAppointmentData({
+          doctor: {
+            id: doctor.doctor_id,
+            name: doctor.doctor_name,
+            specialization: doctor.specialization_name
+          },
+          schedule: {
+            workingDate: selectedDate,
+            startTime: schedule.start_time,
+            endTime: schedule.end_time
+          }
+        });
+    
+        // Chuyển hướng đến trang đặt lịch
+        navigate('/dat-lich');
+      };
 
     const filteredSchedules = doctor.schedules.filter(
         (schedule) => schedule.working_date === selectedDate
@@ -72,6 +96,7 @@ export default function DoctorSchedule({
                             key={i}
                             onClick={() => {
                                 console.log(`Đặt lịch vào ${selectedDate} lúc ${schedule.start_time}`);
+                                handleBookAppointment(schedule);
                             }}
                             className={`flex justify-center items-center w-26 h-12 rounded md:w-20 md:h-8 bg-primary-500 text-white hover:bg-primary-600`}
                         >

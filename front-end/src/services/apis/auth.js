@@ -13,10 +13,10 @@ export const authenticate = async (authenticateRequest) => {
         const response = await axiosClient.post(urlAuthenticate, authenticateRequest);
 
         // Giải nén trực tiếp từ response (không phải response.data)
-        const { access_token, name, role } = response; // Truy cập trực tiếp vào response, không cần .data
+        const { access_token, name, email, role } = response; // Truy cập trực tiếp vào response, không cần .data
 
         // Lưu token vào cookie hoặc storage
-        setToken(access_token, name, role);
+        setToken(access_token, name, email, role);
 
         return response;
     } catch (error) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from '../../../services/apis/axiosClient';
 import List from './components/List';
 import CompanyInformation from './components/CompanyInformation';
+import { AppointmentService } from '../../../services/apis/appointment';
 
 export default function ListAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -12,8 +13,9 @@ export default function ListAppointments() {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/appointments'); // API endpoint
-        setAppointments(response.data.data); // Giả định dữ liệu ở response.data.data
+        const response = await AppointmentService.listAppointments(); // API endpoint
+        console.log('Appointments Response:', response);
+        setAppointments(response); // Giả định dữ liệu ở response.data.data
       } catch (err) {
         console.error('Error fetching appointments:', err);
         setError('Không thể tải danh sách lịch hẹn.');
