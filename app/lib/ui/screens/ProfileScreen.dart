@@ -17,17 +17,15 @@ import '../../models/user.dart';
 import '../../services/StorageService.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final VoidCallback onLogout; // Thêm callback
+
+  const ProfileScreen({super.key, required this.onLogout}); // Nhận callback từ MainScreen
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-  void _submitPersonalInfo() {
-    // Xử lý thông tin cá nhân ở đây
-  }
 
   String username = '';
   UserData? _currentUser;
@@ -45,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       if (_currentUser != null) {
         setState(() {
-          // Update fields with _currentUser data
+          // Cập nhật trường thông tin từ _currentUser
           username = _currentUser?.username ?? '';
         });
       }
@@ -54,41 +52,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  Future<void> _logout() async {
-    try {
-      final storageService = await StorageService.getInstance();
-      await storageService.clearAuthData(); // Xóa dữ liệu người dùng, ví dụ token
-
-      // Chuyển hướng về màn hình đăng nhập
-      Navigator.of(context).pushAndRemoveUntil(
-        CupertinoPageRoute(builder: (context) => const LoginScreen()),
-            (route) => false, // Loại bỏ tất cả các route trước đó
-      );
-    } catch (e) {
-      print('Error during logout: $e');
-      // Hiển thị thông báo lỗi nếu cần
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: <Widget>[
-            // Header
             HeaderWidget(
               isHomeScreen: true,
-              onIconPressed: () {
-
-              },
+              onIconPressed: () {},
             ),
             Expanded(
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Background image
                   Container(
                     decoration: const BoxDecoration(
                       image: DecorationImage(
@@ -97,22 +74,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ),
-
-                  // Thêm widget lên trên background
                   SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(height: 80),
 
-                        // Hình đại diện và tên người dùng
                         CircleAvatar(
                           radius: 50,
-                          backgroundImage: AssetImage("assets/images/Personal_Avatar.png"), // Thay backgroundColor bằng backgroundImage
+                          backgroundImage: AssetImage("assets/images/Personal_Avatar.png"),
                         ),
                         SizedBox(height: 10),
                         Text(
-                          username.isEmpty ? 'Đang tải...' : username, // Kiểm tra nếu chưa có username thì hiển thị "Đang tải..."
+                          username.isEmpty ? 'Đang tải...' : username,
                           style: AppTextStyles.labelStyle.copyWith(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -142,19 +116,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ProfileOptionWidget(
                           icon: Icons.logout,
                           label: 'Đăng xuất',
-                          onTap: () async {
-                            await _logout();
-                          },
+                          onTap: widget.onLogout, // Gọi callback khi nhấn đăng xuất
                         ),
                       ],
                     ),
                   ),
-
-                  // Navigation Bar ở dưới
-                  // Align(
-                  //   alignment: Alignment.bottomCenter,
-                  //   child: NavigationBarWidget(),
-                  // ),
                 ],
               ),
             ),

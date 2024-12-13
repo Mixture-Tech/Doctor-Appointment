@@ -1,6 +1,7 @@
 import 'package:app/models/appointment.dart';
 import 'package:app/services/AppointmentService.dart';
 import 'package:app/styles/colors.dart';
+import 'package:app/ui/screens/AppointmentEditScreen.dart';
 import 'package:app/ui/widgets/ButtonWidget.dart';
 import 'package:app/ui/widgets/HeaderWidget.dart';
 import 'package:flutter/material.dart';
@@ -234,22 +235,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget _buildAppointmentItem(Appointment appointment) {
     final DateFormat dateFormatter = DateFormat('dd-MM-yyyy');
     final DateFormat timeFormatter = DateFormat('HH:mm');
-    //chỉnh sửa định dạng taken_date
+
     String formattedCreatedAt = 'Không xác định';
     if (appointment.createdAt != null) {
       try {
         DateTime createdAtDateTime = DateTime.parse(appointment.createdAt!);
-        formattedCreatedAt = DateTimeUtils.formatDate(createdAtDateTime); // Sử dụng hàm custom formatDate
+        formattedCreatedAt = DateTimeUtils.formatDate(createdAtDateTime);
       } catch (e) {
-        print('Error parsing createdat: ${appointment.createdAt}');
+        print('Error parsing createdAt: ${appointment.createdAt}');
       }
     }
-    //chỉnh sửa định dạng taken_date
+
     String formattedAppointmentTakenDate = 'Không xác định';
     if (appointment.appointmentTakenDate != null) {
       try {
         DateTime appointmentTakenDateTime = DateTime.parse(appointment.appointmentTakenDate!);
-        formattedAppointmentTakenDate = DateTimeUtils.formatDate(appointmentTakenDateTime); // Sử dụng hàm custom formatDate
+        formattedAppointmentTakenDate = DateTimeUtils.formatDate(appointmentTakenDateTime);
       } catch (e) {
         print('Error parsing appointmentTakenDate: ${appointment.appointmentTakenDate}');
       }
@@ -263,11 +264,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-               formattedCreatedAt,
+              formattedCreatedAt,
               style: const TextStyle(fontSize: 16, color: Colors.black),
             ),
             const SizedBox(height: 4),
-            // Thay đổi thông báo theo trạng thái
             Text(
               appointment.status == 'CONFIRMED'
                   ? 'Đặt lịch khám thành công'
@@ -306,25 +306,55 @@ class _NotificationScreenState extends State<NotificationScreen> {
             Text(
               'Thời gian: ${DateTimeUtils.formatTimeRange(appointment.startTime, appointment.endTime) ?? 'N/A'}',
             ),
-            const SizedBox(height: 8), // Khoảng cách giữa thông tin và nút Hủy
-            // Hiển thị nút Hủy chỉ khi status là CONFIRMED
-            if (appointment.status == 'CONFIRMED')
-              ElevatedButton(
-                onPressed: isLoading ? null : () {
-                  // Disable nút khi đang loading
-                  _showCancelConfirmDialog(appointment.id);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.red,
-                  disabledBackgroundColor: Colors.grey, // Màu khi disable
-                ),
-                child: Text(
-                  isLoading ? 'Đang xử lý...' : 'Hủy lịch hẹn',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                if (appointment.status == 'CONFIRMED')
+                  ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                      _showCancelConfirmDialog(appointment.id);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.red,
+                      disabledBackgroundColor: Colors.grey,
+                    ),
+                    child: Text(
+                      isLoading ? 'Đang xử lý...' : 'Hủy lịch hẹn',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                const SizedBox(width: 8), // Khoảng cách giữa hai nút
+                if (appointment.status == 'CONFIRMED')
+                  ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                      // Logic chỉnh sửa lịch hẹn
+                      _editAppointment(appointment.id);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBlue, // Màu sắc của nút sửa
+                      disabledBackgroundColor: Colors.grey,
+                    ),
+                    child: Text(
+                      isLoading ? 'Đang xử lý...' : 'Sửa lịch hẹn',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _editAppointment(String appointmentId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AppointmentEditScreen(),
       ),
     );
   }

@@ -252,7 +252,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
               onIconPressed: () {
                 Navigator.pop(
                   context,
-                  CupertinoPageRoute(builder: (context) => ProfileScreen()), // Chuyển đến trang hồ sơ
+                  CupertinoPageRoute(builder: (context) => ProfileScreen(onLogout: () {  },)), // Chuyển đến trang hồ sơ
                 );
               },
             ),

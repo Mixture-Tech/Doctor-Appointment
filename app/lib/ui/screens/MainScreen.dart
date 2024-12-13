@@ -1,12 +1,12 @@
-import 'package:app/ui/screens/ChatbotScreen.dart';
-import 'package:app/ui/screens/ListDoctorScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:app/ui/screens/HomeScreen.dart';
 import 'package:app/ui/screens/NotificationScreen.dart';
 import 'package:app/ui/screens/AppointmentScreen.dart';
 import 'package:app/ui/screens/ProfileScreen.dart';
-import 'package:app/ui/screens/AnswerScreen.dart'; // Đảm bảo thêm AnswerScreen vào import
+import 'package:app/ui/screens/ChatbotScreen.dart';
+import 'package:app/ui/screens/ListDoctorScreen.dart';
 import 'package:app/ui/widgets/NavigationBarWidget.dart';
+import 'package:app/ui/screens/LoginScreen.dart';  // Thêm import cho LoginScreen
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  bool _isInAnswerScreen = false; // Biến theo dõi nếu đang ở AnswerScreen
+  bool _isInAnswerScreen = false;
 
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -27,22 +27,27 @@ class _MainScreenState extends State<MainScreen> {
     GlobalKey<NavigatorState>(),
   ];
 
+  // Phương thức đăng xuất (callback)
+  void _logout() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+    );
+  }
+
   void _onItemTapped(int index) {
-    // Nếu đang ở AnswerScreen và người dùng nhấn vào chatbot thì ngừng việc điều hướng
     if (index == 3 && _isInAnswerScreen) {
-      return;  // Không chuyển về ChatbotScreen khi đang ở AnswerScreen
+      return;
     }
 
     if (index == _selectedIndex) {
-      // Nếu đang ở tab hiện tại, pop về màn hình đầu tiên
       _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
     } else {
       setState(() {
-        // Cập nhật trạng thái khi chuyển tab
         if (index == 3) {
-          _isInAnswerScreen = true; // Đang ở AnswerScreen khi chọn Chatbot tab
+          _isInAnswerScreen = true;
         } else if (_selectedIndex == 3) {
-          _isInAnswerScreen = false; // Không còn ở AnswerScreen khi chuyển tab khác
+          _isInAnswerScreen = false;
         }
 
         _selectedIndex = index;
@@ -56,6 +61,7 @@ class _MainScreenState extends State<MainScreen> {
       child: TabNavigator(
         navigatorKey: _navigatorKeys[index],
         tabItem: TabItem.values[index],
+        onLogout: _logout, // Truyền phương thức _logout vào TabNavigator
       ),
     );
   }
@@ -98,11 +104,13 @@ enum TabItem { home, notification, appointment, chatbot, profile }
 class TabNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
   final TabItem tabItem;
+  final VoidCallback onLogout; // Thêm đối số callback vào TabNavigator
 
   const TabNavigator({
     Key? key,
     required this.navigatorKey,
     required this.tabItem,
+    required this.onLogout, // Truyền đối số callback
   }) : super(key: key);
 
   @override
@@ -122,7 +130,7 @@ class TabNavigator extends StatelessWidget {
         child = const ChatbotScreen();
         break;
       case TabItem.profile:
-        child = const ProfileScreen();
+        child = ProfileScreen(onLogout: onLogout); // Truyền callback vào ProfileScreen
         break;
     }
 

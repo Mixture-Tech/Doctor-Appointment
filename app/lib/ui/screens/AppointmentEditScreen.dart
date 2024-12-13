@@ -22,30 +22,19 @@ import '../../models/user.dart';
 import '../../styles/colors.dart';
 import '../../styles/text.dart';
 import '../../utils/date_time.dart';
+import 'NotificationScreen.dart';
 
-class AppointmentDetailScreen extends StatefulWidget {
-  final Widget previousScreen;
-  final String doctorId;
-  final Schedule schedule;
-  final String doctorName;
-  final String doctorImage;
-  final String price;
+class AppointmentEditScreen extends StatefulWidget {
 
-  const AppointmentDetailScreen({
+  const AppointmentEditScreen({
     super.key,
-    required this.previousScreen,
-    required this.doctorId,
-    required this.schedule,
-    required this.doctorName,
-    required this.doctorImage,
-    required this.price,
   });
 
   @override
-  State<AppointmentDetailScreen> createState() => _AppointmentDetailScreenState();
+  State<AppointmentEditScreen> createState() => _AppointmentDetailScreenState();
 }
 
-class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
+class _AppointmentDetailScreenState extends State<AppointmentEditScreen> {
   // Form Controllers
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -65,11 +54,19 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   // Form State
   DateTime? _selectedDate;
+  TimeOfDay? _selectedTime;
   Gender _selectedGender = Gender.male;
   SingingCharacter _bookingType = SingingCharacter.SELF_BOOKING;
   bool _isLoading = false;
   bool _isAddressLoaded = false;
   String? _error;
+  final List<String> availableDates = [
+    '06/12/2025', '07/12/2025', '08/12/2025', '09/12/2025'
+  ];
+
+  final List<String> availableTimes = [
+    '09:00 - 09:30', '10:00 - 10:30', '11:00 - 11:30', '12:00 - 12:30'
+  ];
 
   // Services
   late Future<AppointmentService> _appointmentService;
@@ -80,10 +77,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   void initState() {
     super.initState();
     _appointmentService = AppointmentService.create();
-    _loadUserData();
+    /*_loadUserData();*/
   }
 
-  Future<void> _loadUserData() async {
+  /*Future<void> _loadUserData() async {
     try {
       final storageService = await StorageService.getInstance();
       _currentUser = await storageService.getUserDataFromToken();
@@ -97,10 +94,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     } catch (e) {
       print('Error loading user data: $e');
     }
-  }
+  }*/
 
   // Cập nhật hàm _updateFormFields để không khóa trường ngày sinh
-  void _updateFormFields() {
+  /*void _updateFormFields() {
     if (_currentUser == null) return;
 
     setState(() {
@@ -110,9 +107,9 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
         _updateOtherBookingFields();
       }
     });
-  }
+  }*/
 
-  void _updateSelfBookingFields() {
+  /*void _updateSelfBookingFields() {
     // Clear thông tin người đặt vì tự đặt không cần
     _nameController.clear();
     _phoneController.clear();
@@ -173,189 +170,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       _selectedDistrict = null;
       _selectedWard = null;
     });
+  }*/
+
+  Future<void> _updateAppointment() async {
+
   }
 
-  Future<void> _processAddress(String fullAddress) async {
-    try {
-      if(_isAddressLoaded) return;
-
-      final addressParts = fullAddress.split(', ');
-      if (addressParts.length < 3) return;
-
-      final provinces = await ProvinceGHNApiService.getProvinces();
-      final province = provinces.firstWhere(
-            (p) => p['ProvinceName'] == addressParts[2],
-        orElse: () => {},
-      );
-
-      if (province.isEmpty) return;
-
-      setState(() {
-        _selectedProvince = province;
-        _originalProvince = Map<String, dynamic>.from(province);
-      });
-
-      final districts = await ProvinceGHNApiService.getDistricts(province['ProvinceID']);
-      final district = districts.firstWhere(
-            (d) => d['DistrictName'] == addressParts[1],
-        orElse: () => {},
-      );
-
-      if (district.isEmpty) return;
-
-      setState(() {
-        _selectedDistrict = district;
-        _originalDistrict = Map<String, dynamic>.from(district);
-      });
-
-      final wards = await ProvinceGHNApiService.getWards(district['DistrictID']);
-      final ward = wards.firstWhere(
-            (w) => w['WardName'] == addressParts[0],
-        orElse: () => {},
-      );
-
-      if (ward.isNotEmpty) {
-        setState(() {
-          _selectedWard = ward;
-          _originalWard = Map<String, dynamic>.from(ward);
-          _isAddressLoaded = true;
-        });
-      }
-    } catch (e) {
-      print('Error processing address: $e');
-    }
-  }
-
-  Future<void> _createAppointment() async {
-    if (!_validateForm()) return;
-
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      final appointmentService = await _appointmentService;
-      _userData = _createUserData();
-
-      if (_userData != null) {
-        final appointment = await appointmentService.createAppointment(
-          doctorId: widget.doctorId,
-          schedule: widget.schedule,
-          user: _userData!,
-          type: _bookingType.name,
-        );
-
-        if (_bookingType == SingingCharacter.OTHER_BOOKING) {
-          await NotificationService.sendImmediateNotification(
-            title: 'Đặt lịch thành công',
-            description: 'Bạn đã đặt lịch khám cho người thân với Bác sĩ ${widget.doctorName} '
-                'vào lúc ${DateTimeUtils.formatScheduleTimeRange(widget.schedule)} '
-                'ngày ${DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!))}',
-            additionalData: {
-              'type': 'appointment_created_for_other',
-              'appointmentId': appointment.id,
-              'doctorName': widget.doctorName,
-            },
-          );
-        } else {
-          await NotificationService.sendImmediateNotification(
-            title: 'Đặt lịch thành công',
-            description: 'Bạn đã đặt lịch khám thành công với Bác sĩ ${widget.doctorName} '
-                'vào lúc ${DateTimeUtils.formatScheduleTimeRange(widget.schedule)} '
-                'ngày ${DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!))}',
-            additionalData: {
-              'type': 'appointment_created',
-              'appointmentId': appointment.id,
-              'doctorName': widget.doctorName,
-            },
-          );
-        }
-
-        // Đặt lịch nhắc nhở trước 1 giờ
-        // await NotificationService.sheduleAppointmentReminder(
-        //   appointmentId: appointment.id ?? '',
-        //   patientName: _userData!.username ?? '',
-        //   doctorName: widget.doctorName,
-        //   appointmentTime: DateTime.parse('${widget.schedule.workingDate!} ${widget.schedule.startTime!}'),
-        // );
-
-        // await NotifyService().sendNotification(
-        //   'Đặt lịch thành công',
-        //   'Bạn đã đặt lịch khám thành công với bác sĩ ${widget.doctorName} vào lúc ${DateTimeUtils.formatScheduleTimeRange(widget.schedule)} ngày ${DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!))}',
-        // );
-
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            CupertinoPageRoute(builder: (context) => const BookingSuccessScreen()),
-          );
-        }
-      }
-    } catch (e) {
-      setState(() => _error = e.toString());
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  UserData _createUserData() {
-    // Ensure address is properly constructed
-    final addressField = [
-      _selectedWard?['WardName'],
-      _selectedDistrict?['DistrictName'],
-      _selectedProvince?['ProvinceName']
-    ].whereType<String>().join(', ');
-
-    // Add null safety for date of birth
-    String? dateOfBirthField;
-    if (_selectedDate != null) {
-      dateOfBirthField = DateFormat('yyyy-MM-dd').format(_selectedDate!);
-    } else if (_currentUser?.dateOfBirth != null && _currentUser!.dateOfBirth!.isNotEmpty) {
-      // Try to parse existing date if available
-      try {
-        final DateTime parsedDate = DateTime.parse(_currentUser!.dateOfBirth!);
-        dateOfBirthField = DateFormat('yyyy-MM-dd').format(parsedDate);
-      } catch (e) {
-        print('Error parsing existing date of birth: $e');
-        // Don't set dateOfBirthField if parsing fails
-      }
-    }
-
-    // Ensure date of birth is not null before creating UserData
-    if (dateOfBirthField == null) {
-      throw FormatException('Date of birth is required');
-    }
-
-    // Ensure gender is properly formatted
-    final genderField = _selectedGender == Gender.male ? "Nam" : "Nữ";
-
-    if (_bookingType == SingingCharacter.SELF_BOOKING) {
-      return UserData(
-        id: _currentUser?.id,
-        username: _patientNameController.text.isNotEmpty ?
-        _patientNameController.text : _currentUser?.username,
-        phone: _patientPhoneController.text.isNotEmpty ?
-        _patientPhoneController.text : _currentUser?.phone,
-        email: _currentUser?.email,
-        address: addressField.isNotEmpty ? addressField : _currentUser?.address,
-        dateOfBirth: dateOfBirthField, // Use the safely processed date
-        gender: genderField,
-      );
-    } else {
-      return UserData(
-        id: _currentUser?.id,
-        username: _patientNameController.text,
-        phone: _patientPhoneController.text,
-        email: _currentUser?.email,
-        address: addressField,
-        dateOfBirth: dateOfBirthField,
-        gender: genderField,
-      );
-    }
-  }
-
-  bool _validateForm() {
+  /*bool _validateForm() {
     final errors = AppointmentValidator.validateAppointmentForm(
       isOtherBooking: _bookingType == SingingCharacter.OTHER_BOOKING,
       patientName: _patientNameController.text,
@@ -372,7 +193,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
 
     return true;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -382,10 +203,14 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           children: [
             HeaderWidget(
               isHomeScreen: false,
-              onIconPressed: () => Navigator.pop(
-                context,
-                CupertinoPageRoute(builder: (context) => widget.previousScreen),
-              ),
+              onIconPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => NotificationScreen(),
+                  ),
+                );
+              },
             ),
             Expanded(
               child: Stack(
@@ -418,8 +243,6 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
       children: [
         Column(
           children: [
-            _buildBreadcrumb(),
-            _buildDivider(),
             const SizedBox(height: 10),
             _buildMainContent(),
           ],
@@ -428,46 +251,102 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     );
   }
 
-  Widget _buildBreadcrumb() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      child: Row(
-        children: [
-          Icon(Icons.home, color: AppColors.primaryBlue),
-          Text(" / ", style: TextStyle(fontSize: 18, color: Colors.grey)),
-          Expanded(
-            child: Text(
-              "Đặt lịch khám bệnh",
-              style: AppTextStyles.subHeaderStyle,
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Container(
-      height: 1,
-      color: AppColors.primaryBlue,
-      width: double.infinity,
-    );
-  }
-
   Widget _buildMainContent() {
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: DoctorInfoWidget(
-            name: widget.doctorName,
-            imageUrl: widget.doctorImage,
-            date: DateTimeUtils.formatDate(DateTime.parse(widget.schedule.workingDate!)),
-            time: DateTimeUtils.formatScheduleTimeRange(widget.schedule),
-            price: widget.price,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.asset(
+                      "assets/images/doctors/bui-gia-luong.png", // Use a placeholder image
+                      width: 100,
+                      height: 110,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 4),
+                        Text(
+                          "Tạ Văn Tờ",
+                          style: AppTextStyles.subHeaderStyle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Giá khám: 500.000 VND',
+                          style: AppTextStyles.infoStyle,
+                        ),
+                        Text(
+                          'Miễn phí đặt lịch',
+                          style: AppTextStyles.infoStyle.copyWith(color: Colors.green),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
+        SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          child: DropdownButtonFormField<String>(
+            value: _selectedDate != null ? DateFormat('dd/MM/yyyy').format(_selectedDate!) : null,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedDate = DateTime.parse(newValue!);
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Chọn ngày',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12), // Giảm khoảng cách trong
+            ),
+            items: availableDates.map((String date) {
+              return DropdownMenuItem<String>(
+                value: date,
+                child: Text(date),
+              );
+            }).toList(),
+          ),
+        ),
+// Add Time Selector
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+          child: DropdownButtonFormField<String>(
+            value: _selectedTime != null ? _selectedTime!.format(context) : null,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedTime = TimeOfDay.fromDateTime(DateFormat.jm().parse(newValue!));
+              });
+            },
+            decoration: InputDecoration(
+              labelText: 'Chọn giờ',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12), // Giảm khoảng cách trong
+            ),
+            items: availableTimes.map((String time) {
+              return DropdownMenuItem<String>(
+                value: time,
+                child: Text(time),
+              );
+            }).toList(),
+          ),
+        ),
+
         TypeSelectorWidget(
           character: _bookingType,
           onChanged: (value) {
@@ -488,7 +367,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 _selectedWard = null;
               });
               // Gọi updateFormFields sau khi đã clear các trường
-              _updateFormFields();
+              /*_updateFormFields();*/
             }
           },
         ),
@@ -513,21 +392,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   Widget _buildFooterContent() {
     return Column(
       children: [
-        const SizedBox(height: 15),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18),
-          child: Text(
-            'Vui lòng điền đầy đủ thông tin, để tiết kiệm thời gian làm thủ tục khám bệnh',
-            style: AppTextStyles.infoStyle,
-          ),
-        ),
         const SizedBox(height: 20),
         if (_isLoading)
           const Center(child: CircularProgressIndicator())
         else
           CustomElevatedButton(
-            text: 'Đặt lịch ngay',
-            onPressed: _createAppointment,
+            text: 'Cập nhật',
+            onPressed: _updateAppointment,
           ),
         const SizedBox(height: 40),
       ],
@@ -593,9 +464,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           hintText: 'Họ tên bệnh nhân',
           prefixIcon: Icons.person_outline,
           isRequired: true,
-          helperText: 'Hãy ghi rõ họ và tên, viết hoa những chữ cái đầu tiên.\nVí dụ: Nguyễn Văn A',
-          enabled: true,
-          readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.username != null,
+          enabled: false,
+          readOnly: true,
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 6),
@@ -606,8 +476,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 _selectedGender = value; // Update selected gender
               });
             },
-            enabled: true,
-            readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.gender != null,
+            enabled: false,
+            readOnly: true,
           ),
         ),
         TextFieldWidget(
@@ -615,8 +485,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           hintText: 'Số điện thoại bệnh nhân',
           prefixIcon: Icons.phone_outlined,
           isRequired: true,
-          enabled: true,
-          readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.phone != null,
+          enabled: false,
+          readOnly: true,
         ),
         const SizedBox(height: 10),
         DatePickerTextField(
@@ -630,8 +500,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _selectedDate = selectedDate;
             });
           },
-          enabled: true,
-          readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.dateOfBirth != null,
+          enabled: false,
+          readOnly: true,
         ),
         const SizedBox(height: 10),
         AddressDropdownField(
@@ -648,8 +518,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _selectedWard = null;
             });
           },
-          enabled: true, // Luôn bật để hiển thị dữ liệu
-          readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.address != null, // Không cho chọn nếu là SELF_BOOKING
+          enabled: false, // Luôn bật để hiển thị dữ liệu
+          readOnly: true, // Không cho chọn nếu là SELF_BOOKING
         ),
         const SizedBox(height: 10),
         AddressDropdownField(
@@ -667,8 +537,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _selectedWard = null;
             });
           },
-          enabled: true, // Luôn bật để hiển thị dữ liệu
-          readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.address != null, // Không cho chọn nếu là SELF_BOOKING
+          enabled: false, // Luôn bật để hiển thị dữ liệu
+          readOnly: true, // Không cho chọn nếu là SELF_BOOKING
         ),
         const SizedBox(height: 10),
         AddressDropdownField(
@@ -685,8 +555,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _selectedWard = value;
             });
           },
-          enabled: true, // Luôn bật để hiển thị dữ liệu
-          readOnly: _bookingType == SingingCharacter.SELF_BOOKING && _currentUser?.address != null, // Không cho chọn nếu là SELF_BOOKING
+          enabled: false, // Luôn bật để hiển thị dữ liệu
+          readOnly: true, // Không cho chọn nếu là SELF_BOOKING
         ),
       ],
     );

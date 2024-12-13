@@ -26,7 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
               isHomeScreen: true,
               onIconPressed: () {
                 // Navigator.pop(context);
-                print('hehe');
               },
             ),
             Expanded(
@@ -188,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       CupertinoPageRoute(builder: (context) => const SpecializationScreen())
                                   );
                                 }),
-                              // _buildServiceBox('Khám\ntổng quát', 'assets/images/Heart Rate.png'),
+                              _buildServiceBox('Tư vấn từ xa', 'assets/images/Heart Rate.png', () {}),
                               // _buildServiceBox('Tham khảo\nchi phí', 'assets/images/Dollar (USD).png'),
                               // _buildServiceBox('Sức khỏe\ntinh thần', 'assets/images/Body.png'),
                               // _buildServiceBox('Khám\nnha khoa', 'assets/images/Tooth.png'),
