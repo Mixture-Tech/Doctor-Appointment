@@ -128,6 +128,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return AuthenticationResponse.builder()
                 .name(user.getUsername())
                 .role(user.getRole().getName())
+                .email(user.getEmail())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .errorCode(ErrorCodeEnum.OK)

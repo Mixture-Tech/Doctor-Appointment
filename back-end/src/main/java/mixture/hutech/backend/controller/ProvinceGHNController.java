@@ -62,7 +62,7 @@ public class ProvinceGHNController {
     @GetMapping("/wards/{districtId}")
     public ResponseEntity<MessageResponse> getWards(@PathVariable int districtId) {
         try {
-            List<Map<String, Object>> wards = provinceGHNService.getDistricts(districtId);
+            List<Map<String, Object>> wards = provinceGHNService.getWards(districtId);
             return ResponseEntity.ok(MessageResponse.builder()
                     .errorCode(ErrorCodeEnum.OK)
                     .message(ErrorCodeEnum.OK.getMessage())

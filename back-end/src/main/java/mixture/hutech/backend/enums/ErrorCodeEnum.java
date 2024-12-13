@@ -36,6 +36,8 @@ public enum ErrorCodeEnum {
     DISEASE_NOT_FOUND(404,"Không tìm thấy bệnh", HttpStatus.NOT_FOUND),
     SYMPTOM_NOT_FOUND(404, "Không tìm thấy triệu chứng", HttpStatus.NOT_FOUND),
     EXTERNAL_SERVICE_ERROR(500, "Lỗi kết nối dịch vụ ngoại vi", HttpStatus.INTERNAL_SERVER_ERROR),
+    CANNOT_CANCEL_WITHIN_24_HOURS(400, "Không thể huỷ cuộc hẹn trong vòng 24 giờ", HttpStatus.BAD_REQUEST),
+    CANNOT_RESCHEDULE_WITHIN_12_HOURS(400, "Không thể đổi lịch trong vòng 12 giờ", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

@@ -56,7 +56,7 @@ public class AppointmentResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Ho_Chi_Minh")
     private Timestamp createdAt;
 
-    public AppointmentResponse(String appointmentId, LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {
+    public AppointmentResponse(String appointmentId, String username, LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {
         this.id = appointmentId;
         this.probableStartTime = probableStartTime;
         this.actualEndTime = actualEndTime;
@@ -64,5 +64,6 @@ public class AppointmentResponse {
         this.doctorName = doctorName;
         this.status = status;
         this.createdAt = createdAt;
+        this.username = username;
     }
 }

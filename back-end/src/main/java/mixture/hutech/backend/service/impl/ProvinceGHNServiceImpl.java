@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,17 @@ public class ProvinceGHNServiceImpl implements ProvinceGHNService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> responseBody = response.getBody();
-            return (List<Map<String, Object>>) responseBody.get("data");
+            List<Map<String, Object>> originalData = (List<Map<String, Object>>) responseBody.get("data");
+
+            // Filter and map to extract only ProvinceID and ProvinceName
+            return originalData.stream()
+                    .map(province -> {
+                        Map<String, Object> filteredProvince = new HashMap<>();
+                        filteredProvince.put("ProvinceID", province.get("ProvinceID"));
+                        filteredProvince.put("ProvinceName", province.get("ProvinceName"));
+                        return filteredProvince;
+                    })
+                    .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Failed to load provinces");
         }
@@ -64,7 +75,18 @@ public class ProvinceGHNServiceImpl implements ProvinceGHNService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> responseBody = response.getBody();
-            return (List<Map<String, Object>>) responseBody.get("data");
+            List<Map<String, Object>> originalData = (List<Map<String, Object>>) responseBody.get("data");
+
+            // Filter and map to extract only ProvinceID and ProvinceName
+            return originalData.stream()
+                    .map(district -> {
+                        Map<String, Object> filteredDistrict = new HashMap<>();
+                        filteredDistrict.put("ProvinceID", district.get("ProvinceID"));
+                        filteredDistrict.put("DistrictID", district.get("DistrictID"));
+                        filteredDistrict.put("DistrictName", district.get("DistrictName"));
+                        return filteredDistrict;
+                    })
+                    .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Failed to load districts");
         }
@@ -89,7 +111,17 @@ public class ProvinceGHNServiceImpl implements ProvinceGHNService {
 
         if (response.getStatusCode().is2xxSuccessful()) {
             Map<String, Object> responseBody = response.getBody();
-            return (List<Map<String, Object>>) responseBody.get("data");
+            List<Map<String, Object>> originalData = (List<Map<String, Object>>) responseBody.get("data");
+
+            // Filter and map to extract only ProvinceID and ProvinceName
+            return originalData.stream()
+                    .map(ward -> {
+                        Map<String, Object> filteredWard = new HashMap<>();
+                        filteredWard.put("DistrictID", ward.get("DistrictID"));
+                        filteredWard.put("WardName", ward.get("WardName"));
+                        return filteredWard;
+                    })
+                    .collect(Collectors.toList());
         } else {
             throw new RuntimeException("Failed to load wards");
         }

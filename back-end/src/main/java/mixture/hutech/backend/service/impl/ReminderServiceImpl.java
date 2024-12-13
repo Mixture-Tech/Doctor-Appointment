@@ -23,7 +23,7 @@ public class ReminderServiceImpl implements ReminderService {
     private final EmailService emailService;
 
     @Override
-    @Scheduled(fixedRate = 3600000) // Run every hour
+    @Scheduled(fixedRate = 900000) // Run every hour
     public void sendAppointmentReminder() {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
 

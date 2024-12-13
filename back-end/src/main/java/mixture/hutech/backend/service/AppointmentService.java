@@ -10,4 +10,5 @@ public interface AppointmentService {
     AppointmentResponse createAppointment(AppointmentRequest request, String userEmail);
     AppointmentResponse cancelAppointment(String appointmentId, String userEmail);
     List<AppointmentResponse> listAppointmentByUser(String userEmail);
+    AppointmentResponse updateAppointment(String appointmentId, AppointmentRequest request, String userEmail);
 }

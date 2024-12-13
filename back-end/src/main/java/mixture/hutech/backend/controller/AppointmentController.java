@@ -51,12 +51,35 @@ public class AppointmentController {
     }
 
     @PostMapping("/{appointmentId}/cancel")
-    public ResponseEntity<MessageResponse> updateAppointment(
+    public ResponseEntity<MessageResponse> cancelAppointment(
             @PathVariable String appointmentId,
             @AuthenticationPrincipal CustomUserDetail userDetail){
         try {
                                     String currentUserEmail = userDetail.getUsername();
             AppointmentResponse appointmentResponse = appointmentService.cancelAppointment(appointmentId, currentUserEmail);
+            return ResponseEntity.ok(MessageResponse.builder()
+                    .errorCode(ErrorCodeEnum.OK)
+                    .message(ErrorCodeEnum.OK.getMessage())
+                    .data(appointmentResponse)
+                    .build());
+        } catch (ApiException e) {
+            return ResponseEntity
+                    .status(e.getErrorCodeEnum().getHttpStatus())
+                    .body(MessageResponse.builder()
+                            .errorCode(e.getErrorCodeEnum())
+                            .message(e.getMessage())
+                            .build());
+        }
+    }
+
+    @PostMapping("/{appointmentId}/update")
+    public ResponseEntity<MessageResponse> updateAppointment(
+            @PathVariable String appointmentId,
+            @RequestBody AppointmentRequest appointmentRequest,
+            @AuthenticationPrincipal CustomUserDetail userDetail){
+        try {
+            String currentUserEmail = userDetail.getUsername();
+            AppointmentResponse appointmentResponse = appointmentService.updateAppointment(appointmentId, appointmentRequest, currentUserEmail);
             return ResponseEntity.ok(MessageResponse.builder()
                     .errorCode(ErrorCodeEnum.OK)
                     .message(ErrorCodeEnum.OK.getMessage())

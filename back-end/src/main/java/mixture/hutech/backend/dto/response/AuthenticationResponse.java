@@ -22,6 +22,8 @@ public class AuthenticationResponse {
     private String refreshToken;
     @JsonProperty("name")
     private String name;
+    @JsonProperty("email")
+    private String email;
     @JsonProperty("role")
     private String role;
     @JsonProperty("error_code")
