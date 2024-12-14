@@ -61,7 +61,7 @@ export default function Instruct() {
     return (
         <>
             {/* Tiêu đề */}
-            <div className="text-lg font-bold mb-4 bg-gray-200 p-4 rounded-md">
+            <div className="text-lg font-bold mb-4 bg-gray-200 p-4 rounded-md mt-4">
                 Hướng dẫn đi khám
             </div>
 

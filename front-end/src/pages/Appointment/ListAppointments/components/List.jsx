@@ -6,8 +6,8 @@ import { StorageKeys } from '../../../../services/key/keys';
 export default function List({ appointments }) {
     const navigate = useNavigate();
 
-    const handleButtonClick = (appointment_id) => {
-        navigate(`/chi-tiet-lich-hen/${appointment_id}`); // Điều hướng kèm theo ID
+    const handleButtonClick = (appointmentId) => {
+        navigate(`/chi-tiet-lich-hen/${appointmentId}`);
     };
 
     return (
@@ -37,9 +37,12 @@ export default function List({ appointments }) {
                                 <p>Ngày tạo lịch hẹn: {appointment.created_at}</p>
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-primary font-bold underline mb-3">
+                                <span
+                                    className={`font-bold underline mb-3 ${appointment.status === 'CONFIRMED' ? 'text-primary' : 'text-red-500'}`}
+                                >
                                     {appointment.status === 'CONFIRMED' ? 'Đã đặt lịch hẹn' : 'Đã hủy'}
                                 </span>
+
                                 <div className="flex items-center text-sm">
                                     <FaClock className="mr-2 text-yellow-500" />
                                     {appointment.start_time} - {appointment.end_time}
