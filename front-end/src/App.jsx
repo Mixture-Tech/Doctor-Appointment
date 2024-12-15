@@ -6,6 +6,7 @@ import { CircularProgress } from "@mui/material";
 import ChatbotLayout from "./layouts/ChatbotLayout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {ToastContainer} from "react-toastify";
+import AdminLayout from "./layouts/AdminLayout";
 
 const Home = loadable(() => import("./pages/Home/index"));
 const Chatbot = loadable(() => import("./pages/Chatbot/index"));
@@ -20,11 +21,22 @@ const ListAppointments = loadable(() => import("./pages/Appointment/ListAppointm
 const AppointmentDetail = loadable(() => import("./pages/Appointment/AppointmentDetail/index"));
 const AppointmentBooking = loadable(() => import("./pages/Appointment/AppointmentBooking/index"));
 const AppointmentSuccessfully = loadable(() => import("./pages/Appointment/AppointmentSuccessfully/index"));
+const Admin = loadable(() => import("./pages/Admin/index"));
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
+                <Route element={<AdminLayout />}>
+                    <Route
+                        path="/admin"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <Admin title="Admin" />
+                            </Suspense>
+                        }
+                    />
+                </Route>
                 <Route element={<BasicLayout />}>
                     <Route
                         index
