@@ -2,9 +2,14 @@ import React, { useRef, useEffect, useState } from 'react';
 import { RiRobot2Fill, RiUser3Line } from 'react-icons/ri';
 import Logo from '../../../components/Form/Auth/Logo';
 
-export function ChatMessages({ messages, userName = "Hoàng" }) {
+export function ChatMessages({ messages, userName }) {
     const messagesEndRef = useRef(null);
     const [showUserMenu, setShowUserMenu] = useState(false);
+
+    // Lấy username từ localStorage, với giá trị mặc định nếu không tìm thấy
+    const [displayName, setDisplayName] = useState(() => {
+        return localStorage.getItem('USER_NAME') || userName || "Hoàng";
+    });
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -23,7 +28,7 @@ export function ChatMessages({ messages, userName = "Hoàng" }) {
             {/* User Header */}
             <div className="flex items-center justify-start space-x-4">
                 <RiUser3Line className="w-8 h-8 text-primary-500" />
-                <p className="font-semibold text-black">{userName}</p>
+                <p className="font-semibold text-black">{displayName}</p>
             </div>
 
             {/* Messages */}

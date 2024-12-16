@@ -41,11 +41,11 @@ export default function Chatbot() {
                     <div className="space-y-2">
                         <p>Dựa vào các triệu chứng mà bạn cung cấp, có thể bạn đang mắc bệnh: <strong>{response.data.disease_vie_name}</strong></p>
                         <p>
-                            {response.data.cause_of_disease}
+                            Nguyên nhân: {response.data.cause_of_disease}
                         </p>
-                        <p>
+                        {/* <p>
                             <strong>Các triệu chứng:</strong> {response.data.extractedSymptoms.join(', ')}
-                        </p>
+                        </p> */}
                         <div>
                             <strong>Chuyên khoa:</strong>{' '}
                             <span 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import DaLieu from '../../../assets/images/specializations/da-lieu.png';
 import CotSong from '../../../assets/images/specializations/cot-song.png';
@@ -7,21 +7,28 @@ import ChupXQuang from '../../../assets/images/specializations/chup-x-quang.png'
 import CoXuongKhop from '../../../assets/images/specializations/co-xuong-khop.png';
 import DiUngMienDich from '../../../assets/images/specializations/di-ung-mien-dich.png';
 import ChanThuongChinhHinh from '../../../assets/images/specializations/chan-thuong-chinh-hinh.png';
+import { useNavigate } from 'react-router-dom'; // Thêm useNavigate từ react-router-dom
+import axiosClient from '../../../services/apis/axiosClient';
 
 export default function Specialization() {
-    const allImages = [
-        { src: ChamCuu, title: 'Châm cứu' },
-        { src: ChanThuongChinhHinh, title: 'Chấn thương chỉnh hình' },
-        { src: ChupXQuang, title: 'Chụp X-Quang' },
-        { src: CotSong, title: 'Cột sống' },
-        { src: CoXuongKhop, title: 'Cơ xương khớp' },
-        { src: DaLieu, title: 'Da liễu' },
-        { src: DiUngMienDich, title: 'Dị ứng miễn dịch' },
-        { src: DiUngMienDich, title: 'Không Phải Dị ứng miễn dịch' },
-    ];
-
+    const [allImages, setAllImages] = useState([]);
     const [startIndex, setStartIndex] = useState(0);
     const [isAnimating, setIsAnimating] = useState(false);
+    const navigate = useNavigate(); // Khởi tạo navigate
+
+    // Fetch data from API
+    useEffect(() => {
+        const fetchSpecializations = async () => {
+            try {
+                const response = await axiosClient.get('/specializations');
+                setAllImages(response.data); // Lấy dữ liệu từ thuộc tính `data`
+            } catch (error) {
+                console.error("Failed to fetch specializations:", error);
+            }
+        };
+
+        fetchSpecializations();
+    }, []);
 
     const getCurrentImages = () => {
         const visibleImages = [];
@@ -52,6 +59,10 @@ export default function Specialization() {
         setTimeout(() => setIsAnimating(false), 500);
     };
 
+    const handleSpecializationClick = (specializationId) => {
+        navigate(`/chi-tiet-chuyen-khoa/${specializationId}`); // Điều hướng đến trang chi tiết chuyên khoa
+    };
+
     const visibleImages = getCurrentImages();
 
     return (
@@ -74,39 +85,28 @@ export default function Specialization() {
                     </div>
 
                     <div className="flex-1 mx-4 overflow-hidden">
-                        <div className={`
-                            grid grid-cols-4 gap-6
-                            transform transition-all duration-500 ease-in-out
-                            ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}
-                        `}>
-                            {visibleImages.map((image, index) => (
-                                <div
-                                    key={`${index}-${image.title}`}
-                                    className={`
-                                        bg-white shadow-2xl p-6 rounded-lg
-                                        flex flex-col items-center text-center h-72
-                                        transform transition-all duration-300
-                                        hover:shadow-lg hover:-translate-y-1
-                                        cursor-pointer
-                                    `}
-                                >
-                                    <div className="h-40 w-full mb-4 overflow-hidden rounded">
-                                        <img
-                                            src={image.src}
-                                            alt={`Specialization ${index + 1}`}
-                                            className="w-full h-full object-cover rounded
-                                                    transition-transform duration-300
-                                                    hover:scale-110"
-                                        />
+                        <div className={`grid grid-cols-4 gap-6 transform transition-all duration-500 ease-in-out ${isAnimating ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
+                            {visibleImages.map((item, index) => (
+                                item ? (
+                                    <div
+                                        key={item.specialization_id || index}
+                                        className="bg-white shadow-2xl p-6 rounded-lg flex flex-col items-center text-center h-72 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+                                        onClick={() => handleSpecializationClick(item.specialization_id)} // Thêm sự kiện click
+                                    >
+                                        <div className="h-40 w-full mb-4 overflow-hidden rounded">
+                                            <img
+                                                src={require(`../../../${item.specialization_image}`)} // Đường dẫn ảnh tĩnh từ API
+                                                alt={item.specialization_name || "Không rõ chuyên khoa"}
+                                                className="w-full h-full object-cover rounded transition-transform duration-300 hover:scale-110"
+                                            />
+                                        </div>
+                                        <div className="flex-1 flex items-center">
+                                            <h4 className="text-xl font-semibold line-clamp-2 transition-colors duration-300 hover:text-primary">
+                                                {item.specialization_name || "Không rõ chuyên khoa"}
+                                            </h4>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 flex items-center">
-                                        <h4 className="text-xl font-semibold line-clamp-2
-                                                     transition-colors duration-300
-                                                     hover:text-primary">
-                                            {image.title}
-                                        </h4>
-                                    </div>
-                                </div>
+                                ) : null
                             ))}
                         </div>
                     </div>
