@@ -1,10 +1,8 @@
-// src/pages/Dashboard.js
 import React, { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
+import Sidebar from "../../../components/Form/Admin/Sidebar";
 import Content from "./components/Content";
 
-export default function Dashboard() {
+export default function Schedule() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     const toggleSidebar = () => {
@@ -20,8 +18,7 @@ export default function Dashboard() {
                     isSidebarOpen ? "ml-64" : "ml-0"
                 } flex-1`}
             >
-                <Navbar toggleSidebar={toggleSidebar}/>
-                <Content/>
+                <Content />
             </div>
         </div>
     );

@@ -21,7 +21,9 @@ const ListAppointments = loadable(() => import("./pages/Appointment/ListAppointm
 const AppointmentDetail = loadable(() => import("./pages/Appointment/AppointmentDetail/index"));
 const AppointmentBooking = loadable(() => import("./pages/Appointment/AppointmentBooking/index"));
 const AppointmentSuccessfully = loadable(() => import("./pages/Appointment/AppointmentSuccessfully/index"));
-const Admin = loadable(() => import("./pages/Admin/index"));
+const DashboardAdmin = loadable(() => import("./pages/Admin/Dashboard/index"));
+const ScheduleAdmin = loadable(() => import("./pages/Admin/Schedule/index"));
+const EditSchedule = loadable(() => import("./pages/Admin/AppointmentDetail/index"));
 
 function App() {
     return (
@@ -32,7 +34,23 @@ function App() {
                         path="/admin"
                         element={
                             <Suspense fallback={<CircularProgress />}>
-                                <Admin title="Admin" />
+                                <DashboardAdmin title="Trang chủ Admin" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/quan-ly-lich-hen"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <ScheduleAdmin title="Quản lý lịch hẹn" />
+                            </Suspense>
+                        }
+                    />
+                    <Route
+                        path="/chinh-sua-lich-hen"
+                        element={
+                            <Suspense fallback={<CircularProgress />}>
+                                <EditSchedule title="Chỉnh sửa lịch hẹn" />
                             </Suspense>
                         }
                     />
