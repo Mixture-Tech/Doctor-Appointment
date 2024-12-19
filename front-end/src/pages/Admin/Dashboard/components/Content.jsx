@@ -14,13 +14,13 @@ export default function Content() {
                         <p className="text-gray-500 mb-16">Lịch làm việc hôm nay</p>
                         <div className="flex mt-4 space-x-4">
                             <div className="bg-white p-4 rounded shadow">
-                                <p className="text-gray-500">Cuộc hẹn</p>
-                                <p className="flex justify-center text-blue-500 text-2xl font-bold">9</p>
+                                <p className="text-gray-500">Tổng số cuộc hẹn</p>
+                                <p className="flex justify-center text-blue-500 text-2xl font-bold">6</p>
                             </div>
-                            <div className="bg-white p-4 rounded shadow">
-                                <p className="text-gray-500">Ca phẫu thuật</p>
+                            {/* <div className="bg-white p-4 rounded shadow">
+                                <p className="text-gray-500"></p>
                                 <p className="flex justify-center text-green-500 text-2xl font-bold">3</p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -69,7 +69,7 @@ export default function Content() {
                                 className="w-12 h-12 rounded-full"
                             />
                             <div>
-                                <p className="font-bold">Eula</p>
+                                <p className="font-bold">Nguyễn Văn Hùng</p>
                                 <p className="text-gray-500 text-sm">Thần kinh</p>
                                 <p className="text-yellow-400">★★★★★</p>
                             </div>
@@ -81,7 +81,7 @@ export default function Content() {
                                 className="w-12 h-12 rounded-full"
                             />
                             <div>
-                                <p className="font-bold">Yae Miko</p>
+                                <p className="font-bold">Trần Quang Huy</p>
                                 <p className="text-gray-500 text-sm">Tim mạch</p>
                                 <p className="text-yellow-400">★★★★☆</p>
                             </div>

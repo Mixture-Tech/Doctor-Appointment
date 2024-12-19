@@ -13,11 +13,9 @@ export default function EditAppointment({ onSave, onCancel }) {
 
     // Dữ liệu danh sách bác sĩ
     const doctors = [
-        "Nguyễn Văn Hùng",
-        "Trần Quang Tèo",
-        "Lê Quang Bình",
-        "Trần Quốc Tế",
-        "Nguyễn Văn Tâm",
+        "Đã khám",
+        "Chưa khám",
+        "Không có mặt"
     ];
 
     const [appointment, setAppointment] = useState(appointmentData);

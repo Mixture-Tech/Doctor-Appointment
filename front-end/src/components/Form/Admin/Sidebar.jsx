@@ -1,6 +1,5 @@
 // src/components/Sidebar.js
 import React from "react";
-import { Home, TableChart, BarChart, AccountCircle } from "@mui/icons-material";
 import { FaUserCircle } from "react-icons/fa";
 import { FaUserDoctor, FaSquareVirus } from "react-icons/fa6"
 import { MdLocalHospital, MdDashboard } from "react-icons/md";

@@ -3,12 +3,12 @@ import {useNavigate} from "react-router-dom";
 
 export default function Content() {
     const appointments = [
-        { id: 1, date: "20-12-2024", time: "09:00 - 10:00", patient: "Nguyễn Văn A", type: "Khám định kỳ", doctor: "Nguyễn Văn Hùng", },
-        { id: 2, date: "21-12-2024", time: "10:00 - 11:00", patient: "Trần Thị B", type: "Tư vấn sức khỏe", doctor: "Trần Quang Tèo" },
-        { id: 3, date: "22-12-2024", time: "02:00 - 03:00", patient: "Lê Văn C", type: "Phẫu thuật nhỏ", doctor: "Lê Văn Chí" },
-        { id: 4, date: "23-12-2024", time: "11:00 - 12:00", patient: "Nguyễn Thị D", type: "Khám sức khỏe", doctor: "Lê Quang Bình" },
-        { id: 5, date: "24-12-2024", time: "14:00 - 15:00", patient: "Lê Quang E", type: "Khám định kỳ", doctor: "Trần Quốc Tế" },
-        { id: 6, date: "25-12-2024", time: "08:00 - 09:00", patient: "Trần Thanh G", type: "Tư vấn sức khỏe", doctor: "Nguyễn Văn Tâm" },
+        { id: 1, date: "19-12-2024", time: "09:00 - 10:00", patient: "Nguyễn Văn A", type: "Đã khám", doctor: "Nguyễn Văn Hùng", },
+        { id: 2, date: "20-12-2024", time: "10:00 - 11:00", patient: "Trần Thị B", type: "Chưa khám", doctor: "Trần Quang Tèo" },
+        { id: 3, date: "21-12-2024", time: "02:00 - 03:00", patient: "Lê Văn C", type: "Chưa khám", doctor: "Lê Văn Chí" },
+        { id: 4, date: "23-12-2024", time: "11:00 - 12:00", patient: "Nguyễn Thị D", type: "Chưa khám", doctor: "Lê Quang Bình" },
+        { id: 5, date: "24-12-2024", time: "14:00 - 15:00", patient: "Lê Quang E", type: "Chưa khám", doctor: "Trần Quốc Tế" },
+        { id: 6, date: "25-12-2024", time: "08:00 - 09:00", patient: "Trần Thanh G", type: "Chưa khám", doctor: "Nguyễn Văn Tâm" },
         // Thêm nhiều lịch hẹn ở đây nếu cần
     ];
 
@@ -18,7 +18,7 @@ export default function Content() {
         navigate("/chinh-sua-lich-hen");
     };
 
-    const itemsPerPage = 2; // Số lượng lịch hẹn mỗi trang
+    const itemsPerPage = 6; // Số lượng lịch hẹn mỗi trang
     const [currentPage, setCurrentPage] = useState(0); // Trạng thái cho trang hiện tại
 
     // Tính toán dữ liệu hiển thị cho mỗi trang
@@ -44,7 +44,7 @@ export default function Content() {
                         <th className="border border-gray-300 px-4 py-2 font-normal">Ngày</th>
                         <th className="border border-gray-300 px-4 py-2 font-normal">Giờ</th>
                         <th className="border border-gray-300 px-4 py-2 font-normal">Bệnh nhân</th>
-                        <th className="border border-gray-300 px-4 py-2 font-normal">Loại</th>
+                        <th className="border border-gray-300 px-4 py-2 font-normal">Trạng thái</th>
                         <th className="border border-gray-300 px-4 py-2 font-normal">Bác sĩ</th>
                         <th className="border border-gray-300 px-4 py-2 font-normal">Hành động</th>
                     </tr>
