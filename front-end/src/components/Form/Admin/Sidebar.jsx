@@ -15,7 +15,7 @@ export default function Sidebar({ isOpen }) {
     };
 
     const navigateToAppointments = () => {
-        navigate("/quan-ly-lich-hen");
+        navigate("/admin/quan-ly-lich-hen");
     };
 
     return (

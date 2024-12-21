@@ -40,7 +40,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/quan-ly-lich-hen"
+                        path="/admin/quan-ly-lich-hen"
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <ScheduleAdmin title="Quản lý lịch hẹn" />
@@ -48,7 +48,7 @@ function App() {
                         }
                     />
                     <Route
-                        path="/chinh-sua-lich-hen"
+                        path="/admin/chinh-sua-lich-hen/:appointmentId"
                         element={
                             <Suspense fallback={<CircularProgress />}>
                                 <EditSchedule title="Chỉnh sửa lịch hẹn" />
