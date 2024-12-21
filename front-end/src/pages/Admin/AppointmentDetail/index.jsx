@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../../../components/Form/Admin/Sidebar";
 import Content from "./components/Content";
+import { ToastContainer } from "react-toastify";
 
 export default function Dashboard() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Dashboard() {
 
     return (
         <div className="flex">
+            <ToastContainer style={{marginTop: '50px'}}/>
             <Sidebar isOpen={isSidebarOpen} />
 
             <div

@@ -37,12 +37,21 @@ export default function EditAppointment() {
             toast.error("Trạng thái 'Đã khám' không thể thay đổi!");
             return;
         }
+        if (appointment.clinic_status === "NO_SHOW") {
+            toast.error("Trạng thái 'Không có mặt' không thể thay đổi!");
+            return;
+        }
         setSelectedStatus(newStatus);
     };
 
     const handleSave = async () => {
         if (appointment.clinic_status === "COMPLETED") {
             toast.error("Không thể thay đổi trạng thái khi đã là 'Đã khám'!");
+            return;
+        }
+
+        if (appointment.clinic_status === "NO_SHOW") {
+            toast.error("Không thể thay đổi trạng thái khi đã là 'Không có mặt'!");
             return;
         }
 
@@ -58,10 +67,11 @@ export default function EditAppointment() {
                 ...prev,
                 clinic_status: selectedStatus
             }));
-            alert("Cập nhật trạng thái thành công!");
-            navigate("/admin/quan-ly-lich-hen"); // Quay về trang danh sách sau khi lưu
+            toast.success("Cập nhật trạng thái thành công!");
+            navigate("/admin/quan-ly-lich-hen");
         } catch (err) {
-            setError(err.message || "Có lỗi xảy ra khi cập nhật trạng thái");
+            toast.error(err.message);
+            setError(err.message);
         } finally {
             setSaving(false);
         }
@@ -75,16 +85,12 @@ export default function EditAppointment() {
         return <div className="p-6">Đang tải dữ liệu...</div>;
     }
 
-    if (error) {
-        return <div className="p-6 text-red-500">Lỗi: {error}</div>;
-    }
-
     if (!appointment) {
         return <div className="p-6">Không tìm thấy thông tin lịch hẹn</div>;
     }
 
     return (
-        <div className="p-4 space-y-4 max-w-2xl mx-auto">
+        <div className="px-4 space-y-4 max-w-2xl mx-auto">
             <div className="bg-white p-6 rounded-lg shadow-2xl">
                 <h2 className="text-xl font-semibold mb-6">Chi tiết lịch hẹn</h2>
 

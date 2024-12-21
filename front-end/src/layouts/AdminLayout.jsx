@@ -1,12 +1,10 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Form/Admin/Sidebar";
 import Navbar from "../components/Form/Admin/Navbar";
 import { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
 
 export default function AdminLayout() {
     const navigate = useNavigate();
-    const location = useLocation();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [searchParams, setSearchParams] = useState({});
 
@@ -42,7 +40,6 @@ export default function AdminLayout() {
                     <Outlet context={{ searchParams }} />
                 </div>
             </div>
-            <ToastContainer />
         </div>
     );
 }

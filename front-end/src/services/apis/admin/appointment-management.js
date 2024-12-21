@@ -13,7 +13,6 @@ export const fetchAppointments = async (page = 0, size = 10) => {
             throw new Error("Dữ liệu không hợp lệ.");
         }
     } catch (error) {
-        console.error("Error fetching appointments:", error);
         throw new Error(error.message || "Lỗi khi tải danh sách lịch hẹn.");
     }
 };
@@ -28,7 +27,6 @@ export const updateAppointmentClinicStatus = async (appointmentId, { clinic_stat
         );
         return response.data;
     } catch (error) {
-        console.error("Error fetching appointment:", error);
         throw new Error(error.message || "Lỗi xảy ra khi cập nhật trạng thái lịch hẹn.");
     }
 };
@@ -45,9 +43,7 @@ export const searchAppointments = async (searchParams, page = 0, size = 10) => {
 
         const response = await axiosClient.get(`/admin/appointments/search?${queryParams}`);
 
-        console.log("SEARCH: " , response.data.content);
         if (response.data && Array.isArray(response.data.content)) {
-            console.log("SEARCH ARRAY: " , response.data.content);
             return {
                 content: response.data.content,
                 totalPages: response.data.totalPages,
@@ -56,7 +52,6 @@ export const searchAppointments = async (searchParams, page = 0, size = 10) => {
             throw new Error("Dữ liệu không hợp lệ");
         }
     } catch (error) {
-        console.error("Error searching appointments:", error);
         throw new Error(error.message || "Lỗi khi tìm kiếm lịch hẹn");
     }
 };

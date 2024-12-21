@@ -119,12 +119,11 @@ export default function AppointmentDetails() {
             );
             if (result) {
                 toast.success("Đặt lịch khám thành công!");
-                // navigate("/dat-lich-thanh-cong");
+                navigate("/dat-lich-thanh-cong");
             } else {
                 toast.error("Đặt lịch khám thất bại");
             }
         } catch (error) {
-            console.error("Error creating appointment:", error);
             toast.error("Đặt lịch khám thất bại");
         }
     };

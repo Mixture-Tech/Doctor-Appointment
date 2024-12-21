@@ -14,7 +14,6 @@ export default function AppointmentDetail() {
 
     useEffect(() => {
         const fetchAppointmentDetails = async () => {
-            console.log("Fetching appointment details for appointmentId:", appointmentId);
 
             try {
                 const response = await AppointmentService.listAppointments();
