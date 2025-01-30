@@ -11,9 +11,9 @@ export default function DoctorCard({
         <div className="border border-gray-200 shadow-sm rounded-lg p-6 bg-white md:p-4">
             <div className="mb-4 flex flex-col md:flex-row items-center gap-4">
                 <img
-                    src={doctor.doctor_image}
+                    src={require(`../../../${doctor.doctor_image}`)}
                     alt={doctor.doctor_name}
-                    className="w-16 h-16 rounded-full object-cover md:w-12 md:h-12"
+                    className="w-16 h-16 rounded-full object-cover md:w-28 md:h-28"
                 />
                 <div className="flex-1">
                     <h3 className="text-xl font-semibold text-primary-600">{doctor.doctor_name}</h3>

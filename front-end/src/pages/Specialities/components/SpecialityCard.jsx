@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import CoXuongKhop from '../../../assets/images/specializations/co-xuong-khop.png'
 
 export default function SpecialtyCard({ id, name, imageUrl }) {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function SpecialtyCard({ id, name, imageUrl }) {
         onClick={handleNavigate}
         >
             <img
-                src={imageUrl}
+                src={require(`../../../${imageUrl}`)}
                 alt={name}
                 className="w-28 h-28 object-cover rounded"
             />

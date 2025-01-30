@@ -24,7 +24,7 @@ export default function Speciality({ item }) {
 Speciality.propTypes = {
     item: PropTypes.arrayOf(
         PropTypes.shape({
-            id: PropTypes.number.isRequired,
+            id: PropTypes.string.isRequired,
             name: PropTypes.string.isRequired,
             imageUrl: PropTypes.string.isRequired
         })
