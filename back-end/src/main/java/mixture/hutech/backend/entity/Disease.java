@@ -11,11 +11,17 @@ import lombok.*;
 @Builder
 public class Disease {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @Column(name = "disease_name")
-    private String diseaseName;
+    @Column(name = "disease_eng_name")
+    private String diseaseEnglishName;
+
+    @Column(name = "disease_vie_name")
+    private String diseaseVietnameseName;
+
+    @Column(name = "cause_of_disease", length = 1000)
+    private String causeOfDisease;
 
     @ManyToOne
     @JoinColumn(name = "specialization_id")

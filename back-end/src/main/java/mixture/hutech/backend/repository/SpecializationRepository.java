@@ -13,4 +13,8 @@ public interface SpecializationRepository extends JpaRepository<Specialization, 
 
     @Query("SELECT new mixture.hutech.backend.dto.response.SpecializationResponse(s.id, s.specializationName, s.image) FROM Specialization s")
     List<SpecializationResponse> findAllSpecialization();
+
+//    @Query("SELECT s FROM Specialization s WHERE s.id = ?1")
+    @Query("SELECT new mixture.hutech.backend.dto.response.SpecializationResponse(s.id, s.specializationName, s.image) FROM Specialization s JOIN s.diseases d WHERE d.id = ?1")
+    SpecializationResponse findSpecializationByDiseaseId(int diseaseId);
 }

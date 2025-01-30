@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface DiseaseService {
     List<DiseaseResponse> listDiseaseBySpecializationId(String specializationId);
+    List<DiseaseResponse> findAllDiseaseEnglishName();
 }

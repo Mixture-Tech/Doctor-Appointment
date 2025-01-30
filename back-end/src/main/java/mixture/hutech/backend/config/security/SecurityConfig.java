@@ -31,6 +31,9 @@ public class SecurityConfig {
 //            "/api/specializations/**",
 //            "/api/doctors",
 //            "/api/doctors/**",
+//            "api/chatbot/**",
+//            "api/demo-controller/**",
+//            "api/ghn/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -50,6 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
 //                                .requestMatchers("/api/appointment/**").hasRole("USER")
                         .anyRequest()
                         .authenticated()

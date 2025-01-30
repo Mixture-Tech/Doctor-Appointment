@@ -3,12 +3,14 @@ package mixture.hutech.backend.service.impl;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import mixture.hutech.backend.dto.request.AppointmentRequest;
+import mixture.hutech.backend.dto.request.ClinicRequest;
 import mixture.hutech.backend.dto.response.AppointmentResponse;
 import mixture.hutech.backend.entity.Appointment;
 import mixture.hutech.backend.entity.DoctorSchedule;
 import mixture.hutech.backend.entity.User;
 import mixture.hutech.backend.enums.AppointmentStatusEnum;
 import mixture.hutech.backend.enums.BookingTypeEnum;
+import mixture.hutech.backend.enums.ClinicStatusEnum;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.repository.AppointmentRepository;
@@ -17,11 +19,19 @@ import mixture.hutech.backend.repository.DoctorScheduleRepository;
 import mixture.hutech.backend.repository.UserRepository;
 import mixture.hutech.backend.service.AppointmentService;
 import mixture.hutech.backend.service.EmailService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
+import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +46,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorScheduleRepository doctorScheduleRepository;
     private static final int MAX_APPOINTMENTS_PER_SLOT = 3;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     /**
      * Create an appointment.
@@ -96,6 +107,17 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new ApiException(ErrorCodeEnum.CANNOT_CANCEL_PAST_APPOINTMENT);
         }
 
+        // Tính thời gian bắt đầu của lịch hẹn
+        LocalDateTime appointmentStartDateTime = LocalDateTime.of(
+                appointment.getAppointmentTakenDate(),
+                appointment.getProbableStartTime()
+        );
+
+        // Kiểm tra thời hạn hủy trước 24 giờ
+        if (appointmentStartDateTime.isBefore(LocalDateTime.now().plusHours(24))) {
+            throw new ApiException(ErrorCodeEnum.CANNOT_CANCEL_WITHIN_24_HOURS);
+        }
+
         appointment.setReminderSent(false);
         appointment.setAppointmentStatus(AppointmentStatusEnum.CANCELLED);
         appointmentRepository.save(appointment);
@@ -107,7 +129,60 @@ public class AppointmentServiceImpl implements AppointmentService {
         return buildAppointmentResponse(appointment, patient, doctorSchedule.getUser(), "Appointment has been cancelled");
     }
 
-//    @Override
+    @Override
+    @Transactional
+    public AppointmentResponse updateAppointment(String appointmentId, AppointmentRequest request, String userEmail) {
+        User patient = getUserByEmail(userEmail);
+        Appointment existingAppointment = getAppointmentById(appointmentId);
+
+        if (!existingAppointment.getUser().getId().equals(patient.getId())) {
+            throw new ApiException(ErrorCodeEnum.AUTHENTICATION_FAILED);
+        }
+
+//        if (!isUpcoming(existingAppointment)) {
+//            throw new ApiException(ErrorCodeEnum.CANNOT_MODIFY_PAST_APPOINTMENT);
+//        }
+
+        User doctor = existingAppointment.getDoctorSchedule().getUser();
+        DoctorSchedule newAvailableSlot = getAvailableSlot(doctor.getId(), request);
+
+        if (!existingAppointment.getDoctorSchedule().getId().equals(newAvailableSlot.getId())) {
+            DoctorSchedule oldSlot = existingAppointment.getDoctorSchedule();
+            oldSlot.setCurrentAppointment(oldSlot.getCurrentAppointment() - 1);
+            doctorScheduleRepository.save(oldSlot);
+
+            existingAppointment.setDoctorSchedule(newAvailableSlot);
+        }
+
+        existingAppointment.setProbableStartTime(request.getStartTime());
+        existingAppointment.setActualEndTime(request.getEndTime());
+        existingAppointment.setAppointmentTakenDate(request.getAppointmentTakenDate());
+
+        Appointment updatedAppointment = appointmentRepository.save(existingAppointment);
+
+        updateDoctorSchedule(newAvailableSlot, updatedAppointment);
+
+        try {
+            sendUpdateConfirmationEmail(patient, doctor, updatedAppointment);
+        } catch (MessagingException e) {
+            System.out.println("Mail error: " + e.getMessage());
+        }
+
+        return buildAppointmentResponse(updatedAppointment, patient, doctor, "Appointment updated successfully");
+    }
+
+    // Add a new method to send update confirmation email
+    private void sendUpdateConfirmationEmail(User patient, User doctor, Appointment appointment) throws MessagingException {
+        emailService.sendMailAppointmentUpdate(
+                patient.getEmail(),
+                patient.getUsername(),
+                doctor.getUsername(),
+                appointment.getAppointmentTakenDate().format(DateTimeFormatter.ISO_LOCAL_DATE),
+                appointment.getProbableStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + " - " + appointment.getActualEndTime().format(DateTimeFormatter.ISO_LOCAL_TIME)
+        );
+    }
+
+    //    @Override
     public List<AppointmentResponse> getAppointmentsByUserId(String userId) {
         List<Appointment> appointments = appointmentRepository.findByUserId(userId);
 
@@ -130,6 +205,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                 appointment.getProbableStartTime().format(DateTimeFormatter.ISO_LOCAL_TIME) + " - " + appointment.getActualEndTime().format(DateTimeFormatter.ISO_LOCAL_TIME)
         );
     }
+
+
 
     private User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
@@ -173,6 +250,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 //        appointment.setPhone(patient.getPhone());
         appointment.setUser(patient);
         appointment.setAppointmentStatus(AppointmentStatusEnum.CONFIRMED);
+        appointment.setClinicStatus(ClinicStatusEnum.PENDING);
+
+        String appointmentCode = "MTAP" + String.format("%06d", Math.abs(secureRandom.nextInt(1000000)));
+        appointment.setAppointmentCode(appointmentCode);
         appointment.setDoctorSchedule(availableSlot);
 
         setAppointmentDetails(appointment, request, patient);
@@ -193,26 +274,6 @@ public class AppointmentServiceImpl implements AppointmentService {
             appointment.setAddress(Optional.ofNullable(patient.getAddress()).orElse(request.getPatientAddress()));
             appointment.setDateOfBirth(Optional.ofNullable(patient.getDateOfBirth()).orElse(request.getPatientDateOfBirth()));
             appointment.setGender(Optional.ofNullable(patient.getGender()).orElse(request.getPatientGender()));
-//            if (patient.getAddress() == null) {
-//                appointment.setAddress(request.getPatientAddress());
-//            }
-//            else {
-//                appointment.setAddress(patient.getAddress());
-//            }
-//            if (patient.getDateOfBirth() == null) {
-//                appointment.setDateOfBirth(request.getPatientDateOfBirth());
-//            }
-//            else {
-//                appointment.setDateOfBirth(patient.getDateOfBirth());
-//            }
-//            if (patient.getGender() == null) {
-//                appointment.setGender(request.getPatientGender());
-//            }
-//            else {
-//                appointment.setGender(patient.getGender());
-//            }
-//            appointment.setDateOfBirth(patient.getDateOfBirth());
-//            appointment.setGender(patient.getGender());
         }
     }
 
@@ -249,6 +310,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .email(patient.getEmail())
                 .doctorName(doctor.getUsername())
                 .status(appointment.getAppointmentStatus())
+                .appointmentCode(appointment.getAppointmentCode())
                 .build();
     }
 
@@ -276,5 +338,111 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         return appointments;
     }
+
+    /**
+     * Management Clinic Status.
+     */
+
+    @Override
+    public Page<AppointmentResponse> listAppointmentsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<AppointmentResponse> appointments = appointmentRepository.findAllAppointmentsPaginated(pageable);
+
+        if(appointments.isEmpty()){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FOUND);
+        }
+
+        return appointments;
+    }
+
+    @Override
+    @Transactional
+    public AppointmentResponse updateClinicStatus(String appointmentId, ClinicStatusEnum clinicStatusEnum) {
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(
+                () -> new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FOUND)
+        );
+
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+
+        if(clinicStatusEnum != ClinicStatusEnum.COMPLETED && clinicStatusEnum != ClinicStatusEnum.NO_SHOW){
+            throw new ApiException(ErrorCodeEnum.INVALID_CLINIC_STATUS);
+        }
+
+        if(appointment.getClinicStatus() == ClinicStatusEnum.NO_SHOW){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_ALREADY_NO_SHOW);
+        }
+
+        if(appointment.getClinicStatus() == ClinicStatusEnum.COMPLETED){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_ALREADY_COMPLETED);
+        }
+
+        if(appointment.getAppointmentTakenDate().isAfter(currentDate)){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_HAPPENED);
+        }
+
+        if (appointment.getAppointmentTakenDate().isEqual(currentDate)) {
+            LocalTime appointmentStart = appointment.getProbableStartTime();
+            LocalTime appointmentEnd = appointment.getActualEndTime();
+
+            if (clinicStatusEnum == ClinicStatusEnum.COMPLETED) {
+                if (currentTime.isBefore(appointmentEnd)) {
+                    throw new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FINISHED);
+                }
+            }
+        }
+
+        if(appointment.getAppointmentStatus() == AppointmentStatusEnum.CANCELLED){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_CANCELLED);
+        }
+
+        appointment.setClinicStatus(clinicStatusEnum);
+        appointment.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        appointmentRepository.save(appointment);
+
+        return AppointmentResponse.builder()
+                .id(appointment.getId())
+                .probableStartTime(appointment.getProbableStartTime())
+                .actualEndTime(appointment.getActualEndTime())
+                .appointmentTakenDate(appointment.getAppointmentTakenDate())
+                .bookingType(appointment.getBookingType())
+                .username(appointment.getUser().getUsername())
+                .phone(appointment.getUser().getPhone())
+                .address(appointment.getUser().getAddress())
+                .dateOfBirth(appointment.getUser().getDateOfBirth())
+                .gender(appointment.getUser().getGender())
+                .email(appointment.getUser().getEmail())
+                .doctorName(appointment.getDoctorSchedule().getUser().getUsername())
+                .status(appointment.getAppointmentStatus())
+                .clinicStatus(appointment.getClinicStatus())
+                .appointmentCode(appointment.getAppointmentCode())
+                .createdAt(appointment.getCreatedAt())
+                .updatedAt(appointment.getUpdatedAt())
+                .build();
+    }
+
+    @Override
+    public Page<AppointmentResponse> searchAppointments(String appointmentCode, String username, int page, int size) {
+        if(appointmentCode != null && appointmentCode.trim().isEmpty()){
+            appointmentCode = null;
+        }
+        if(username != null && username.trim().isEmpty()){
+            username = null;
+        }
+
+        if(appointmentCode == null && username == null){
+            throw new ApiException(ErrorCodeEnum.SEARCH_CRITERIA_REQUIRED);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<AppointmentResponse> responses = appointmentRepository.searchAppointments(appointmentCode, username, pageable);
+
+        if(responses.isEmpty()){
+            throw new ApiException(ErrorCodeEnum.APPOINTMENT_NOT_FOUND);
+        }
+
+        return responses;
+    }
+
 
 }

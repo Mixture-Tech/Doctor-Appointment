@@ -30,10 +30,20 @@ public enum ErrorCodeEnum {
     APPOINTMENT_NOT_FOUND(404,"Không tìm thấy lịch hẹn", HttpStatus.NOT_FOUND),
     SPECIALIZATION_NOT_FOUND(404,"Không tìm thấy chuyên khoa", HttpStatus.NOT_FOUND),
     TOKEN_ALREADY_ACTIVATED(400,"Tài khoản đã được kích hoạt" ,HttpStatus.BAD_REQUEST ),
-    TOKEN_NOT_FOUND(400,"Không tìm thấy token hợp lệ" , HttpStatus.BAD_REQUEST ),
+    TOKEN_NOT_FOUND(404,"Không tìm thấy token hợp lệ" , HttpStatus.NOT_FOUND ),
     VERIFICATION_FAILED(401,"Xác thực thất bại",HttpStatus.UNAUTHORIZED ),
     INVALID_CURRENT_PASSWORD(401,"Mật khẩu hiện tại không đúng", HttpStatus.UNAUTHORIZED ),
     DISEASE_NOT_FOUND(404,"Không tìm thấy bệnh", HttpStatus.NOT_FOUND),
+    SYMPTOM_NOT_FOUND(404, "Không tìm thấy triệu chứng", HttpStatus.NOT_FOUND),
+    EXTERNAL_SERVICE_ERROR(500, "Lỗi kết nối dịch vụ ngoại vi", HttpStatus.INTERNAL_SERVER_ERROR),
+    CANNOT_CANCEL_WITHIN_24_HOURS(400, "Không thể huỷ cuộc hẹn trong vòng 24 giờ", HttpStatus.BAD_REQUEST),
+    CANNOT_RESCHEDULE_WITHIN_12_HOURS(400, "Không thể đổi lịch trong vòng 12 giờ", HttpStatus.BAD_REQUEST),
+    INVALID_CLINIC_STATUS(400, "Chuyển đổi trạng thái không hợp lệ", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_ALREADY_NO_SHOW(400, "Cuộc hẹn đã được đánh dấu là không đến", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_ALREADY_COMPLETED(400, "Cuộc hẹn đã được đánh dấu là đã hoàn thành", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_NOT_HAPPENED(400, "Cuộc hẹn chưa diễn ra", HttpStatus.BAD_REQUEST),
+    APPOINTMENT_NOT_FINISHED(400, "Cuộc hẹn chưa hoàn thành", HttpStatus.BAD_REQUEST),
+    SEARCH_CRITERIA_REQUIRED(400, "Cần có ít nhất một tiêu chí tìm kiếm", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;
