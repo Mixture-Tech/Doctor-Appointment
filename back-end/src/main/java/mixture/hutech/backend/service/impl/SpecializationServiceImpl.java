@@ -22,4 +22,12 @@ public class SpecializationServiceImpl implements SpecializationService {
         }
         return specializationRepository.findAllSpecialization();
     }
+
+    @Override
+    public SpecializationResponse findSpecializationByDiseaseId(int diseaseId) {
+        if(specializationRepository.findSpecializationByDiseaseId(diseaseId) == null){
+            throw new ApiException(ErrorCodeEnum.SPECIALIZATION_NOT_FOUND);
+        }
+        return specializationRepository.findSpecializationByDiseaseId(diseaseId);
+    }
 }

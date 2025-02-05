@@ -10,6 +10,7 @@ import mixture.hutech.backend.entity.DoctorSchedule;
 import mixture.hutech.backend.entity.User;
 import mixture.hutech.backend.enums.AppointmentStatusEnum;
 import mixture.hutech.backend.enums.BookingTypeEnum;
+import mixture.hutech.backend.enums.ClinicStatusEnum;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 
 import java.sql.Time;
@@ -52,11 +53,17 @@ public class AppointmentResponse {
     private String doctorName;
     @JsonProperty("status")
     private AppointmentStatusEnum status;
+    @JsonProperty("appointment_code")
+    private String appointmentCode;
+    @JsonProperty("clinic_status")
+    private ClinicStatusEnum clinicStatus;
     @JsonProperty("created_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Ho_Chi_Minh")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Timestamp createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
+    private Timestamp updatedAt;
 
-    public AppointmentResponse(String appointmentId, LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt) {
+    public AppointmentResponse(String appointmentId, String username, LocalTime probableStartTime, LocalTime actualEndTime, LocalDate appointmentTakenDate, String doctorName, AppointmentStatusEnum status, Timestamp createdAt, String appointmentCode) {
         this.id = appointmentId;
         this.probableStartTime = probableStartTime;
         this.actualEndTime = actualEndTime;
@@ -64,5 +71,7 @@ public class AppointmentResponse {
         this.doctorName = doctorName;
         this.status = status;
         this.createdAt = createdAt;
+        this.username = username;
+        this.appointmentCode = appointmentCode;
     }
 }

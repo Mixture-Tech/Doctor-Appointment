@@ -76,6 +76,22 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void sendMailAppointmentUpdate(String toEmail, String name, String doctorName, String appointmentDate, String appointmentTime) throws MessagingException {
+        Context context = new Context();
+        context.setVariable("title", "Xác nhận thay đổi thông tin lịch hẹn");
+        context.setVariable("patientName", name);
+        context.setVariable("doctorName", doctorName);
+        context.setVariable("appointmentDate", appointmentDate);
+        context.setVariable("appointmentTime", appointmentTime);
+        context.setVariable("message", "Lịch hẹn khám bệnh của bạn đã được thay đổi thành công. Chi tiết lịch hẹn như sau:");
+        context.setVariable("url", frontendUrl + "/appointments");
+        context.setVariable("textBtn", "Xem chi tiết lịch hẹn");
+        context.setVariable("isConfirmation", true);
+
+        sendEmail(toEmail, "Xác nhận thay đổi thông tin lịch hẹn", "mail-appointment", context);
+    }
+
+    @Override
     public void sendMailAppointmentReminder(String toEmail, String patientName, String doctorName, String appointmentDate, String appointmentTime) throws MessagingException {
         Context context = new Context();
         context.setVariable("title", "Nhắc nhở: Cuộc hẹn sắp tới của bạn");

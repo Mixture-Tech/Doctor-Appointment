@@ -3,10 +3,7 @@ package mixture.hutech.backend.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import mixture.hutech.backend.enums.AppointmentStatusEnum;
-import mixture.hutech.backend.enums.BookingTypeEnum;
-import mixture.hutech.backend.enums.ErrorCodeEnum;
-import mixture.hutech.backend.enums.PasswordResetTokenEnum;
+import mixture.hutech.backend.enums.*;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.utils.DateTimeUtils;
 import org.hibernate.validator.constraints.Length;
@@ -51,6 +48,9 @@ public class Appointment {
     @Enumerated(EnumType.STRING)
     private BookingTypeEnum bookingType = BookingTypeEnum.SELF_BOOKING;
 
+    @Enumerated(EnumType.STRING)
+    private ClinicStatusEnum clinicStatus = ClinicStatusEnum.PENDING;
+
     @Column(name = "username")
     private String username;
 
@@ -70,6 +70,9 @@ public class Appointment {
 
     @Column(name = "reminder_sent")
     private Boolean reminderSent = false;
+
+    @Column(name = "appointment_code")
+    private String appointmentCode;
 
     @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -108,6 +111,10 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "doctor_schedule_id")
     private DoctorSchedule doctorSchedule;
+
+//    @ManyToOne
+//    @JoinColumn(name = "clinic_id")
+//    private Clinic clinic;
 
 //    public void setAppointmentTakenDate(LocalDate appointmentTakenDate) {
 //        this.appointmentTakenDate = DateTimeUtils.p
