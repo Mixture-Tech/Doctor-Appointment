@@ -8,6 +8,7 @@ import mixture.hutech.backend.entity.CustomUserDetail;
 import mixture.hutech.backend.enums.ErrorCodeEnum;
 import mixture.hutech.backend.exceptions.ApiException;
 import mixture.hutech.backend.service.AppointmentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -46,6 +47,13 @@ public class AppointmentController {
                     .body(MessageResponse.builder()
                             .errorCode(e.getErrorCodeEnum())
                             .message(e.getMessage())
+                            .build());
+        } catch (Exception e){
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(MessageResponse.builder()
+                            .errorCode(ErrorCodeEnum.EXTERNAL_SERVICE_ERROR)
+                            .message("An unexpected error occurred: " + e.getMessage())
                             .build());
         }
     }
